@@ -71,3 +71,29 @@ app.get('/signUp', (req, res) => {
         }
     });
 });
+
+
+// Get list of Posts
+app.get('/getPosts', (req, res) => {
+    let query = 'SELECT * FROM Posts';
+    
+    db.query(query, (error, response) => {
+        console.log(response);
+        
+        if(error) {
+            res.send(JSON.stringify({
+                "status": 500, 
+                "error": error, 
+                "response": null
+            }));
+        }
+        
+        else {
+            res.send(JSON.stringify({
+                "status": 200, 
+                "error": null, 
+                "response": response
+            }));
+        }
+    });
+});
