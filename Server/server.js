@@ -11,7 +11,7 @@ app.get('/', function(req, res){
 });
 
 app.listen(5500, function(){
-    console.log('Server Started on Port 5500...');
+    console.log('Server Started on Port 5500..');
 });
 
 var mysql = require('mysql');
@@ -31,4 +31,43 @@ db.connect(function(error) {
   }
 
   console.log('Connected to database.');
+});
+
+
+// Add User into User credentials Table
+app.get('/signUp', (req, res) => {
+    var fname = 'Purdue'; 
+    var mname = 'Boilermaker'; 
+    var lname = 'Pete';
+    var email = 'purduepete@purdue.com'; 
+    var password = "pass123";
+    let post = {
+        FirstName: fname, 
+        MiddleName: mname, 
+        LastName: lname,
+        EmailID: email, 
+        Password: password
+    };
+
+    let query = 'INSERT INTO Users SET ?';
+    
+    db.query(query, post, (error, response) => {
+        console.log(response);
+        
+        if(error) {
+            res.send(JSON.stringify({
+                "status": 500, 
+                "error": error, 
+                "response": null
+            }));
+        }
+        
+        else {
+            res.send(JSON.stringify({
+                "status": 200, 
+                "error": null, 
+                "response": response
+            }));
+        }
+    });
 });
