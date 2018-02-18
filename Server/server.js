@@ -66,7 +66,7 @@ function authMiddleware(req, res, next) {
 };
 
 // Add User into User credentials Table
-app.get('/signUp', (req, res) => {
+app.post('/signUp', (req, res) => {
     var email = 'purduepete@purdue.com';
     var password = "pass123";
     let user = {
