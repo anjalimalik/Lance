@@ -40,6 +40,8 @@ db.connect(function (error) {
 
 //Auth Middleware
 function authMiddleware(req, res, next) {
+
+    // this is to make sure that user cannot get access to any page before signing in.
     if (!req.query.auth) {
         return res.status(400).json({ message: "unauthorized access" });
     }
@@ -66,7 +68,7 @@ function authMiddleware(req, res, next) {
 };
 
 // Add User into User credentials Table
-app.post('/signUp', (req, res) => {
+app.get('/signUp', (req, res) => {
     var email = 'purduepete@purdue.com';
     var password = "pass123";
     let user = {
@@ -101,7 +103,7 @@ app.post('/signUp', (req, res) => {
 
 
 // Get list of Posts
-app.get('/getPosts', (req, res) => {
+app.get('/getPosts', authMiddleware, (req, res) => {
     let query = 'SELECT * FROM Posts';
 
     db.query(query, (error, response) => {
