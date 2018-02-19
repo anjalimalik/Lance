@@ -1,9 +1,45 @@
+/*
+General
+*******
+Email from client - req.body.email
+Password from client - req.body.pass
+Name of client - req.body.name
+
+Edit user profile endpoint
+**************************
+Field to be edited - req.body.field
+Date to be added - req.body.fdata
+
+Editing a field in User Profile pass one of the below in body as 'field'
+
+Skills - skills
+Education - edu
+Links - links
+Cover Photo - pic (Support not added yet)
+Description - desc
+Documents - docs (Support not added yet)
+Contact Info (Mobile Number) - contact
+Name - name (Support not added yet)
+
+Create new post endpoint - Anjali could you describe what the endpoint does and each field means a bit more? thanks -Kenan
+************************
+Content: req.body.Content,
+PostingType: req.body.PostingType,
+money: req.body.money,
+numLikes: numLikes,
+Tags: req.body.Tags,
+PostingStatus: Status, - set to 1 initiialy to indicate open
+DatePosted: posted, - get date from system
+UserID: null - get user id from database
+*/
+
 var express = require('express');
 var bodyParser = require('body-parser');
 
 var env = require('dotenv/config');
 var path = require('path');
 var uuid = require("uuid/v4");
+var crypto = require('crypto');
 
 var app = express();
 
@@ -68,9 +104,15 @@ function authMiddleware(req, res, next) {
 };
 
 // Add User into User credentials Table
-app.get('/signUp', (req, res) => {
-    var email = 'purduepete@purdue.com';
-    var password = "pass123";
+app.post('/signUp', (req, res) => {
+
+    var email = req.body.email;
+    var password = req.body.pass;
+    var name = req.body.name;
+
+    password = decipherPass(email, password);
+    password = createPass(email, password);
+
     let user = {
         Email: email,
         Password: password
@@ -131,17 +173,22 @@ app.get('/getPosts', authMiddleware, (req, res) => {
 
 //Login
 app.post('/login', function (req, res) {
-    var Email = req.body.Email;
-    var Password = req.body.Password;
+    
+    var email = req.body.email;
+    var password = req.body.pass;
 
-    if (!Email || !Password) {
+    password = decipherPass(email, password);
+    password = createPass(email, password);
+
+    if (!email || !password) { //SHOULD BE HANDLED IN JS too
         return res.status(401).json({ message: "invalid_credentials" });
     }
 
     var dbQuery = "select * from Users where Email = ? and Password = ?";
-    var requestParams = [Email, Password];
+    var requestParams = [email, password];
 
-    db.get(dbQuery, requestParams, function (err, user) {
+    db.query(dbQuery, requestParams, function (err, user) {
+        
         if (err) {
             return res.status(500).json({ message: "Internal server error" });
         }
@@ -154,7 +201,8 @@ app.post('/login', function (req, res) {
         var authToken = uuid();
         var currentTime = new Date().getTime().toString();
         // Store the auth token in the database
-        db.run("UPDATE Users SET AuthToken = ?, AuthTokenIssued = ? WHERE Email = ?", [authToken, currentTime, Email], function (err) {
+        db.query("UPDATE Users SET AuthToken = ?, AuthTokenIssued = ? WHERE Email = ?", [authToken, currentTime, email], function (err) {
+            
             if (err) {
                 return res.status(500).json({ message: "Internal server error" });
             }
@@ -227,3 +275,97 @@ app.post('/CreatePost', authMiddleware, function (req, res) {
         }
     });
 });
+
+
+//Edit user profile details
+app.post('/editProfile', authMiddleware, function (req, res) {
+
+    var field = req.body.field;
+    var data = req.body.fdata;
+    var auth = req.query.auth;
+
+    if (field.equals("skills")) {
+
+        field = "SkillsSet";
+    }
+    else if (field.equals("edu")) {
+
+        field = "Education";
+    }
+    else if (field.equals("links")) {
+
+        field = "Links";
+    }
+    else if (field.equals("pic")) {
+
+        field = "Picture";
+    }
+    else if (field.equals("desc")) {
+
+        field = "Description";
+    }
+    else if (field.equals("docs")) {
+
+        field = "Documents";
+    }
+    else if (field.equals("contact")) {
+
+        field = "ContactInfo";
+    }
+    else if (field.equals("name")) {
+
+        field = "Name";
+    }
+    else {
+
+        return res.status(400).json({ message: "invalid_field" });
+    }
+
+    let query = "INSERT INTO Profiles (?) VALUES (?) WHERE idUsers ";
+    var params = [newPost.Headline, newPost.Content, newPost.PostingType, newPost.money, newPost.numLikes, newPost.Tags, newPost.PostingType, newPost.DatePosted, newPost.UserID];
+
+    db.run(query, params, function (error, response) {
+        console.log(response);
+        if (error) {
+            res.send(JSON.stringify({
+                "status": 500,
+                "error": error,
+                "response": null,
+                "message": "Internal server error"
+            }));
+        }
+        else {
+            res.send(JSON.stringify({
+                "status": 200,
+                "error": null,
+                "response": response,
+                "message": "success"
+            }));
+        }
+    });
+});
+
+function createPass(email, password) {
+
+    var i = email.length;
+    var salt = email.substring(i/2, i) + email.substring(0, i/2);
+
+    const cipher = crypto.createCipher('aes192', salt);
+
+    let encrypted = cipher.update(password, 'utf8', 'hex');
+    encrypted += cipher.final('hex');
+    
+    return encrypted;
+}
+
+function decipherPass(email, password) {
+
+    var i = email.length;
+    var salt = email.substring(i/2, i) + email.substring(0, i/2);
+
+    const decipher = crypto.createDecipher('aes192', salt);
+
+    let decrypted = decipher.update(encrypted, 'hex', 'utf8');
+    decrypted += decipher.final('utf8');
+    return decrypted;
+}
