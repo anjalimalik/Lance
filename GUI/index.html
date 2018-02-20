@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Welcome To 1ance!</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/full.css" rel="stylesheet">
+
+  </head>
+
+  <body>
+
+    <!-- Navigation -->
+<!--     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+      <div class="container">
+        <a class="navbar-brand" href="#">Start Bootstrap</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="#">Home
+                <span class="sr-only">(current)</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">About</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Services</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Contact</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav> -->
+
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <a class="navbar-brand" href="#">1ANCE</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarColor01">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Offers</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Requests</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">About</a>
+      </li>
+    </ul>
+    <form class="form-inline my-2 my-lg-0">
+      <input class="form-control mr-sm-2" type="text" placeholder="Search">
+      <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+    </form>
+  </div>
+</nav>
+<br />
+<br /><br />
+
+
+
+<div class="row">
+  <div class="col-md-4">
+    <div class="jumbotron">
+  <h1 class="display-3">Hello!</h1>
+  <p class="lead">Welcome to 1ANCE. Begin your journey by logging in or signing up today!.</p>
+  <hr class="my-4">
+  <p>1ance Is Exclusive To Purdue University Students</p>
+<div class="input-group pb-modalreglog-input-group">
+                <button class="btn btn-primary pb-modalreglog-submit" data-toggle="modal" data-target="#myModal">Login</button>
+                <button class="btn btn-primary pb-modalreglog-submit" data-toggle="modal" data-target="#myModal2">Register</button>
+            </div>
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h4 class="modal-title" id="myModalLabel">Login form</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form>
+                                <div class="form-group">
+                                    <label for="email">Email address</label>
+                                    <div class="input-group pb-modalreglog-input-group">
+                                        <input type="email" class="form-control" id="email" placeholder="Email">
+                                        <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="password">Password</label>
+                                    <div class="input-group pb-modalreglog-input-group">
+                                        <input type="password" class="form-control" id="pws" placeholder="Password">
+                                        <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary">Log in</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-sm" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h4 class="modal-title" id="myModalLabel">New User</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form class="pb-modalreglog-form-reg">
+                                <div class="form-group">
+                                    <div id="pb-modalreglog-progressbar"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="email">Email Address</label>
+                                    <div class="input-group pb-modalreglog-input-group">
+                                        <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
+                                        <input type="email" class="form-control" id="inputEmail" placeholder="Email">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="password">Password</label>
+                                    <div class="input-group pb-modalreglog-input-group">
+                                        <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+                                        <input type="password" class="form-control" id="inputPws" placeholder="Password">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="confirmpassword">Confirm password</label>
+                                    <div class="input-group pb-modalreglog-input-group">
+                                        <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
+                                        <input type="password" class="form-control" id="inputConfirmPws" placeholder="Confirm Password">
+                                    </div>
+                                </div>
+                      <!--           <div class="form-group">
+                                    <label for="country">Country</label>
+                                    <div class="input-group pb-modalreglog-input-group">
+                                        <span class="input-group-addon"><span class="glyphicon glyphicon-globe"></span></span>
+                                        <input type="text" class="form-control" id="countries" placeholder="Country">
+                                    </div>
+                                </div> -->
+           <!--                      <div class="form-group">
+                                    <label for="age">Age</label>
+                                    <div class="input-group pb-modalreglog-input-group">
+                                        <input id="age">
+                                    </div>
+                                </div> -->
+                                <div class="form-group">
+                                    <input type="checkbox" id="ch" name="chs">
+                                    I agree with <a href="#">terms and conditions.</a>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary">Sign up</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+</div></div>
+
+  <div class="col-md-4"></div>
+</div>
+
+
+
+
+
+
+
+<style>
+    .pb-modalreglog-container
+    {
+        margin-top: 100px;
+    }
+
+    .pb-modalreglog-legend
+    {
+        text-align: center;
+    }
+
+    .pb-modalreglog-input-group
+    {
+        margin: auto;
+    }
+
+    .pb-modalreglog-submit
+    {
+        margin-left: 5px;
+    }
+
+    .pb-modalreglog-form-reg
+    {
+        text-align: center;
+    }
+
+    .pb-modalreglog-footer p
+    {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    #pb-modalreglog-progressbar
+    {
+        border-radius: 2px;
+    }
+</style>
+
+<script>
+    $(function () {
+        var progress = $("#pb-modalreglog-progressbar").shieldProgressBar({
+            value: 0
+        }).swidget();
+
+        $('#inputEmail').change(function () {
+            if ($('#inputEmail').val().length > 1) {
+                progress.value(progress.value() + 15);
+            } else {
+                progress.value(progress.value() - 15);
+            }
+        });
+
+        $('#inputPws').change(function () {
+            if ($('#inputPws').val().length > 1) {
+                progress.value(progress.value() + 15);
+            } else {
+                progress.value(progress.value() - 15);
+            }
+        });
+
+        $('#inputConfirmPws').change(function () {
+            if ($('#inputConfirmPws').val().length > 1) {
+                progress.value(progress.value() + 15);
+            } else {
+                progress.value(progress.value() - 15);
+            }
+        });
+
+        $('#countries').change(function () {
+            if ($('#countries').val().length > 1) {
+                progress.value(progress.value() + 15);
+            } else {
+                progress.value(progress.value() - 15);
+            }
+        });
+
+        $('#age').change(function () {
+            if ($('#age').val().length > 1) {
+                progress.value(progress.value() + 15);
+            } else {
+                progress.value(progress.value() - 15);
+            }
+        });
+
+        $('#ch').change(function () {
+            if ($('input[name="chs"]:checked').length > 0) {
+                progress.value(progress.value() + 25);
+            } else {
+                progress.value(progress.value() - 25);
+            }
+        });
+
+        $("#age").shieldMaskedTextBox({
+            enabled: true,
+            mask: "00/00/0000",
+            value: "19/03/1032"
+        });
+    })
+</script>
+
+
+
+
+    <!-- Page Content -->
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  </body>
+
+</html>
