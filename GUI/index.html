@@ -15,7 +15,7 @@
 
     <!-- Custom styles for this template -->
     <link href="css/full.css" rel="stylesheet">
-
+    <script src="vendor/scripts/index.js"></script>
   </head>
 
   <body>
@@ -99,6 +99,9 @@
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
+
+
+                            <!-- Login Modal -->
                             <h4 class="modal-title" id="myModalLabel">Login form</h4>
                         </div>
                         <div class="modal-body">
@@ -121,7 +124,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Log in</button>
+                            <button type="button" class="btn btn-primary" onclick="btn_login()">Log in</button>
                         </div>
                     </div>
                 </div>
@@ -133,6 +136,9 @@
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
+
+
+                            <!-- Signup Modal -->
                             <h4 class="modal-title" id="myModalLabel">New User</h4>
                         </div>
                         <div class="modal-body">
@@ -182,7 +188,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Sign up</button>
+                            <button type="button" class="btn btn-primary" onclick="btn_register()">Sign up</button>
                         </div>
                     </div>
                 </div>
@@ -306,6 +312,7 @@
     <!-- Bootstrap core JavaScript -->
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
 
   </body>
 
