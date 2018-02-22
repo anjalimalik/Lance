@@ -1,20 +1,47 @@
-var users = {
-    'user1234@purdue.edu': 'Password',
-    'john2@purdue.edu': 'john2',
-    'shengqi8@purdue.edu': 'cocoabutter',
-    'juju-smith@purdue.edu': 'apple',
-    'tombrady12@purdue.edu': 'banana',
-    'gronk87@purdue.edu': 'spike',
+var url = "http://localhost:5500/login";
+var authToken;
+var email;
 
-}
+//LOGIN
+
 function btn_login() {
-    var _email = email.value;
+    var _email = loginEmail.value;
     var _pass = pws.value;
 
-    if (users[_email] && _pass === users[_email])
-        alert("Successful login, you will be redirected");
-    else
-        alert("Invalid Email and/or Username");
+        fetch(url, {
+					method: "POST",
+                    headers: {
+        				'Accept': 'application/json',
+        	   			'content-type': 'application/json'
+        	  		},
+                    body: JSON.stringify({
+        				"email":_email,
+        			 	"pass":_pass,
+        			})
+
+				}).then(function(res) {
+
+			        if (res.ok) {
+			            res.json().then(function(data) {
+
+                            this.authToken = data.authToken
+                            this.email = _email;
+                            
+
+			            }.bind(this));
+			        }
+			        else {
+			            res.json().then(function(data) {
+
+			            	createAlert(data.message);
+			            }.bind(this));
+			        }
+			    }).catch(function(err) {
+
+			    	createAlert(err.message + ": No Internet Connection");
+			    });
+
+
 }
 
 function btn_register() {
@@ -33,13 +60,50 @@ function btn_register() {
         return;
     }
 
-
+    var verified = false;
     if (verifyEmail(_email)) {
         users[_email] = _pass;
-        alert("User added successfully");
+        verified = true;
+    }
+    if (verified) {
+
+        fetch(url, {
+			method: "POST",
+			headers: {
+				'Accept': 'application/json',
+	   			'content-type': 'application/json'
+	  		},
+			body: JSON.stringify({
+                "name": "userName123",
+				"email":_email,
+			 	"pass":_pass,
+			})
+
+			}).then(function(res) {
+
+		        if (res.ok) {
+		            res.json().then(function(data) {
+
+		            	sessionStorage.setItem("signedIn", "true");
+						location.reload(true);
+		            }.bind(this));
+		        }
+		        else {
+		            res.json().then(function(data) {
+
+		            	createAlert(data.message);
+                        alert(data.authToken);
+		            }.bind(this));
+		        }
+		    }).catch(function(err) {
+
+		    	createAlert(err.message + ": No Internet Connection");
+		    }.bind(this));
+
+        }
     }
 
-}
+
 
 function verifyEmail(_email) {
     if (users[_email]) {

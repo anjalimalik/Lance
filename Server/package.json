@@ -1,0 +1,19 @@
+{
+  "name": "dev1ance",
+  "version": "1.0.0",
+  "description": "1ance-Server",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error\" && exit 1"
+  },
+  "author": "1ance",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "cors": "^2.8.4",
+    "dotenv": "^5.0.0",
+    "express": "^4.16.2",
+    "mysql": "^2.15.0",
+    "uuid": "^3.2.1"
+  }
+}
