@@ -109,7 +109,7 @@
                                 <div class="form-group">
                                     <label for="email">Email address</label>
                                     <div class="input-group pb-modalreglog-input-group">
-                                        <input type="email" class="form-control" id="email" placeholder="Email">
+                                        <input type="email" class="form-control" id="loginEmail" placeholder="Email">
                                         <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
                                     </div>
                                 </div>
@@ -243,7 +243,7 @@
 </style>
 
 <script>
-    $(function () {
+    (function () {
         var progress = $("#pb-modalreglog-progressbar").shieldProgressBar({
             value: 0
         }).swidget();

@@ -32,7 +32,7 @@ PostingStatus: Status, - set to 1 initiialy to indicate open
 DatePosted: posted, - get date from system
 UserID: null - get user id from database
 */
-
+var cors = require('cors');
 var express = require('express');
 var bodyParser = require('body-parser');
 
@@ -43,6 +43,7 @@ var crypto = require('crypto');
 
 var app = express();
 
+app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
@@ -173,7 +174,7 @@ app.get('/getPosts', authMiddleware, (req, res) => {
 
 //Login
 app.post('/login', function (req, res) {
-    
+
     var email = req.body.email;
     var password = req.body.pass;
 
@@ -187,7 +188,7 @@ app.post('/login', function (req, res) {
     var requestParams = [email, password];
 
     db.query(dbQuery, requestParams, function (err, result) {
-        
+
         if (err) {
             return res.status(500).json({ message: "Internal server error" });
         }
@@ -202,7 +203,7 @@ app.post('/login', function (req, res) {
         var currentTime = new Date().getTime().toString();
         // Store the auth token in the database
         db.query("UPDATE Users SET AuthToken = ?, AuthTokenIssued = ? WHERE Email = ?", [authToken, currentTime, email], function (err) {
-            
+
             if (err) {
                 return res.status(500).json({ message: "Internal server error" });
             }
@@ -354,7 +355,7 @@ function createPass(email, password) {
 
     let encrypted = cipher.update(password, 'utf8', 'hex');
     encrypted += cipher.final('hex');
-    
+
     return encrypted;
 }
 
