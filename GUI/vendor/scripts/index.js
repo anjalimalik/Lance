@@ -106,15 +106,12 @@ function btn_register() {
 
 
 function verifyEmail(_email) {
-    if (users[_email]) {
-        alert("This email is already registered!");
-        return false;
-    }
+    
     var idx = _email.indexOf("@purdue.edu");
-    if (idx == -1 || idx != _email.length-11 || idx == 0){
-        alert("Must be a valid Purdue Email!");
-        return false;
-    }
-    return true;
+    if (idx == -1 || idx != _email.length-11 || idx == 0){
+        document.getElementById("emailFeedback").style.visibility = "visible";
+        return false;
+    }
+    return true;
 
 }
