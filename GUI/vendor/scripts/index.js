@@ -36,6 +36,47 @@ function btn_register() {
 
     if (verifyEmail(_email)) {
         users[_email] = _pass;
+
+
+        fetch("http://localhost:5500/auth/signin", {
+					method: "POST",
+					headers: {
+						'Accept': 'application/json',
+			   			'content-type': 'application/json'
+			  		},
+					body: JSON.stringify({
+
+						"userID":_email,
+					 	"password":_pass,
+					})
+
+				}).then(function(res) {
+
+			        if (res.ok) {
+			            res.json().then(function(data) {
+
+			            	sessionStorage.setItem("signedIn", "true");
+							this.authToken = data.authToken;
+
+							console.log(this.authToken);
+
+							location.reload(true);
+			            }.bind(this));
+			        }
+			        else {
+			            res.json().then(function(data) {
+
+			            	createAlert(data.message);
+			            }.bind(this));
+			        }
+			    }).catch(function(err) {
+
+			    	createAlert(err.message + ": No Internet Connection");
+			    }.bind(this));
+			},
+
+
+
         alert("User added successfully");
     }
 
