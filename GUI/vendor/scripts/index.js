@@ -116,6 +116,12 @@ function btn_register_finish() {
         pic = null;
         docs = null;
 
+
+        window.location.href = "profile.html";
+
+        
+
+        /*
         fetch(urlCreateProfile, {
 			method: "POST",
 			headers: {
@@ -154,7 +160,7 @@ function btn_register_finish() {
 
 		    	console.log(err.message + ": No Internet Connection");
 		    }.bind(this));
-
+                */
 
 }
 
