@@ -71,6 +71,14 @@ function btn_register_continue() {
 function btn_register_finish() {
 
         var name = fName.trim() + " " + lName.trim();
+        edu = in_register_edu.value;
+        links = in_register_links.value;
+        contact = in_register_contact.value;
+        desc = in_register_desc.value;
+        skills = in_register_skills.value;
+        pic = null;
+        docs = null;
+
         fetch(urlRegister, {
 			method: "POST",
 			headers: {
