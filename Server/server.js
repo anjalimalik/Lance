@@ -342,6 +342,34 @@ app.post('/editProfile', authMiddleware, function (req, res) {
     });
 });
 
+
+// Profile Creation
+app.post('/CreateProfile', (req, res) => {
+   
+    var email = req.body.email;
+    var name = req.body.name;
+    var desc = req.body.desc;
+    var contact = req.body.contact;
+    var skills = req.body.skills;
+    var edu = req.body.education;
+    var links = req.body.links;
+    var pics = null;
+    var docs = null;
+    
+    let query = "INSERT INTO Profiles (Email, FullName, ContactInfo, Picture, Description, SkillsSet, Education, Links, Documents) VALUES (?)";
+    var params = [email, name, contact, pics, desc, skills, edu, links, docs];
+
+    db.query(query, params, (err, result) => {
+        if (err) {
+            return res.status(400).json({ error: err });
+        }
+        else {
+             return res.status(200).json({ message: "Success" });
+        }
+    })
+});
+
+
 function createPass(email, password) {
 
     var i = email.length;
