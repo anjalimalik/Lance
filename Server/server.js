@@ -39,6 +39,7 @@ var S3_BUCKET_NAME="1ancepics";
 
 var express = require('express');
 var bodyParser = require('body-parser');
+var cors = require('cors');
 
 var env = require('dotenv/config');
 var path = require('path');
@@ -49,6 +50,11 @@ var app = express();
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+app.use(cors({
+  origin: 'http://localhost:5500',
+  credentials: true
+}));
 
 app.get('/', function (req, res) {
     res.send('1ance Test Server');
@@ -279,7 +285,7 @@ app.post('/CreatePost', authMiddleware, function (req, res) {
 });
 
 //create User profile
-app.post('/createProfile', authMiddleware, function (req, res) {
+app.post('/createProfile', function (req, res) {
 
     var qparams = [];
 

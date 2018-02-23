@@ -10,6 +10,7 @@ function btn_login() {
     var _email = in_login_email.value;
     var _pass = in_login_pass.value;
 
+    console.log("Inside btn_login()");
         fetch(urlLogin, {
 					method: "POST",
                     headers: {
@@ -18,29 +19,30 @@ function btn_login() {
         	  		},
                     body: JSON.stringify({
         				"email":_email,
-        			 	"pass":_pass,
+        			 	"pass":_pass
         			})
 
 				}).then(function(res) {
-
+                    console.log("Inside res function");
 			        if (res.ok) {
 			            res.json().then(function(data) {
 
                             this.authToken = data.authToken
                             this.email = _email;
-                            alert(this.authToken);
+                            console.log("Inside res.ok");
 
 			            }.bind(this));
 			        }
 			        else {
+                        alert("In else func")
 			            res.json().then(function(data) {
 
-			            	createAlert(data.message);
+			            	console.log(data.message);
 			            }.bind(this));
 			        }
 			    }).catch(function(err) {
 
-			    	createAlert(err.message + ": No Internet Connection");
+			    	console.log(err.message + ": No Internet Connection");
 			    });
 
 }
@@ -109,13 +111,13 @@ function btn_register_finish() {
 		        else {
 		            res.json().then(function(data) {
 
-		            	createAlert(data.message);
-                        alert(data.authToken);
+		            	console.log(data.message);
+                        console.log(data.authToken);
 		            }.bind(this));
 		        }
 		    }).catch(function(err) {
 
-		    	createAlert(err.message + ": No Internet Connection");
+		    	console.log(err.message + ": No Internet Connection");
 		    }.bind(this));
 
 
