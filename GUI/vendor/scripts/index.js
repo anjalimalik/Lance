@@ -2,7 +2,7 @@ var urlLogin = "http://localhost:5500/login";
 var urlRegister = "http://localhost:5500/signUp"
 var urlCreateProfile = "http://localhost:5500/createProfile"
 var authToken;
-var email, pass, fName, lName, edu, skills, desc, contact, links, pic, docs;
+var email, pass, fName, lName, edu, skills, desc, contact, links, pic, docs, name;
 var verifyFlag;
 
 //LOGIN
@@ -55,7 +55,8 @@ function btn_register_continue() {
     pass = in_register_pass.value;
     fName = in_register_fName.value;
     lName = in_register_lName.value;
-    var name = fName.trim() + " " + lName.trim();
+
+    name = fName.trim() + " " + lName.trim();
     //verifyFlag = true  --> means no errors
     //verifyFlag = false --> means errors
     verifyFlag = true;
@@ -116,10 +117,16 @@ function btn_register_finish() {
         pic = null;
         docs = null;
 
+        localStorage.setItem('email', email);
+        localStorage.setItem('name', name);
+        localStorage.setItem('edu', edu);
+        localStorage.setItem('links', links);
+        localStorage.setItem('contact', contact);
+        localStorage.setItem('desc', desc);
+        localStorage.setItem('skills', skills);
 
         window.location.href = "profile.html";
 
-        
 
         /*
         fetch(urlCreateProfile, {
