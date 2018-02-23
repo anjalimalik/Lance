@@ -33,6 +33,10 @@ DatePosted: posted, - get date from system
 UserID: null - get user id from database
 */
 
+var AMAZON_ACCESS_KEY = "AKIAJCVYDLK3I4O5M4YQ";
+var AMAZON_SECRET_ACCESS_KEY = "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";
+var S3_BUCKET_NAME="1ancepics";
+
 var express = require('express');
 var bodyParser = require('body-parser');
 
@@ -381,7 +385,7 @@ app.post('/createProfile', authMiddleware, function (req, res) {
     });
 });
 
-//Edit user profile details
+// Edit user profile details
 app.post('/editProfile', authMiddleware, function (req, res) {
 
     var qparams = [];
@@ -396,15 +400,6 @@ app.post('/editProfile', authMiddleware, function (req, res) {
     var contact = req.body.contact;
     var name = req.body.name;
 
-    qparams.push("SkillsSet");
-    qparams.push("Education");
-    qparams.push("Links");
-    qparams.push("Picture");
-    qparams.push("Description");
-    qparams.push("Documents");
-    qparams.push("Email");
-    qparams.push("ContactInfo");
-    qparams.push("FullName");
 
     if (contact == "") {
 
@@ -478,15 +473,41 @@ app.post('/editProfile', authMiddleware, function (req, res) {
     qparams.push(name);
     qparams.push(email);
     
-    let query = "INSERT INTO Profiles (??, ??, ??, ??, ??, ??, ??, ??,??) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) WHERE Email = ?";
+    let query = "UPDATE Profiles SET SkillsSet = ?, Education = ?, Links = ?, Picture = ?, Description = ?, Documents = ?, Email = ?, ContactInfo = ?, FullName = ? WHERE Email = ?";
 
     db.query(query, qparams, function (error) {
         
         if (error) {    
             return res.status(500).json({ message: error });
         }
-        return res.status(200).json({ message: "Profile Created" });
+        return res.status(200).json({ message: "Profile Updated" });
     });
+});
+
+app.get('/sign-s3', (req, res) => {
+  const s3 = new aws.S3();
+  const fileName = req.query['file-name'];
+  const fileType = req.query['file-type'];
+  const s3Params = {
+    Bucket: S3_BUCKET,
+    Key: fileName,
+    Expires: 60,
+    ContentType: fileType,
+    ACL: 'public-read'
+  };
+
+  s3.getSignedUrl('putObject', s3Params, (err, data) => {
+    if(err){
+      console.log(err);
+      return res.end();
+    }
+    const returnData = {
+      signedRequest: data,
+      url: `https://${S3_BUCKET}.s3.amazonaws.com/${fileName}`
+    };
+    res.write(JSON.stringify(returnData));
+    res.end();
+  });
 });
 
 function createPass(email, password) {
