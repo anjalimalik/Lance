@@ -1,6 +1,7 @@
-var url = "http://localhost:5500/login";
+var urlLogin = "http://localhost:5500/login";
+var urlRegister = "http://localhost:5500/createProfile"
 var authToken;
-var email;
+var email, pass, fName, lName, edu, skills, desc, contact, links, pic, docs;
 var verifyFlag;
 
 //LOGIN
@@ -9,7 +10,7 @@ function btn_login() {
     var _email = in_login_email.value;
     var _pass = in_login_pass.value;
 
-        fetch(url, {
+        fetch(urlLogin, {
 					method: "POST",
                     headers: {
         				'Accept': 'application/json',
@@ -42,38 +43,50 @@ function btn_login() {
 			    	createAlert(err.message + ": No Internet Connection");
 			    });
 
-
 }
 
-function btn_register() {
-    var _email = inputEmail.value;
-    var _pass = inputPws.value;
-    var _cpass = inputConfirmPws.value;
-    var _agree = ch.checked;
 
 
-    if (_pass !== _cpass || _pass.length == 0) {
-        alert("The two passwords do not match, try again!");
+function btn_register_continue() {
+    email = in_register_email.value;
+    pass = in_register_pass.value;
+    fName = in_register_fName.value;
+    lName = in_register_lName.value;
+    //verifyFlag = true  --> means no errors
+    //verifyFlag = false --> means errors
+    verifyFlag = true;
+
+    verifyEmail(email);
+    verifyPass(pass);
+    verifyFName(fName);
+    verifyLName(lName);
+
+    if (verifyFlag == true) {
+        $('#myModal2').modal('hide');
+        $("#myModal3").modal();
+    }
+
         return;
-    }
+}
+function btn_register_finish() {
 
-    var verified = false;
-    if (verifyEmail(_email)) {
-        users[_email] = _pass;
-        verified = true;
-    }
-    if (verified) {
-
-        fetch(url, {
+        var name = fName.trim() + " " + lName.trim();
+        fetch(urlRegister, {
 			method: "POST",
 			headers: {
 				'Accept': 'application/json',
 	   			'content-type': 'application/json'
 	  		},
 			body: JSON.stringify({
-                "name": "userName123",
-				"email":_email,
-			 	"pass":_pass,
+				"email":email,
+			 	"name":name,
+                "desc":desc,
+                "contact":contact,
+                "links":links,
+                "edu":edu,
+                "skills":skills,
+                "pic":null,
+                "docs":null
 			})
 
 			}).then(function(res) {
@@ -97,28 +110,7 @@ function btn_register() {
 		    	createAlert(err.message + ": No Internet Connection");
 		    }.bind(this));
 
-        }
-    }
 
-function btn_register_continue() {
-    var email = in_register_email.value;
-    var pass = in_register_pass.value;
-    var fName = in_register_fName.value;
-    var lName = in_register_lName.value;
-    //verifyFlag = true  --> means no errors
-    //verifyFlag = false --> means errors
-    verifyFlag = true;
-
-    verifyEmail(email);
-    verifyPass(pass);
-    verifyFName(fName);
-    verifyLName(lName);
-
-    if (verifyFlag == true) {
-        $('#myModal2').modal('hide');
-        $("#myModal3").modal();
-    }
-        return;
 }
 
 function verifyEmail(_email) {
