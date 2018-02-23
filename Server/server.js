@@ -4,14 +4,11 @@ General
 Email from client - req.body.email
 Password from client - req.body.pass
 Name of client - req.body.name
-
 Edit user profile endpoint
 **************************
 Field to be edited - req.body.field
 Date to be added - req.body.fdata
-
 Editing a field in User Profile pass one of the below in body as 'field'
-
 Skills - skills
 Education - edu
 Links - links
@@ -20,7 +17,6 @@ Description - desc
 Documents - docs (Support not added yet)
 Contact Info (Mobile Number) - contact
 Name - name (Support not added yet)
-
 Create new post endpoint - Anjali could you describe what the endpoint does and each field means a bit more? thanks -Kenan
 ************************
 Content: req.body.Content,
@@ -32,11 +28,7 @@ PostingStatus: Status, - set to 1 initiialy to indicate open
 DatePosted: posted, - get date from system
 UserID: null - get user id from database
 */
-
-var AMAZON_ACCESS_KEY = "AKIAJCVYDLK3I4O5M4YQ";
-var AMAZON_SECRET_ACCESS_KEY = "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";
-var S3_BUCKET_NAME="1ancepics";
-
+var cors = require('cors');
 var express = require('express');
 var bodyParser = require('body-parser');
 
@@ -47,6 +39,7 @@ var crypto = require('crypto');
 
 var app = express();
 
+app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
@@ -88,7 +81,7 @@ function authMiddleware(req, res, next) {
 
     //Check this token against the database
     var dbQuery = "select * from Users where AuthToken = ?";
-    db.query(dbQuery, [req.query.auth], function (err, user) {
+    db.get(dbQuery, [req.query.auth], function (err, user) {
         if (err) {
             return res.status(500).json({ message: "Internal server error" });
         }
@@ -118,7 +111,8 @@ app.post('/signUp', (req, res) => {
 
     let user = {
         Email: email,
-        Password: password
+        Password: password,
+        FullName: name
     };
 
     let query = 'INSERT INTO Users SET ?';
@@ -186,18 +180,19 @@ app.post('/login', function (req, res) {
         return res.status(401).json({ message: "invalid_credentials" });
     }
 
-    var dbQuery = "select * from Users where Email = ? and Password = ?";
+    var dbQuery = "SELECT * FROM Users WHERE Email = ? AND Password = ?";
     var requestParams = [email, password];
 
-    db.query(dbQuery, requestParams, function (err, user) {
+    db.query(dbQuery, requestParams, function (err, result) {
 
         if (err) {
             return res.status(500).json({ message: "Internal server error" });
         }
 
-        if (user == null) {
+        if (result == null || result == "") {
             return res.status(401).json({ message: "invalid_credentials" });
         }
+        //console.log(result[0].Password);
 
         // valid user, issue them an auth token
         var authToken = uuid();
@@ -258,7 +253,7 @@ app.post('/CreatePost', authMiddleware, function (req, res) {
     var params = [newPost.Headline, newPost.Content, newPost.PostingType, newPost.money, newPost.numLikes, newPost.Tags, newPost.PostingType, newPost.DatePosted, newPost.UserID];
 
     db.run(query, params, function (error, response) {
-
+        console.log(response);
         if (error) {
             res.send(JSON.stringify({
                 "status": 500,
@@ -278,236 +273,73 @@ app.post('/CreatePost', authMiddleware, function (req, res) {
     });
 });
 
-//create User profile
-app.post('/createProfile', authMiddleware, function (req, res) {
 
-    var qparams = [];
-
-    var email = req.body.email;
-    var skills = req.body.skills;
-    var edu = req.body.edu;
-    var links = req.body.links;
-    var pic = req.body.pic;
-    var desc = req.body.desc;
-    var docs = req.body.docs;
-    var contact = req.body.contact;
-    var name = req.body.name;
-
-    qparams.push("SkillsSet");
-    qparams.push("Education");
-    qparams.push("Links");
-    qparams.push("Picture");
-    qparams.push("Description");
-    qparams.push("Documents");
-    qparams.push("Email");
-    qparams.push("ContactInfo");
-    qparams.push("FullName");
-
-    if (contact == "") {
-
-        return res.status(400).json({ message: "missing_field_contact" });
-    }
-    if (name == "") {
-
-        return res.status(400).json({ message: "missing_field_name" });
-    }
-    if (email == "") {
-
-        return res.status(400).json({ message: "missing_field_email_critical" });
-    }
-
-    if (skills != "") {
-
-        qparams.push(skills);
-    }
-    else {
-
-        qparams.push("");
-    }
-
-    if (edu != "") {
-
-        qparams.push(edu);
-    }
-    else {
-
-        qparams.push("");
-    }
-
-    if (links != "") {
-
-        qparams.push(links);
-    }
-    else {
-
-        qparams.push("");
-    }
-
-    if (pic != "") {
-
-        qparams.push(pic);
-    }
-    else {
-
-        qparams.push("");
-    }
-
-    if (desc != "") {
-
-        qparams.push(desc);
-    }
-    else {
-
-        qparams.push("");
-    }
-
-    if (docs != "") {
-
-        qparams.push(docs);
-    }
-    else {
-
-        qparams.push("");
-    }
-
-    qparams.push(email);
-    qparams.push(contact);
-    qparams.push(name);
-
-    let query = "INSERT INTO Profiles (??, ??, ??, ??, ??, ??, ??, ??,??) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-    db.query(query, qparams, function (error) {
-
-        if (error) {
-            return res.status(500).json({ message: error });
-        }
-        return res.status(200).json({ message: "Profile Created" });
-    });
-});
-
-// Edit user profile details
+//Edit user profile details
 app.post('/editProfile', authMiddleware, function (req, res) {
 
-    var qparams = [];
+    var field = req.body.field;
+    var data = req.body.fdata;
+    var auth = req.query.auth;
 
-    var email = req.body.email;
-    var skills = req.body.skills;
-    var edu = req.body.edu;
-    var links = req.body.links;
-    var pic = req.body.pic;
-    var desc = req.body.desc;
-    var docs = req.body.docs;
-    var contact = req.body.contact;
-    var name = req.body.name;
+    if (field.equals("skills")) {
 
-
-    if (contact == "") {
-
-        return res.status(400).json({ message: "missing_field_contact" });
+        field = "SkillsSet";
     }
-    if (name == "") {
+    else if (field.equals("edu")) {
 
-        return res.status(400).json({ message: "missing_field_name" });
+        field = "Education";
     }
-    if (email == "") {
+    else if (field.equals("links")) {
 
-        return res.status(400).json({ message: "missing_field_email_critical" });
+        field = "Links";
     }
+    else if (field.equals("pic")) {
 
-    if (skills != "") {
-
-        qparams.push(skills);
+        field = "Picture";
     }
-    else {
+    else if (field.equals("desc")) {
 
-        qparams.push("");
+        field = "Description";
     }
+    else if (field.equals("docs")) {
 
-    if (edu != "") {
+        field = "Documents";
+    }
+    else if (field.equals("contact")) {
 
-        qparams.push(edu);
+        field = "ContactInfo";
+    }
+    else if (field.equals("name")) {
+
+        field = "Name";
     }
     else {
 
-        qparams.push("");
+        return res.status(400).json({ message: "invalid_field" });
     }
 
-    if (links != "") {
+    let query = "INSERT INTO Profiles (?) VALUES (?) WHERE idUsers ";
+    var params = [newPost.Headline, newPost.Content, newPost.PostingType, newPost.money, newPost.numLikes, newPost.Tags, newPost.PostingType, newPost.DatePosted, newPost.UserID];
 
-        qparams.push(links);
-    }
-    else {
-
-        qparams.push("");
-    }
-
-    if (pic != "") {
-
-        qparams.push(pic);
-    }
-    else {
-
-        qparams.push("");
-    }
-
-    if (desc != "") {
-
-        qparams.push(desc);
-    }
-    else {
-
-        qparams.push("");
-    }
-
-    if (docs != "") {
-
-        qparams.push(docs);
-    }
-    else {
-
-        qparams.push("");
-    }
-
-    qparams.push(email);
-    qparams.push(contact);
-    qparams.push(name);
-    qparams.push(email);
-
-    let query = "UPDATE Profiles SET SkillsSet = ?, Education = ?, Links = ?, Picture = ?, Description = ?, Documents = ?, Email = ?, ContactInfo = ?, FullName = ? WHERE Email = ?";
-
-    db.query(query, qparams, function (error) {
-
+    db.run(query, params, function (error, response) {
+        console.log(response);
         if (error) {
-            return res.status(500).json({ message: error });
+            res.send(JSON.stringify({
+                "status": 500,
+                "error": error,
+                "response": null,
+                "message": "Internal server error"
+            }));
         }
-        return res.status(200).json({ message: "Profile Updated" });
+        else {
+            res.send(JSON.stringify({
+                "status": 200,
+                "error": null,
+                "response": response,
+                "message": "success"
+            }));
+        }
     });
-});
-
-app.get('/sign-s3', (req, res) => {
-  const s3 = new aws.S3();
-  const fileName = req.query['file-name'];
-  const fileType = req.query['file-type'];
-  const s3Params = {
-    Bucket: S3_BUCKET,
-    Key: fileName,
-    Expires: 60,
-    ContentType: fileType,
-    ACL: 'public-read'
-  };
-
-  s3.getSignedUrl('putObject', s3Params, (err, data) => {
-    if(err){
-      console.log(err);
-      return res.end();
-    }
-    const returnData = {
-      signedRequest: data,
-      url: `https://${S3_BUCKET}.s3.amazonaws.com/${fileName}`
-    };
-    res.write(JSON.stringify(returnData));
-    res.end();
-  });
 });
 
 function createPass(email, password) {

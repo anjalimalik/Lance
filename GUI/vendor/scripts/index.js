@@ -1,6 +1,8 @@
-var url = "http://localhost:5500/login";
+var urlLogin = "http://localhost:5500/login";
+var urlRegister = "http://localhost:5500/signUp"
+var urlCreateProfile = "http://localhost:5500/createProfile"
 var authToken;
-var email;
+var email, pass, fName, lName, edu, skills, desc, contact, links, pic, docs, name;
 var verifyFlag;
 
 //LOGIN
@@ -9,7 +11,8 @@ function btn_login() {
     var _email = in_login_email.value;
     var _pass = in_login_pass.value;
 
-        fetch(url, {
+    console.log("Inside btn_login()");
+        fetch(urlLogin, {
 					method: "POST",
                     headers: {
         				'Accept': 'application/json',
@@ -17,63 +20,131 @@ function btn_login() {
         	  		},
                     body: JSON.stringify({
         				"email":_email,
-        			 	"pass":_pass,
+        			 	"pass":_pass
         			})
 
 				}).then(function(res) {
-
+                    console.log("Inside res function");
 			        if (res.ok) {
 			            res.json().then(function(data) {
 
                             this.authToken = data.authToken
                             this.email = _email;
-                            alert(this.authToken);
+                            console.log("Inside res.ok");
 
 			            }.bind(this));
 			        }
 			        else {
+                        alert("In else func")
 			            res.json().then(function(data) {
 
-			            	createAlert(data.message);
+			            	console.log(data.message);
 			            }.bind(this));
 			        }
 			    }).catch(function(err) {
 
-			    	createAlert(err.message + ": No Internet Connection");
+			    	console.log(err.message + ": No Internet Connection");
 			    });
-
 
 }
 
-function btn_register() {
-    var _email = inputEmail.value;
-    var _pass = inputPws.value;
-    var _cpass = inputConfirmPws.value;
-    var _agree = ch.checked;
 
 
-    if (_pass !== _cpass || _pass.length == 0) {
-        alert("The two passwords do not match, try again!");
-        return;
+function btn_register_continue() {
+    email = in_register_email.value;
+    pass = in_register_pass.value;
+    fName = in_register_fName.value;
+    lName = in_register_lName.value;
+
+    name = fName.trim() + " " + lName.trim();
+    //verifyFlag = true  --> means no errors
+    //verifyFlag = false --> means errors
+    verifyFlag = true;
+
+    verifyEmail(email);
+    verifyPass(pass);
+    verifyFName(fName);
+    verifyLName(lName);
+
+    if (verifyFlag == true) {
+        $('#myModal2').modal('hide');
+        $("#myModal3").modal();
+
+
+        fetch(urlRegister, {
+            method: "POST",
+            headers: {
+                'Accept': 'application/json',
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify({
+                "email":email,
+                "pass":pass,
+                "name":name
+            })
+
+            }).then(function(res) {
+
+                if (res.ok) {
+                    res.json().then(function(data) {
+
+                        sessionStorage.setItem("signedIn", "true");
+                        location.reload(true);
+                    }.bind(this));
+                }
+                else {
+                    res.json().then(function(data) {
+
+                        console.log(data.message);
+                        console.log(data.authToken);
+                    }.bind(this));
+                }
+            }).catch(function(err) {
+
+                console.log(err.message + ": No Internet Connection");
+            }.bind(this));
     }
+    return;
+}
+function btn_register_finish() {
 
-    var verified = false;
-    if (verifyEmail(_email)) {
-        users[_email] = _pass;
-        verified = true;
-    }
-    if (verified) {
 
-        fetch(url, {
+        edu = in_register_edu.value;
+        links = in_register_links.value;
+        contact = in_register_contact.value;
+        desc = in_register_desc.value;
+        skills = in_register_skills.value;
+        pic = null;
+        docs = null;
+
+        localStorage.setItem('email', email);
+        localStorage.setItem('name', name);
+        localStorage.setItem('edu', edu);
+        localStorage.setItem('links', links);
+        localStorage.setItem('contact', contact);
+        localStorage.setItem('desc', desc);
+        localStorage.setItem('skills', skills);
+
+        window.location.href = "profile.html";
+
+
+        /*
+        fetch(urlCreateProfile, {
 			method: "POST",
 			headers: {
 				'Accept': 'application/json',
 	   			'content-type': 'application/json'
 	  		},
 			body: JSON.stringify({
-                "name": "userName123",
-				"email":_email,
-			 	"pass":_pass,
+				"email":email,
+			 	"name":name,
+                "desc":desc,
+                "contact":contact,
+                "links":links,
+                "edu":edu,
+                "skills":skills,
+                "pic":null,
+                "docs":null
 			})
 
 			}).then(function(res) {
@@ -88,37 +159,16 @@ function btn_register() {
 		        else {
 		            res.json().then(function(data) {
 
-		            	createAlert(data.message);
-                        alert(data.authToken);
+		            	console.log(data.message);
+                        console.log(data.authToken);
 		            }.bind(this));
 		        }
 		    }).catch(function(err) {
 
-		    	createAlert(err.message + ": No Internet Connection");
+		    	console.log(err.message + ": No Internet Connection");
 		    }.bind(this));
+                */
 
-        }
-    }
-
-function btn_register_continue() {
-    var email = in_register_email.value;
-    var pass = in_register_pass.value;
-    var fName = in_register_fName.value;
-    var lName = in_register_lName.value;
-    //verifyFlag = true  --> means no errors
-    //verifyFlag = false --> means errors
-    verifyFlag = true;
-
-    verifyEmail(email);
-    verifyPass(pass);
-    verifyFName(fName);
-    verifyLName(lName);
-
-    if (verifyFlag == true) {
-        $('#myModal2').modal('hide');
-        $("#myModal3").modal();
-    }
-        return;
 }
 
 function verifyEmail(_email) {
