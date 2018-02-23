@@ -116,7 +116,7 @@ function btn_register_finish() {
         pic = null;
         docs = null;
 
-        fetch(urlRegister, {
+        fetch(urlCreateProfile, {
 			method: "POST",
 			headers: {
 				'Accept': 'application/json',
@@ -124,15 +124,14 @@ function btn_register_finish() {
 	  		},
 			body: JSON.stringify({
 				"email":email,
-                "pass":pass,
-			 	"name":name
-                //"desc":desc,
-                //"contact":contact,
-                //"links":links,
-                //"edu":edu,
-                //"skills":skills,
-                //"pic":null,
-                //"docs":null
+			 	"name":name,
+                "desc":desc,
+                "contact":contact,
+                "links":links,
+                "edu":edu,
+                "skills":skills,
+                "pic":null,
+                "docs":null
 			})
 
 			}).then(function(res) {
