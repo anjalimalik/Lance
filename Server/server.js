@@ -355,16 +355,39 @@ app.post('/CreateProfile', (req, res) => {
     var links = req.body.links;
     var pics = null;
     var docs = null;
-    
-    let query = "INSERT INTO Profiles (Email, FullName, ContactInfo, Picture, Description, SkillsSet, Education, Links, Documents) VALUES (?)";
-    var params = [email, name, contact, pics, desc, skills, edu, links, docs];
 
-    db.query(query, params, (err, result) => {
-        if (err) {
-            return res.status(400).json({ error: err });
+    let userProfile = {
+        Email: email,
+        FullName: password,
+        ContactInfo: contact, 
+        Picture: pics, 
+        Description: desc, 
+        SkillsSet: skills, 
+        Education: edu, 
+        Links: links, 
+        Documents: docs
+    };
+    
+    let query = "INSERT INTO Profiles SET ?";
+
+    db.query(query, userProfile, (err, result) => {
+        console.log(response);
+        if (error) {
+            res.send(JSON.stringify({
+                "status": 500,
+                "error": error,
+                "response": null,
+                "message": "Internal server error"
+            }));
         }
+
         else {
-             return res.status(200).json({ message: "Success" });
+            res.send(JSON.stringify({
+                "status": 200,
+                "error": null,
+                "response": response,
+                "message": "success"
+            }));
         }
     })
 });
