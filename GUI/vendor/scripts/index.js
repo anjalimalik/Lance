@@ -26,7 +26,7 @@ function btn_login() {
 
                             this.authToken = data.authToken
                             this.email = _email;
-
+                            
 
 			            }.bind(this));
 			        }
@@ -106,7 +106,7 @@ function btn_register() {
 
 
 function verifyEmail(_email) {
-
+    
     var idx = _email.indexOf("@purdue.edu");
     if (idx == -1 || idx != _email.length-11 || idx == 0){
         document.getElementById("emailFeedback").style.visibility = "visible";
