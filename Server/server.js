@@ -176,7 +176,7 @@ app.get('/getPosts', authMiddleware, (req, res) => {
 
 //Login
 app.post('/login', function (req, res) {
-    
+
     var email = req.body.email;
     var password = req.body.pass;
 
@@ -190,7 +190,7 @@ app.post('/login', function (req, res) {
     var requestParams = [email, password];
 
     db.query(dbQuery, requestParams, function (err, user) {
-        
+
         if (err) {
             return res.status(500).json({ message: "Internal server error" });
         }
@@ -204,7 +204,7 @@ app.post('/login', function (req, res) {
         var currentTime = new Date().getTime().toString();
         // Store the auth token in the database
         db.query("UPDATE Users SET AuthToken = ?, AuthTokenIssued = ? WHERE Email = ?", [authToken, currentTime, email], function (err) {
-            
+
             if (err) {
                 return res.status(500).json({ message: "Internal server error" });
             }
@@ -258,7 +258,7 @@ app.post('/CreatePost', authMiddleware, function (req, res) {
     var params = [newPost.Headline, newPost.Content, newPost.PostingType, newPost.money, newPost.numLikes, newPost.Tags, newPost.PostingType, newPost.DatePosted, newPost.UserID];
 
     db.run(query, params, function (error, response) {
-        
+
         if (error) {
             res.send(JSON.stringify({
                 "status": 500,
@@ -323,7 +323,7 @@ app.post('/createProfile', authMiddleware, function (req, res) {
     else {
 
         qparams.push("");
-    }   
+    }
 
     if (edu != "") {
 
@@ -373,12 +373,12 @@ app.post('/createProfile', authMiddleware, function (req, res) {
     qparams.push(email);
     qparams.push(contact);
     qparams.push(name);
-    
+
     let query = "INSERT INTO Profiles (??, ??, ??, ??, ??, ??, ??, ??,??) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     db.query(query, qparams, function (error) {
-        
-        if (error) {    
+
+        if (error) {
             return res.status(500).json({ message: error });
         }
         return res.status(200).json({ message: "Profile Created" });
@@ -421,7 +421,7 @@ app.post('/editProfile', authMiddleware, function (req, res) {
     else {
 
         qparams.push("");
-    }   
+    }
 
     if (edu != "") {
 
@@ -472,12 +472,12 @@ app.post('/editProfile', authMiddleware, function (req, res) {
     qparams.push(contact);
     qparams.push(name);
     qparams.push(email);
-    
+
     let query = "UPDATE Profiles SET SkillsSet = ?, Education = ?, Links = ?, Picture = ?, Description = ?, Documents = ?, Email = ?, ContactInfo = ?, FullName = ? WHERE Email = ?";
 
     db.query(query, qparams, function (error) {
-        
-        if (error) {    
+
+        if (error) {
             return res.status(500).json({ message: error });
         }
         return res.status(200).json({ message: "Profile Updated" });
@@ -519,7 +519,7 @@ function createPass(email, password) {
 
     let encrypted = cipher.update(password, 'utf8', 'hex');
     encrypted += cipher.final('hex');
-    
+
     return encrypted;
 }
 
