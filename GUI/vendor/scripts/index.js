@@ -1,5 +1,6 @@
 var urlLogin = "http://localhost:5500/login";
-var urlRegister = "http://localhost:5500/createProfile"
+var urlRegister = "http://localhost:5500/signUp"
+var urlCreateProfile = "http://localhost:5500/createProfile"
 var authToken;
 var email, pass, fName, lName, edu, skills, desc, contact, links, pic, docs;
 var verifyFlag;
@@ -54,6 +55,7 @@ function btn_register_continue() {
     pass = in_register_pass.value;
     fName = in_register_fName.value;
     lName = in_register_lName.value;
+    var name = fName.trim() + " " + lName.trim();
     //verifyFlag = true  --> means no errors
     //verifyFlag = false --> means errors
     verifyFlag = true;
@@ -66,13 +68,46 @@ function btn_register_continue() {
     if (verifyFlag == true) {
         $('#myModal2').modal('hide');
         $("#myModal3").modal();
-    }
 
-        return;
+
+        fetch(urlRegister, {
+            method: "POST",
+            headers: {
+                'Accept': 'application/json',
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify({
+                "email":email,
+                "pass":pass,
+                "name":name
+            })
+
+            }).then(function(res) {
+
+                if (res.ok) {
+                    res.json().then(function(data) {
+
+                        sessionStorage.setItem("signedIn", "true");
+                        location.reload(true);
+                    }.bind(this));
+                }
+                else {
+                    res.json().then(function(data) {
+
+                        console.log(data.message);
+                        console.log(data.authToken);
+                    }.bind(this));
+                }
+            }).catch(function(err) {
+
+                console.log(err.message + ": No Internet Connection");
+            }.bind(this));
+    }
+    return;
 }
 function btn_register_finish() {
 
-        var name = fName.trim() + " " + lName.trim();
+
         edu = in_register_edu.value;
         links = in_register_links.value;
         contact = in_register_contact.value;
@@ -89,14 +124,15 @@ function btn_register_finish() {
 	  		},
 			body: JSON.stringify({
 				"email":email,
-			 	"name":name,
-                "desc":desc,
-                "contact":contact,
-                "links":links,
-                "edu":edu,
-                "skills":skills,
-                "pic":null,
-                "docs":null
+                "pass":pass,
+			 	"name":name
+                //"desc":desc,
+                //"contact":contact,
+                //"links":links,
+                //"edu":edu,
+                //"skills":skills,
+                //"pic":null,
+                //"docs":null
 			})
 
 			}).then(function(res) {
