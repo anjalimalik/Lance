@@ -342,6 +342,57 @@ app.post('/editProfile', authMiddleware, function (req, res) {
     });
 });
 
+
+// Profile Creation
+app.post('/CreateProfile', (req, res) => {
+   
+    var email = req.body.email;
+    var name = req.body.name;
+    var desc = req.body.desc;
+    var contact = req.body.contact;
+    var skills = req.body.skills;
+    var edu = req.body.education;
+    var links = req.body.links;
+    var pics = null;
+    var docs = null;
+
+    let userProfile = {
+        Email: email,
+        FullName: password,
+        ContactInfo: contact, 
+        Picture: pics, 
+        Description: desc, 
+        SkillsSet: skills, 
+        Education: edu, 
+        Links: links, 
+        Documents: docs
+    };
+    
+    let query = "INSERT INTO Profiles SET ?";
+
+    db.query(query, userProfile, (err, result) => {
+        console.log(response);
+        if (error) {
+            res.send(JSON.stringify({
+                "status": 500,
+                "error": error,
+                "response": null,
+                "message": "Internal server error"
+            }));
+        }
+
+        else {
+            res.send(JSON.stringify({
+                "status": 200,
+                "error": null,
+                "response": response,
+                "message": "success"
+            }));
+        }
+    })
+});
+
+
 function createPass(email, password) {
 
     var i = email.length;
