@@ -169,28 +169,28 @@
 
                     <div class="form-group">
                       <label class="col-form-label" for="inputDefault">Major</label>
-                      <input type="text" class="form-control" placeholder="(optional)" id="inputDefault">
+                      <input id="in_register_edu" type="text" class="form-control" placeholder="(optional)" >
                     </div>
 
                     <div class="form-group">
-                      <label class="col-form-label" for="inputDefault">Facebook Link</label>
-                      <input type="text" class="form-control" placeholder="(optional)" id="inputDefault">
+                      <label class="col-form-label" for="inputDefault">Links</label>
+                      <input type="text" class="form-control" placeholder="Example: https://twitter.com/JohnPurdue/ (optional)" id="in_register_links">
                     </div>
 
                     <div class="form-group">
                       <label class="col-form-label" for="inputDefault">Phone Number</label>
-                      <input type="text" class="form-control" placeholder="(optional)" id="inputDefault">
+                      <input type="text" class="form-control" placeholder="(optional)" id="in_register_contact">
                     </div>
 
                     <div class="form-group">
                       <label for="exampleTextarea">Bio</label>
-                      <grammarly-ghost spellcheck="false"></grammarly-ghost><textarea class="form-control" id="exampleTextarea" placeholder="Something about yourself (optional)" rows="3" data-gramm="true" data-txt_gramm_id="eb4089ef-e26f-ce7a-9117-b156d9e1a197" data-gramm_id="eb4089ef-e26f-ce7a-9117-b156d9e1a197" spellcheck="false" data-gramm_editor="true" style="z-index: auto; position: relative; line-height: 21px; font-size: 14px; transition: none; background-color: transparent !important; background-position: initial initial !important; background-repeat: initial initial !important;"></textarea><grammarly-btn><div style="z-index: 2; opacity: 1; transform: translate(509px, 640px);" class="_9b5ef6-textarea_btn _9b5ef6-show _9b5ef6-field_hovered" data-grammarly-reactid=".0"><div class="_9b5ef6-transform_wrap" data-grammarly-reactid=".0.0"><div title="Protected by Grammarly" class="_9b5ef6-status" data-grammarly-reactid=".0.0.0">&nbsp;</div></div></div></grammarly-btn>
+                      <grammarly-ghost spellcheck="false"></grammarly-ghost><textarea class="form-control" id="in_register_desc" placeholder="Something about yourself (optional)" rows="3" data-gramm="true" data-txt_gramm_id="eb4089ef-e26f-ce7a-9117-b156d9e1a197" data-gramm_id="eb4089ef-e26f-ce7a-9117-b156d9e1a197" spellcheck="false" data-gramm_editor="true" style="z-index: auto; position: relative; line-height: 21px; font-size: 14px; transition: none; background-color: transparent !important; background-position: initial initial !important; background-repeat: initial initial !important;"></textarea><grammarly-btn><div style="z-index: 2; opacity: 1; transform: translate(509px, 640px);" class="_9b5ef6-textarea_btn _9b5ef6-show _9b5ef6-field_hovered" data-grammarly-reactid=".0"><div class="_9b5ef6-transform_wrap" data-grammarly-reactid=".0.0"><div title="Protected by Grammarly" class="_9b5ef6-status" data-grammarly-reactid=".0.0.0">&nbsp;</div></div></div></grammarly-btn>
                     </div>
 
 
                     <div class="form-group">
                       <label for="exampleTextarea">Skills</label>
-                      <grammarly-ghost spellcheck="false"></grammarly-ghost><textarea class="form-control" id="exampleTextarea" placeholder="Your skills separated by commas (optional)" rows="3" data-gramm="true" data-txt_gramm_id="eb4089ef-e26f-ce7a-9117-b156d9e1a197" data-gramm_id="eb4089ef-e26f-ce7a-9117-b156d9e1a197" spellcheck="false" data-gramm_editor="true" style="z-index: auto; position: relative; line-height: 21px; font-size: 14px; transition: none; background-color: transparent !important; background-position: initial initial !important; background-repeat: initial initial !important;"></textarea><grammarly-btn><div style="z-index: 2; opacity: 1; transform: translate(509px, 640px);" class="_9b5ef6-textarea_btn _9b5ef6-show _9b5ef6-field_hovered" data-grammarly-reactid=".0"><div class="_9b5ef6-transform_wrap" data-grammarly-reactid=".0.0"><div title="Protected by Grammarly" class="_9b5ef6-status" data-grammarly-reactid=".0.0.0">&nbsp;</div></div></div></grammarly-btn>
+                      <grammarly-ghost spellcheck="false"></grammarly-ghost><textarea class="form-control" id="in_register_skills" placeholder="Your skills separated by commas (optional)" rows="3" data-gramm="true" data-txt_gramm_id="eb4089ef-e26f-ce7a-9117-b156d9e1a197" data-gramm_id="eb4089ef-e26f-ce7a-9117-b156d9e1a197" spellcheck="false" data-gramm_editor="true" style="z-index: auto; position: relative; line-height: 21px; font-size: 14px; transition: none; background-color: transparent !important; background-position: initial initial !important; background-repeat: initial initial !important;"></textarea><grammarly-btn><div style="z-index: 2; opacity: 1; transform: translate(509px, 640px);" class="_9b5ef6-textarea_btn _9b5ef6-show _9b5ef6-field_hovered" data-grammarly-reactid=".0"><div class="_9b5ef6-transform_wrap" data-grammarly-reactid=".0.0"><div title="Protected by Grammarly" class="_9b5ef6-status" data-grammarly-reactid=".0.0.0">&nbsp;</div></div></div></grammarly-btn>
                     </div>
 
                 </fieldset>
@@ -199,7 +199,7 @@
 
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-outline-primary" data-dismiss="modal">Finish</button>
+            <button type="button" class="btn btn-outline-primary" onclick="btn_register_finish()" data-dismiss="modal">Finish</button>
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
           </div>
         </div>
