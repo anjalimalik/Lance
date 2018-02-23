@@ -1,6 +1,7 @@
 var url = "http://localhost:5500/login";
 var authToken;
 var email;
+var verifyFlag;
 
 //LOGIN
 
@@ -99,20 +100,26 @@ function btn_register() {
         }
     }
 
-function btn_register_continue () {
+function btn_register_continue() {
     var email = in_register_email.value;
     var pass = in_register_pass.value;
     var fName = in_register_fName.value;
-    var lName = in_register_lName.checked;
+    var lName = in_register_lName.value;
+    //verifyFlag = true  --> means no errors
+    //verifyFlag = false --> means errors
+    verifyFlag = true;
 
-    alert("in btn func");
-    if (!verifyEmail(email)) {
-        return;
-    }
-    else {
+    verifyEmail(email);
+    verifyPass(pass);
+    verifyFName(fName);
+    verifyLName(lName);
+
+    if (verifyFlag == true) {
         $('#myModal2').modal('hide');
         $("#myModal3").modal();
     }
+        return;
+
 
 //setAttribute("data-target", "myModal3")
 
@@ -122,10 +129,37 @@ function verifyEmail(_email) {
 
     var idx = _email.indexOf("@purdue.edu");
     if (idx == -1 || idx != _email.length-11 || idx == 0){
-        document.getElementById("emailFeedback").value = "Invalid Email";
+        document.getElementById("emailError").style.display = 'flex';
+        verifyFlag = false;
         return false;
     }
-
-    document.getElementById("emailFeedback").visibility = "visible";
-
+    document.getElementById("emailError").style.display = 'none';
     return true;
+}
+function verifyPass(_pass) {
+    if (_pass.length < 4) {
+        document.getElementById("passError").style.display = 'flex';
+        verifyFlag = false;
+        return false;
+    }
+    document.getElementById("passError").style.display = 'none';
+    return true;
+}
+function verifyFName(_fName) {
+    if (_fName.length == 0) {
+        document.getElementById("fNameError").style.display = 'flex';
+        verifyFlag = false;
+        return false;
+    }
+    document.getElementById("fNameError").style.display = 'none';
+    return true;
+}
+function verifyLName(_lName) {
+    if (_lName.length == 0) {
+        document.getElementById("lNameError").style.display = 'flex';
+        verifyFlag = false;
+        return false;
+    }
+    document.getElementById("lNameError").style.display = 'none';
+    return true;
+}
