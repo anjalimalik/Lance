@@ -6,8 +6,8 @@ var verifyFlag;
 //LOGIN
 
 function btn_login() {
-    var _email = loginEmail.value;
-    var _pass = pws.value;
+    var _email = in_login_email.value;
+    var _pass = in_login_pass.value;
 
         fetch(url, {
 					method: "POST",
@@ -27,7 +27,7 @@ function btn_login() {
 
                             this.authToken = data.authToken
                             this.email = _email;
-
+                            alert(this.authToken);
 
 			            }.bind(this));
 			        }
@@ -119,10 +119,6 @@ function btn_register_continue() {
         $("#myModal3").modal();
     }
         return;
-
-
-//setAttribute("data-target", "myModal3")
-
 }
 
 function verifyEmail(_email) {
@@ -162,4 +158,24 @@ function verifyLName(_lName) {
     }
     document.getElementById("lNameError").style.display = 'none';
     return true;
+}
+
+
+///////////CLEARING MODALS///////////
+
+function clearModal1() {
+    document.getElementById("in_login_email").value = "";
+    document.getElementById("in_login_pass").value = "";
+}
+function clearModal2() {
+    document.getElementById("in_register_email").value = "";
+    document.getElementById("in_register_pass").value = "";
+    document.getElementById("in_register_fName").value = "";
+    document.getElementById("in_register_lName").value = "";
+
+    document.getElementById("emailError").style.display = 'none';
+    document.getElementById("passError").style.display = 'none';
+    document.getElementById("fNameError").style.display = 'none';
+    document.getElementById("lNameError").style.display = 'none';
+
 }

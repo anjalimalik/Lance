@@ -22,30 +22,18 @@
 
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-  <a class="navbar-brand" href="#">1ANCE</a>
+  <a class="navbar-brand" style="font-size:25px;" href="#">1ANCE</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
 
   <div class="collapse navbar-collapse" id="navbarColor01">
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Offers</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Requests</a>
-      </li>
       <li class="nav-item">
         <a class="nav-link" href="#">About</a>
       </li>
     </ul>
-    <form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="text" placeholder="Search">
-      <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
-    </form>
+
   </div>
 </nav>
 <br />
@@ -64,13 +52,13 @@
 
 
  <!-- LOG IN/REGISTER BUTTON  -->
- <button class="btn btn-outline-primary" data-toggle="modal" data-target="#myModal">Login</button>
- <button class="btn btn-outline-primary" data-toggle="modal" data-target="#myModal2">Register</button>
+ <button class="btn btn-outline-primary" data-toggle="modal" data-target="#myModal1" onclick="clearModal1()">Login</button>
+ <button class="btn btn-outline-primary" data-toggle="modal" data-target="#myModal2" onclick="clearModal2()">Register</button>
 
 
 
         <!-- LOG IN MODAL -->
-    <div class="modal" id="myModal" aria-hidden="true">
+    <div class="modal" id="myModal1" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
@@ -85,14 +73,14 @@
                 <fieldset>
                     <div class="form-group">
                           <label for="exampleInputEmail1">Email address</label>
-                          <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                          <input type="email" class="form-control" id="in_login_email" aria-describedby="emailHelp" placeholder="boilermaker@purdue.edu">
                           <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
                     </div>
 
 
                 <div class="form-group">
                      <label for="exampleInputPassword1">Password</label>
-                     <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                     <input type="password" class="form-control" id="in_login_pass" placeholder="Password">
                 </div>
                 </fieldset>
             </form>
@@ -124,8 +112,8 @@
                 <fieldset>
                     <div class="form-group">
                           <label for="in_register_email">Email</label>
-                          <input type="email" class="form-control" id="in_register_email" aria-describedby="emailHelp" placeholder="boilermaker@purdue.edu">
-                          <label id="emailFeedback">Invalid Email</label>
+                          <input type="text" class="form-control" id="in_register_email" placeholder="boilermaker@purdue.edu">
+                          <label id="emailError">Invalid Email</label>
 
                     </div>
 
@@ -133,17 +121,20 @@
                 <div class="form-group">
                      <label for="exampleInputPassword1">Password</label>
                      <input type="password" class="form-control" id="in_register_pass" placeholder="Password">
+                     <label id="passError">Password must be atleast 4 characters</label>
                 </div>
 
 
                 <div class="form-group">
                   <label class="col-form-label" for="inputDefault">First Name</label>
                   <input type="text" class="form-control" placeholder="First Name" id="in_register_fName">
+                  <label id="fNameError">Please input a First Name</label>
                 </div>
 
                 <div class="form-group">
                   <label class="col-form-label" for="inputDefault">Last Name</label>
                   <input type="text" class="form-control" placeholder="Last Name" id="in_register_lName">
+                  <label id="lNameError">Please input a Last Name</label>
                 </div>
 
 
@@ -214,135 +205,11 @@
         </div>
       </div>
     </div>
-
-
-                                                 <!-- MODAL VERSION 1.0 -->
-
-
-    <!-- <div class="input-group pb-modalreglog-input-group"> -->
-
-                <!-- </div> -->
-  <!--               <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button> -->
-
-
-
-
-                                <!-- Login Modal -->
-                        <!--         <h4 class="modal-title" id="myModalLabel">Login form</h4>
-                            </div>
-                            <div class="modal-body">
-                                <form>
-                                    <div class="form-group">
-                                        <label for="email">Email address</label>
-                                        <div class="input-group pb-modalreglog-input-group">
-                                            <input type="email" class="form-control" id="loginEmail" placeholder="Email">
-                                            <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="password">Password</label>
-                                        <div class="input-group pb-modalreglog-input-group">
-                                            <input type="password" class="form-control" id="pws" placeholder="Password">
-                                            <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-primary" onclick="btn_login()">Log in</button>
-                            </div>
-                        </div>
-                    </div>
-                </div> -->
-              <!--   <div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-sm" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button> -->
-
-
-                                <!-- Signup Modal -->
-                               <!--  <h4 class="modal-title" id="myModalLabel">New User</h4>
-                            </div>
-                            <div class="modal-body">
-                                <form class="pb-modalreglog-form-reg">
-                                    <div class="form-group">
-                                        <div id="pb-modalreglog-progressbar"></div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="email">Email Address</label>
-                                        <div class="input-group pb-modalreglog-input-group">
-                                            <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
-                                            <input type="email" class="form-control" id="inputEmail" placeholder="Email">
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="password">Password</label>
-                                        <div class="input-group pb-modalreglog-input-group">
-                                            <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
-                                            <input type="password" class="form-control" id="inputPws" placeholder="Password">
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="confirmpassword">Confirm password</label>
-                                        <div class="input-group pb-modalreglog-input-group">
-                                            <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
-                                            <input type="password" class="form-control" id="inputConfirmPws" placeholder="Confirm Password">
-                                        </div>
-                                    </div> -->
-                          <!--           <div class="form-group">
-                                        <label for="country">Country</label>
-                                        <div class="input-group pb-modalreglog-input-group">
-                                            <span class="input-group-addon"><span class="glyphicon glyphicon-globe"></span></span>
-                                            <input type="text" class="form-control" id="countries" placeholder="Country">
-                                        </div>
-                                    </div> -->
-               <!--                      <div class="form-group">
-                                        <label for="age">Age</label>
-                                        <div class="input-group pb-modalreglog-input-group">
-                                            <input id="age">
-                                        </div>
-                                    </div> -->
-                                   <!--  <div class="form-group">
-                                        <input type="checkbox" id="ch" name="chs">
-                                        I agree with <a href="#">terms and conditions.</a>
-                                    </div>
-                                </form>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-primary" onclick="btn_register()">Sign up</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-    </div></div>
-      <div class="col-md-4"></div> -->
-                                                    <!-- (END OF MODAL V1.0) -->
-
 </div>
 
 
-
-
-
-
-
 <style>
-    .emailFeedback
-    {
-        visibility: hidden;
-        color: red;
-    }
+
     .pb-modalreglog-container
     {
         margin-top: 100px;
@@ -368,68 +235,31 @@
         text-align: center;
         margin-top: 20px;
     }
+    #emailError
+    {
+        display: none;
+        color: red;
+    }
+    #passError
+    {
+        display: none;
+        color: red;
+    }
+    #fNameError
+    {
+        display: none;
+        color: red;
+    }
+    #lNameError
+    {
+        display: none;
+        color: red;
+    }
     #pb-modalreglog-progressbar
     {
         border-radius: 2px;
     }
 </style>
-
-<script>
-    (function () {
-        var progress = $("#pb-modalreglog-progressbar").shieldProgressBar({
-            value: 0
-        }).swidget();
-        $('#inputEmail').change(function () {
-            if ($('#inputEmail').val().length > 1) {
-                progress.value(progress.value() + 15);
-            } else {
-                progress.value(progress.value() - 15);
-            }
-        });
-        $('#inputPws').change(function () {
-            if ($('#inputPws').val().length > 1) {
-                progress.value(progress.value() + 15);
-            } else {
-                progress.value(progress.value() - 15);
-            }
-        });
-        $('#inputConfirmPws').change(function () {
-            if ($('#inputConfirmPws').val().length > 1) {
-                progress.value(progress.value() + 15);
-            } else {
-                progress.value(progress.value() - 15);
-            }
-        });
-        $('#countries').change(function () {
-            if ($('#countries').val().length > 1) {
-                progress.value(progress.value() + 15);
-            } else {
-                progress.value(progress.value() - 15);
-            }
-        });
-        $('#age').change(function () {
-            if ($('#age').val().length > 1) {
-                progress.value(progress.value() + 15);
-            } else {
-                progress.value(progress.value() - 15);
-            }
-        });
-        $('#ch').change(function () {
-            if ($('input[name="chs"]:checked').length > 0) {
-                progress.value(progress.value() + 25);
-            } else {
-                progress.value(progress.value() - 25);
-            }
-        });
-        $("#age").shieldMaskedTextBox({
-            enabled: true,
-            mask: "00/00/0000",
-            value: "19/03/1032"
-        });
-    })
-</script>
-
-
 
 
     <!-- Page Content -->
