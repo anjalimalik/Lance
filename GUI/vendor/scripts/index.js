@@ -87,9 +87,7 @@ function btn_register_continue() {
 
                 if (res.ok) {
                     res.json().then(function(data) {
-
                         sessionStorage.setItem("signedIn", "true");
-                        location.reload(true);
                     }.bind(this));
                 }
                 else {
@@ -128,7 +126,7 @@ function btn_register_finish() {
         window.location.href = "profile.html";
 
 
-        /*
+        
         fetch(urlCreateProfile, {
 			method: "POST",
 			headers: {
@@ -167,7 +165,7 @@ function btn_register_finish() {
 
 		    	console.log(err.message + ": No Internet Connection");
 		    }.bind(this));
-                */
+                
 
 }
 
