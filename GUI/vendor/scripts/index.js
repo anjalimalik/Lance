@@ -27,7 +27,7 @@ function btn_login() {
                     console.log("Inside res function");
 			        if (res.ok) {
 			            res.json().then(function(data) {
-
+                            alert("Login successful!");
                             this.authToken = data.authToken
                             this.email = _email;
                             console.log("Inside res.ok");
@@ -35,14 +35,13 @@ function btn_login() {
 			            }.bind(this));
 			        }
 			        else {
-                        alert("In else func")
+                        alert("Error: Login unsuccessful!");
 			            res.json().then(function(data) {
-
-			            	console.log(data.message);
+                        console.log(data.message);
 			            }.bind(this));
 			        }
 			    }).catch(function(err) {
-
+                    alert("Error: No internet connection!");
 			    	console.log(err.message + ": No Internet Connection");
 			    });
 
@@ -124,8 +123,6 @@ function btn_register_finish() {
         localStorage.setItem('skills', skills);
 
         window.location.href = "profile.html";
-
-
         
         fetch(urlCreateProfile, {
 			method: "POST",
