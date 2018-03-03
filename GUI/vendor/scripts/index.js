@@ -1,6 +1,7 @@
 var urlLogin = "http://localhost:5500/login";
 var urlRegister = "http://localhost:5500/signUp"
 var urlCreateProfile = "http://localhost:5500/createProfile"
+var urlLogout = "http://localhost:5500/logout"
 var authToken;
 var email, pass, fName, lName, edu, skills, desc, contact, links, pic, docs, name;
 var verifyFlag;
@@ -203,6 +204,38 @@ function verifyLName(_lName) {
     }
     document.getElementById("lNameError").style.display = 'none';
     return true;
+}
+
+function btn_logout() {
+    fetch(urlLogout, {
+                method: "POST",
+                headers: {
+                    'Accept': 'application/json',
+                    'content-type': 'application/json'
+                },
+                body: JSON.stringify({
+                    "email":_email,
+                    "signOut":true
+                })
+
+            }).then(function(res) {
+                console.log("Inside res function");
+                if (res.ok) {
+                    res.json().then(function(data) {
+                        alert("Logout successful!");
+                        alert(this.authToken);
+                    }.bind(this));
+                }
+                else {
+                    alert("Error: Logout unsuccessful!");
+                    res.json().then(function(data) {
+                    console.log(data.message);
+                    }.bind(this));
+                }
+            }).catch(function(err) {
+                alert("Error: No internet connection!");
+                console.log(err.message + ": No Internet Connection");
+        });
 }
 
 
