@@ -17,7 +17,7 @@ Description - desc
 Documents - docs (Support not added yet)
 Contact Info (Mobile Number) - contact
 Name - name (Support not added yet)
-Create new post endpoint - Anjali could you describe what the endpoint does and each field means a bit more? thanks -Kenan
+Create new post endpoint - (Anjali)
 ************************
 Content: req.body.Content,
 PostingType: req.body.PostingType,
@@ -366,3 +366,25 @@ function decipherPass(email, password) {
     decrypted += decipher.final('utf8');
     return decrypted;
 }
+
+// Endpoint to Logout
+app.post('/logout', function (req, res) {
+    
+    var signOut = req.body.signOut;
+    var email = req.body.email;
+
+    if(!signOut) {
+        return res.status(401).json({ message: "invalid_credentials" });
+    }
+    
+    var dbQuery = "UPDATE Users SET AuthToken = ?, AuthTokenIssued = ? WHERE Email = ?";
+    var requestParams = [null, null, email];
+    
+    db.query(dbQuery, requestParams, function (err, result) {
+        if (err) {
+            return res.status(500).json({ message: "Internal server error" });
+        } else {
+            return res.status(200).json({ message: "Success! User logged out!" });
+        }
+    });
+});
