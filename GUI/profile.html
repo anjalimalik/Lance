@@ -50,6 +50,34 @@
   <body>
     <!-- Page Content -->
 
+
+  <div class="collapse navbar-collapse" id="navbarColor01">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Offers</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">Requests</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#">About</a>
+      </li>
+    </ul>
+    <form class="form-inline my-2 my-lg-0">
+      <input class="form-control mr-sm-2" type="text" placeholder="Search">
+      <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+    </form>
+  </div>
+</nav>
+
+
+  <body>
+    <!-- Page Content -->
+
+
     <div class="card mb-3" style="width: 650px; margin-left: 25%;">
       <h3 class="card-header" id="profile_name">John Doe</h2>
         <div class="card-body">
@@ -57,8 +85,14 @@
         <img style="height: 100px; width: 100px; margin-left: 10%; display: block;" src="Pictures/user_icon.jpg" alt="Card image">
         <div class="card-body">
 
-          <button type="button" class="btn btn-success btn-sm" style="margin-left: 520px; font-size: 12px;" data-toggle="modal" data-target="#myModal3"
+          <button type="button" class="btn btn-success btn-sm" style="margin-left: 520px; font-size: 12px;" data-toggle="modal" data-target="#myModal2"
             onclick="btn_edit()">edit</button>
+
+            <br>
+            <br>
+
+                      <button type="button" class="btn btn-success btn-sm" style="margin-left: 489px; font-size: 12px;" data-toggle="modal" data-target="#setModal"
+            onclick="btn_edit()">settings</button>
 
           <!-- EDIT PROFILE MODAL -->
           <div class="modal" id="myModal2" aria-hidden="true">
@@ -189,12 +223,55 @@
             </div>
           </div>
 
+          <!-- SETTINGS MODAL-->
+    <div class="modal" id="setModal" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Password Change</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+
+            <form>
+                <fieldset>
+
+                <div class="form-group">
+                     <label for="exampleInputPassword1">Current Password</label>
+                     <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                </div>
+
+                <div class="form-group">
+                     <label for="exampleInputPassword1">New Password</label>
+                     <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                </div>
+
+                <div class="form-group">
+                     <label for="exampleInputPassword1">Confirm Password</label>
+                     <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                </div>
+
+
+                </fieldset>
+            </form>
+          </div>
+          <div class="modal-footer">
+                  <button type="button" class="btn btn-outline-primary" onclick="btn_finish_edit()" data-dismiss="modal">Save</button>
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
 
           <!--Profile Page//-->
 
           <h6>BIO:</h6>
           <p class="card-text" id="profile_desc"> This is an example bio</p>
         </div>
+
 
 
         <table class="table table-hover">
@@ -246,6 +323,7 @@
         <div class="card-body">
           <a href="#" id="profile_links" class="card-link">Link</a>
         </div>
+
 
         <!-- Bootstrap core JavaScript -->
         <script src="vendor/jquery/jquery.min.js"></script>
