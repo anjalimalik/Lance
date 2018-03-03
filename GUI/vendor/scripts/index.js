@@ -214,7 +214,7 @@ function btn_logout() {
                     'content-type': 'application/json'
                 },
                 body: JSON.stringify({
-                    "email":_email,
+                    "email":email,
                     "signOut":true
                 })
 
