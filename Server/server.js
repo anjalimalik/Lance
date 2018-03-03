@@ -372,6 +372,10 @@ app.post('/logout', function (req, res) {
     
     var signOut = req.body.signOut;
     var email = req.body.email;
+
+    if(!signOut) {
+        return res.status(401).json({ message: "invalid_credentials" });
+    }
     
     var dbQuery = "UPDATE Users SET AuthToken = ?, AuthTokenIssued = ? WHERE Email = ?";
     var requestParams = [null, null, email];
