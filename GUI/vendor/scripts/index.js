@@ -45,7 +45,7 @@ function btn_login() {
                     alert("Error: No internet connection!");
 			    	console.log(err.message + ": No Internet Connection");
 		    });
-            //window.location.href = 'profile.html';
+            window.location.href = 'profile.html';
 }
 
 

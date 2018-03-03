@@ -1,6 +1,6 @@
 
 var email, pass, name, edu, skills, desc, contact, links, pic, docs;
-
+var urlChangePass = "http://localhost:5500/changePassword"
 function body_onload() {
     name = localStorage.getItem('name');
     email = localStorage.getItem('email');
@@ -42,5 +42,51 @@ function btn_finish_edit() {
     skills = edit_skills.value;
 
     populate_profile();
+
+}
+
+function btn_passChange() {
+    var currentPass = in_profile_currentPass.value;
+    var newPass = in_profile_newPass.value;
+    var confirmPass = in_profile_confirmPass.value;
+
+    if (newPass != confirmPass) {
+        alert(currentPass);
+        alert(newPass);
+        alert(confirmPass);
+        return;
+    }
+    alert("equal");
+
+    fetch(urlChangePass, {
+                method: "POST",
+                headers: {
+                    'Accept': 'application/json',
+                    'content-type': 'application/json'
+                },
+                body: JSON.stringify({
+                    "email": email,
+                    "oldPass": currentPass,
+                    "newPass": verifyPass
+                })
+
+            }).then(function(res) {
+                console.log("Inside res function");
+                if (res.ok) {
+                    res.json().then(function(data) {
+                        alert("Change password successful!");
+                        console.log("Inside res.ok");
+                    }.bind(this));
+                }
+                else {
+                    alert("Error: Change password unsuccessful!");
+                    res.json().then(function(data) {
+                    console.log(data.message);
+                    }.bind(this));
+                }
+            }).catch(function(err) {
+                alert("Error: No internet connection!");
+                console.log(err.message + ": No Internet Connection");
+        });
 
 }
