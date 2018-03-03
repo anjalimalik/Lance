@@ -414,7 +414,7 @@ app.post('/changePassword', (req, res) => {
             if (createPass(email, oldPassword) === response) {
                 console.log("Old password matches");
 
-                newPassword = createPass(email, password);
+                //newPassword = createPass(email, newPassword);
                 let query = "UPDATE Users SET Password = ? WHERE Email = ?";
                 let params = [newPassword, email];
 
