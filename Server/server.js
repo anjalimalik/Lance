@@ -4,14 +4,11 @@ General
 Email from client - req.body.email
 Password from client - req.body.pass
 Name of client - req.body.name
-
 Edit user profile endpoint
 **************************
 Field to be edited - req.body.field
 Date to be added - req.body.fdata
-
 Editing a field in User Profile pass one of the below in body as 'field'
-
 Skills - skills
 Education - edu
 Links - links
@@ -20,7 +17,6 @@ Description - desc
 Documents - docs (Support not added yet)
 Contact Info (Mobile Number) - contact
 Name - name (Support not added yet)
-
 Create new post endpoint - Anjali could you describe what the endpoint does and each field means a bit more? thanks -Kenan
 ************************
 Content: req.body.Content,
