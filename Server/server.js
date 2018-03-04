@@ -390,11 +390,11 @@ app.post('/logout', function (req, res) {
 });
 
 
-//Endpoint to Change Password
+// Endpoint to Change Password
 app.post('/changePassword', (req, res) => {
 
     var email = req.body.email;
-    var oldPassword = req.body.oldPass;
+    var currPassword = req.body.oldPass;
     var newPassword = req.body.newPass;
 
     let sql = "SELECT Password FROM Users WHERE Email = ?";
@@ -411,13 +411,15 @@ app.post('/changePassword', (req, res) => {
         }
         else {
             // check if old password is the same as the one in database
-            if (createPass(email, oldPassword) === response) {
-                console.log("Old password matches");
+            var matchCurrPass = decipherPass(email, response[0].Password);
+            if (currPassword === matchCurrPass) {
+                console.log("Current password matches");
 
-                //newPassword = createPass(email, newPassword);
+                newPassword = createPass(email, newPassword);
                 let query = "UPDATE Users SET Password = ? WHERE Email = ?";
                 let params = [newPassword, email];
 
+                // update password
                 db.query(query, params, (error, response) => {
                     console.log(response);
                     if (error) {
@@ -437,6 +439,14 @@ app.post('/changePassword', (req, res) => {
                         }));
                     }
                 });
+            } 
+            else {
+                res.send(JSON.stringify({
+                    "status": 500,
+                    "error": error,
+                    "response": null,
+                    "message": "Current password is not correct"
+                }));
             }
         }
     });
