@@ -31,7 +31,7 @@ function btn_login() {
                             this.authToken = data.authToken
                             this.email = _email;
                             console.log("Inside res.ok");
-
+                            alert("You are successfully logged in!");
 			            }.bind(this));
 			        }
 			        else {
@@ -43,8 +43,8 @@ function btn_login() {
 			    }).catch(function(err) {
                     alert("Error: No internet connection!");
 			    	console.log(err.message + ": No Internet Connection");
-			    });
-
+		    });
+            //window.location.href = 'profile.html';
 }
 
 
@@ -66,8 +66,9 @@ function btn_register_continue() {
     verifyLName(lName);
 
     if (verifyFlag == true) {
+
         $('#myModal2').modal('hide');
-        $("#myModal3").modal();
+        $("#myModal3").modal('show');
 
 
         fetch(urlRegister, {
@@ -104,7 +105,6 @@ function btn_register_continue() {
     return;
 }
 function btn_register_finish() {
-
 
         edu = in_register_edu.value;
         links = in_register_links.value;
