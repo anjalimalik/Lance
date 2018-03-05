@@ -275,7 +275,7 @@ app.post('/CreatePost', authMiddleware, function (req, res) {
 
 
 //Edit user profile details
-app.post('/editProfile',  function (req, res) {
+app.post('/editProfile', function (req, res) {
 
     var email = req.body.email;
     var name = req.body.name;
@@ -284,7 +284,7 @@ app.post('/editProfile',  function (req, res) {
     var skills = req.body.skills;
     var edu = req.body.edu;
     var links = req.body.links;
-    
+
     var auth = req.query.auth;
     let query = "UPDATE Profiles SET FullName = ?, ContactInfo = ?, Description = ?, SkillsSet = ?, Education = ?, Links = ? WHERE Email = ?";
     var params = [name, desc, contact, skills, edu, links, email];
@@ -311,6 +311,7 @@ app.post('/editProfile',  function (req, res) {
 });
 
 
+
 // Profile Creation
 app.post('/CreateProfile', (req, res) => {
 
@@ -319,22 +320,13 @@ app.post('/CreateProfile', (req, res) => {
     var desc = req.body.desc;
     var contact = req.body.contact;
     var skills = req.body.skills;
-    var edu = req.body.edu;
+    var edu = req.body.education;
     var links = req.body.links;
 
-    let userProfile = {
-        Email: email,
-        FullName: password,
-        ContactInfo: contact,
-        Picture: pics,
-        Description: desc,
-        SkillsSet: skills,
-        Education: edu,
-        Links: links,
-        Documents: docs
-    };
+    // First check if email corresponds to an account in Users Table.
+    var query1 = "SELECT * FROM Users WHERE Email = ?";
 
-    let query = "INSERT INTO Profiles SET ?";
+    db.query(query1, email, function (error, response) {
 
         if (error) {
             res.send(JSON.stringify({
