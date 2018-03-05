@@ -74,7 +74,7 @@ function btn_passChange() {
                 console.log("Inside res function");
                 if (res.ok) {
                     res.json().then(function(data) {
-                        alert("Change password successful!");
+                        alert(data.message);
                         console.log("Inside res.ok");
                     }.bind(this));
                 }
