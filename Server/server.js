@@ -107,7 +107,7 @@ app.post('/signUp', (req, res) => {
     var password = req.body.pass;
     var name = req.body.name;
 
-    password = createPass(email, password);
+    //password = createPass(email, password);
 
     let user = {
         Email: email,
@@ -322,10 +322,19 @@ app.post('/CreateProfile', (req, res) => {
     var edu = req.body.edu;
     var links = req.body.links;
 
-    // First check if email corresponds to an account in Users Table.
-    var query1 = "SELECT * FROM Users WHERE Email = ?";
+    let userProfile = {
+        Email: email,
+        FullName: password,
+        ContactInfo: contact,
+        Picture: pics,
+        Description: desc,
+        SkillsSet: skills,
+        Education: edu,
+        Links: links,
+        Documents: docs
+    };
 
-    db.query(query1, email, function (error, response) {
+    let query = "INSERT INTO Profiles SET ?";
 
         if (error) {
             res.send(JSON.stringify({
