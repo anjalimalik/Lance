@@ -275,53 +275,21 @@ app.post('/CreatePost', authMiddleware, function (req, res) {
 
 
 //Edit user profile details
-app.post('/editProfile', authMiddleware, function (req, res) {
+app.post('/editProfile',  function (req, res) {
 
-    var field = req.body.field;
-    var data = req.body.fdata;
+    var email = req.body.email;
+    var name = req.body.name;
+    var desc = req.body.desc;
+    var contact = req.body.contact;
+    var skills = req.body.skills;
+    var edu = req.body.edu;
+    var links = req.body.links;
+    
     var auth = req.query.auth;
+    let query = "UPDATE Profiles SET FullName = ?, ContactInfo = ?, Description = ?, SkillsSet = ?, Education = ?, Links = ? WHERE Email = ?";
+    var params = [name, desc, contact, skills, edu, links, email];
 
-    if (field.equals("skills")) {
-
-        field = "SkillsSet";
-    }
-    else if (field.equals("edu")) {
-
-        field = "Education";
-    }
-    else if (field.equals("links")) {
-
-        field = "Links";
-    }
-    else if (field.equals("pic")) {
-
-        field = "Picture";
-    }
-    else if (field.equals("desc")) {
-
-        field = "Description";
-    }
-    else if (field.equals("docs")) {
-
-        field = "Documents";
-    }
-    else if (field.equals("contact")) {
-
-        field = "ContactInfo";
-    }
-    else if (field.equals("name")) {
-
-        field = "Name";
-    }
-    else {
-
-        return res.status(400).json({ message: "invalid_field" });
-    }
-
-    let query = "INSERT INTO Profiles (?) VALUES (?) WHERE idUsers ";
-    var params = [newPost.Headline, newPost.Content, newPost.PostingType, newPost.money, newPost.numLikes, newPost.Tags, newPost.PostingType, newPost.DatePosted, newPost.UserID];
-
-    db.run(query, params, function (error, response) {
+    db.query(query, params, function (error, response) {
         console.log(response);
         if (error) {
             res.send(JSON.stringify({
@@ -336,7 +304,7 @@ app.post('/editProfile', authMiddleware, function (req, res) {
                 "status": 200,
                 "error": null,
                 "response": response,
-                "message": "success"
+                "message": "Success! Profile successfully edited!"
             }));
         }
     });
@@ -351,7 +319,7 @@ app.post('/CreateProfile', (req, res) => {
     var desc = req.body.desc;
     var contact = req.body.contact;
     var skills = req.body.skills;
-    var edu = req.body.education;
+    var edu = req.body.edu;
     var links = req.body.links;
 
     // First check if email corresponds to an account in Users Table.
