@@ -345,7 +345,7 @@ app.post('/editProfile', authMiddleware, function (req, res) {
 
 // Profile Creation
 app.post('/CreateProfile', (req, res) => {
-   
+
     var email = req.body.email;
     var name = req.body.name;
     var desc = req.body.desc;
@@ -353,25 +353,12 @@ app.post('/CreateProfile', (req, res) => {
     var skills = req.body.skills;
     var edu = req.body.education;
     var links = req.body.links;
-    var pics = null;
-    var docs = null;
 
-    let userProfile = {
-        Email: email,
-        FullName: password,
-        ContactInfo: contact, 
-        Picture: pics, 
-        Description: desc, 
-        SkillsSet: skills, 
-        Education: edu, 
-        Links: links, 
-        Documents: docs
-    };
-    
-    let query = "INSERT INTO Profiles SET ?";
+    // First check if email corresponds to an account in Users Table.
+    var query1 = "SELECT * FROM Users WHERE Email = ?";
 
-    db.query(query, userProfile, (err, result) => {
-        console.log(response);
+    db.query(query1, email, function (error, response) {
+
         if (error) {
             res.send(JSON.stringify({
                 "status": 500,
@@ -381,15 +368,50 @@ app.post('/CreateProfile', (req, res) => {
             }));
         }
 
-        else {
+        // Enter here if no account corresponds to the given email
+        if (response == null || response == "") {
             res.send(JSON.stringify({
-                "status": 200,
-                "error": null,
-                "response": response,
-                "message": "success"
+                "status": 401,
+                "response": null,
+                "message": "Could not find account with this email"
             }));
         }
-    })
+
+        else {
+            // Insert profile into Profiles table
+            let query2 = "INSERT INTO Profiles SET ?";
+
+            let userProfile = {
+                Email: email,
+                FullName: name,
+                ContactInfo: contact,
+                Description: desc,
+                SkillsSet: skills,
+                Education: edu,
+                Links: links
+            };
+
+            db.query(query2, userProfile, (err, result) => {
+                console.log(result);
+                if (error) {
+                    res.send(JSON.stringify({
+                        "status": 500,
+                        "error": error,
+                        "response": null,
+                        "message": "Internal server error"
+                    }));
+                }
+                else {
+                    res.send(JSON.stringify({
+                        "status": 200,
+                        "error": null,
+                        "response": result,
+                        "message": "Success! New profile created!"
+                    }));
+                }
+            });
+        }
+    });
 });
 
 
@@ -490,7 +512,7 @@ app.post('/changePassword', (req, res) => {
                         }));
                     }
                 });
-            } 
+            }
             else {
                 res.send(JSON.stringify({
                     "status": 500,
