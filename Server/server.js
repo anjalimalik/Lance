@@ -210,7 +210,12 @@ app.post('/login', function (req, res) {
 
 
 //Create new post
-app.post('/CreatePost', authMiddleware, function (req, res) {
+app.post('/CreatePost', function (req, res) {
+
+    // Email is needed to connect post to user
+    if (!req.body.email) {
+        return res.status(400).json({ message: "Email of poster not sent" });
+    }
 
     // Headline, Content, PostingType, and Money are required entires that must be provided by users
     if (!req.body.Headline) {
@@ -220,10 +225,10 @@ app.post('/CreatePost', authMiddleware, function (req, res) {
         return res.status(400).json({ message: "Missing Content" });
     }
     if (!req.body.PostingType) {
-        return res.status(400).json({ message: "Missing posting type" });
+        return res.status(400).json({ message: "Missing Posting Type" });
     }
     if (!req.body.money) {
-        return res.status(400).json({ message: "Missing money" });
+        return res.status(400).json({ message: "Missing Money value" });
     }
 
     // initially posting status should be open
@@ -233,49 +238,75 @@ app.post('/CreatePost', authMiddleware, function (req, res) {
     var numLikes = 0;
 
     // set date posted
-    var posted = new Date().toString();
+    var posted = new Date();
 
-    // WILL HAVE TO USE SOMETHING TO INPUT USERID AUTOMATICALLY
+    // get user id using email
+    let query1 = "SELECT idUsers FROM Users WHERE Email = ?";
 
-    var newPost = {
-        Headline: req.body.Headline,
-        Content: req.body.Content,
-        PostingType: req.body.PostingType,
-        money: req.body.money,
-        numLikes: numLikes,
-        Tags: req.body.Tags,
-        PostingStatus: Status,
-        DatePosted: posted,
-        UserID: null
-    };
+    db.query(query1, req.body.email, function (err, resp) {
 
-    let query = "INSERT INTO Posts (Headline, Content, PostingType, money, numLikes, Tags, PostingType, DatePosted, UserID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    var params = [newPost.Headline, newPost.Content, newPost.PostingType, newPost.money, newPost.numLikes, newPost.Tags, newPost.PostingType, newPost.DatePosted, newPost.UserID];
-
-    db.run(query, params, function (error, response) {
-        console.log(response);
-        if (error) {
+        if (err) {
             res.send(JSON.stringify({
                 "status": 500,
-                "error": error,
+                "error": err,
                 "response": null,
                 "message": "Internal server error"
             }));
         }
-        else {
+
+        // Enter here if no account corresponds to the given email
+        if (resp == null || resp == "") {
             res.send(JSON.stringify({
-                "status": 200,
-                "error": null,
-                "response": response,
-                "message": "success"
+                "status": 401,
+                "response": resp,
+                "message": "Could not find account with this email"
             }));
+        }
+
+        else {
+            // account with given email exists, therefore, proceed with creating a post 
+            let query2 = "INSERT INTO Posts SET ?";
+
+            var newPost = {
+                Headline: req.body.Headline,
+                Content: req.body.Content,
+                PostingType: req.body.PostingType,
+                money: req.body.money,
+                numLikes: numLikes,
+                Tags: req.body.Tags,
+                PostingStatus: Status,
+                DatePosted: posted,
+                UserID: resp[0].idUsers
+            };
+
+            // INSERT INTO POSTS TABLE
+            db.query(query2, newPost, function (error, response) {
+                console.log(response);
+                if (error) {
+                    res.send(JSON.stringify({
+                        "status": 500,
+                        "error": error,
+                        "response": null,
+                        "message": "Internal server error"
+                    }));
+                }
+                else {
+
+                    res.send(JSON.stringify({
+                        "status": 200,
+                        "error": null,
+                        "response": response,
+                        "message": "Success! New Post created!"
+                    }));
+                }
+            });
         }
     });
 });
 
 
 //Edit user profile details
-app.post('/editProfile', function (req, res) {
+app.post('/EditProfile', function (req, res) {
 
     var email = req.body.email;
     var name = req.body.name;
@@ -416,9 +447,10 @@ app.post('/logout', function (req, res) {
     var email = req.body.email;
 
     if (!signOut) {
-        return res.status(401).json({ message: "invalid_credentials" });
+        return res.status(401).json({ message: "Logout selection not recieved" });
     }
 
+    // reset AuthToken and AuthTokenIssued
     var dbQuery = "UPDATE Users SET AuthToken = ?, AuthTokenIssued = ? WHERE Email = ?";
     var requestParams = [null, null, email];
 
