@@ -18,11 +18,11 @@
   <script src="vendor/scripts/index.js"></script>
 </head>
 
-<body>
+ <body onload="onLoad()">
 
   <!-- Navigation -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-    <a class="navbar-brand" style="font-size:25px;" href="#">LANCE</a>
+    <a class="navbar-brand" style="font-size:25px;" href="./index.html">LANCE</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01"
       aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
@@ -104,7 +104,7 @@
 
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-primary" onclick="btn_login()">Log In</button>
+                <button type="button" class="btn btn-primary" id="btn_modal_login" onclick="btn_login()">Log In</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
               </div>
             </div>

@@ -7,6 +7,15 @@ var email, pass, fName, lName, edu, skills, desc, contact, links, pic, docs, nam
 var verifyFlag;
 
 //LOGIN
+function onLoad() {
+    document.getElementById("in_login_pass")
+        .addEventListener("keyup", function(event) {
+        event.preventDefault();
+        if (event.keyCode == 13) {
+            document.getElementById("btn_modal_login").click();
+        }
+    });
+}
 
 function btn_login() {
     var _email = in_login_email.value;
@@ -223,7 +232,7 @@ function btn_logout() {
                 if (res.ok) {
                     res.json().then(function(data) {
                         alert("Logout successful!");
-                        alert(this.authToken);
+                        //alert(this.authToken);
                     }.bind(this));
                 }
                 else {
@@ -233,7 +242,7 @@ function btn_logout() {
                     }.bind(this));
                 }
             }).catch(function(err) {
-                alert("Error: No internet connection!");
+                alert("Error: No connection to server!");
                 console.log(err.message + ": No Internet Connection");
         });
 }

@@ -10,8 +10,19 @@ function body_onload() {
     desc = localStorage.getItem('desc');
     skills = localStorage.getItem('skills');
 
+    var img = new Image();
+    img.src = "./Pictures/spinner.jpg";
+    document.getElementById("img_profile").src = "./Pictures/spinner.jpg";
+
+
     populate_profile();
 }
+
+$("profile_pic").change(function() {
+    alert("ur uploading a picture");
+
+console.log(this.files);
+});
 
 function populate_profile () {
     document.getElementById("profile_name").innerHTML = name;
@@ -27,6 +38,8 @@ function populate_profile () {
 }
 
 function btn_edit() {
+    document.getElementById("in_profile_edit_email").value = email;
+    document.getElementById("in_profile_edit_email").readOnly = true;
     edit_edu.value = edu;
     edit_links.value = links;
     edit_contact.value = contact;
