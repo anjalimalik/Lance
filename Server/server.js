@@ -134,7 +134,7 @@ app.post('/signUp', (req, res) => {
                 "status": 200,
                 "error": null,
                 "response": response,
-                "message": "success"
+                "message": "Success! New user account created"
             }));
         }
     });
@@ -142,7 +142,7 @@ app.post('/signUp', (req, res) => {
 
 
 // Get list of Posts
-app.get('/getPosts', authMiddleware, (req, res) => {
+app.get('/getPosts', (req, res) => {
     let query = 'SELECT * FROM Posts';
 
     db.query(query, (error, response) => {
@@ -162,7 +162,7 @@ app.get('/getPosts', authMiddleware, (req, res) => {
                 "status": 200,
                 "error": null,
                 "response": response,
-                "message": "success"
+                "message": "Succes! All posts retrived."
             }));
         }
     });
