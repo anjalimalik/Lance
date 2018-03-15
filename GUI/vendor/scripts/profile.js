@@ -18,10 +18,18 @@ function body_onload() {
     populate_profile();
 }
 
-$("profile_pic").change(function() {
-    alert("ur uploading a picture");
-
-console.log(this.files);
+$("btn_upload_hidden").change(function() {
+        var pic = document.getElementById("btn_upload_hidden").files[0];
+        var fReader = new FileReader();
+        fReader.onloadend = function() {
+            document.getElementById("img_profile").src = fReader.result.src;
+        }
+        if(pic) {
+            fReader.readAsDataURL(pic);
+        }
+        else {
+            break;
+        }
 });
 
 function populate_profile () {

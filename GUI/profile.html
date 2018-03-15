@@ -16,6 +16,7 @@
   <!-- Custom styles for this template -->
   <link href="profile.css" rel="stylesheet">
 
+
 </head>
 
 <body onload="body_onload()">
@@ -51,50 +52,31 @@
     <!-- Page Content -->
 
 
-  <div class="collapse navbar-collapse" id="navbarColor01">
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Offers</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">Requests</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#">About</a>
-      </li>
-    </ul>
-    <form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="text" placeholder="Search">
-      <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
-    </form>
-  </div>
-</nav>
-
-
-  <body>
-    <!-- Page Content -->
-
-
     <div class="card mb-3" style="width: 650px; margin-left: 25%;">
       <h3 class="card-header" id="profile_name">John Doe</h2>
-        <div class="card-body">
-        </div>
-        <img style="height: 100px; width: 100px; margin-left: 10%; display: block;" src="Pictures/user_icon.jpg" id="img_profile" alt="Card image">
-        <div class="card-body">
-            <label for="profile_pic">Choose a picture to upload</label>
-            <input id="profile_pic" type="file" accept=".jpg">
 
+          <img style="height: 100px; width: 100px; margin-left: 5%; margin-top:2%; display: block;" src="Pictures/user_icon.jpg" id="img_profile" alt="Card image">
+
+
+
+        <div class="card-body">
+            <!--Upload profile image-->
+            <div class="img_profile_container">
+                <label for="btn_upload_hidden" class="txt_uploadImg">Upload Image</label>
+                <input id="btn_upload_hidden" style="visibility:hidden" type="file">
+            </div>
+
+            <!--EDIT BUTTON-->
             <button type="button" class="btn btn-success btn-sm" style="margin-left: 520px; font-size: 12px;" data-toggle="modal" data-target="#myModal2"
             onclick="btn_edit()">edit</button>
-
             <br>
             <br>
-
-                      <button type="button" class="btn btn-success btn-sm" style="margin-left: 489px; font-size: 12px;" data-toggle="modal" data-target="#setModal"
+            <!--SETTINGS BUTTON-->
+            <button type="button" class="btn btn-success btn-sm" style="margin-left: 489px; font-size: 12px;" data-toggle="modal" data-target="#setModal"
             onclick="btn_edit()">settings</button>
+
+            <br>
+
 
           <!-- EDIT PROFILE MODAL -->
           <div class="modal" id="myModal2" aria-hidden="true">
@@ -345,5 +327,27 @@
         </script>
         <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
   </body>
+
+  <style>
+      .img_profile_container {
+          border-top: 1px solid #CCCCCC;
+          border-right: 3px solid #CCCCCC;
+          border-bottom: 3px solid #CCCCCC;
+          border-left: 1px solid #CCCCCC;
+          border-radius: 5px;
+          background-color: #EEEEEE;
+          color: #333333;
+          padding: 2px;
+          width: 120px;
+          height: 30px;
+      }
+      .txt_uploadImg {
+          font-size: 15px;
+          font-weight: bold;
+      }
+      #btn_upload_hidden {
+      }
+
+  </style>
 
 </html>
