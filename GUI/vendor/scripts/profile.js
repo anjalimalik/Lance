@@ -18,19 +18,19 @@ function body_onload() {
     populate_profile();
 }
 
-$("btn_upload_hidden").change(function() {
-        var pic = document.getElementById("btn_upload_hidden").files[0];
-        var fReader = new FileReader();
-        fReader.onloadend = function() {
-            document.getElementById("img_profile").src = fReader.result.src;
+$(function() {
+    $(":file").change(function() {
+        if(this.files && this.files[0]) {
+            var reader = new FileReader();
+            reader.onload = imageIsLoaded;
+            reader.readAsDataURL(this.files[0]);
         }
-        if(pic) {
-            fReader.readAsDataURL(pic);
-        }
-        else {
-            break;
-        }
+    });
 });
+
+function imageIsLoaded(e) {
+    $('#img_profile').attr('src', e.target.result);
+}
 
 function populate_profile () {
     document.getElementById("profile_name").innerHTML = name;
