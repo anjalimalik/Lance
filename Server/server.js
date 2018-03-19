@@ -168,6 +168,67 @@ app.get('/getPosts', (req, res) => {
     });
 });
 
+
+// Get Sorted list of Posts
+app.get('/getSortedPosts', (req, res) => {
+
+    var basedOn = req.body.basedOn; // can be posting date or cost of service
+    var order = req.body.order;
+
+    // cannot be null
+    if(basedOn == null || order == null){
+        return res.status(400).json({ message: "Not enough information provided for sorting of posts" });
+    }
+    else if (basedOn === "date") {
+        if(order === "ASC") {
+            let query = 'SELECT * FROM Posts ORDER BY DatePosted ASC;';
+        } 
+        else if (order === "DESC") {
+            let query = 'SELECT * FROM Posts ORDER BY DatePosted DESC;';
+        }
+        else {
+            return res.status(400).json({ message: "Invalid request for sorting posts" });
+        }
+    } 
+    else if (basedOn === "cost") {
+        if(order === "ASC") {
+            let query = 'SELECT * FROM Posts ORDER BY money ASC;';
+        } 
+        else if (order === "DESC") {
+            let query = 'SELECT * FROM Posts ORDER BY money DESC;';
+        }
+        else {
+            return res.status(400).json({ message: "Invalid request for sorting posts" });
+        }
+    } 
+    else {
+        return res.status(400).json({ message: "Invalid request for sorting posts" });
+    }
+
+
+    db.query(query, (error, response) => {
+        console.log(response);
+
+        if (error) {
+            res.send(JSON.stringify({
+                "status": 500,
+                "error": error,
+                "message": "Internal server error",
+                "response": null
+            }));
+        }
+
+        else {
+            res.send(JSON.stringify({
+                "status": 200,
+                "error": null,
+                "response": response,
+                "message": "Succes! Sorted posts retrived."
+            }));
+        }
+    });
+});
+
 //Login
 app.post('/login', function (req, res) {
 
