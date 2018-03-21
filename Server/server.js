@@ -4,14 +4,11 @@ General
 Email from client - req.body.email
 Password from client - req.body.pass
 Name of client - req.body.name
-
 Edit user profile endpoint
 **************************
 Field to be edited - req.body.field
 Date to be added - req.body.fdata
-
 Editing a field in User Profile pass one of the below in body as 'field'
-
 Skills - skills
 Education - edu
 Links - links
@@ -20,8 +17,7 @@ Description - desc
 Documents - docs (Support not added yet)
 Contact Info (Mobile Number) - contact
 Name - name (Support not added yet)
-
-Create new post endpoint - Anjali could you describe what the endpoint does and each field means a bit more? thanks -Kenan
+Create new post endpoint - (Anjali)
 ************************
 Content: req.body.Content,
 PostingType: req.body.PostingType,
@@ -111,7 +107,7 @@ app.post('/signUp', (req, res) => {
     var password = req.body.pass;
     var name = req.body.name;
 
-    password = createPass(email, password);
+    //password = createPass(email, password);
 
     let user = {
         Email: email,
@@ -138,7 +134,7 @@ app.post('/signUp', (req, res) => {
                 "status": 200,
                 "error": null,
                 "response": response,
-                "message": "success"
+                "message": "Success! New user account created"
             }));
         }
     });
@@ -146,7 +142,7 @@ app.post('/signUp', (req, res) => {
 
 
 // Get list of Posts
-app.get('/getPosts', authMiddleware, (req, res) => {
+app.get('/getPosts', (req, res) => {
     let query = 'SELECT * FROM Posts';
 
     db.query(query, (error, response) => {
@@ -166,7 +162,68 @@ app.get('/getPosts', authMiddleware, (req, res) => {
                 "status": 200,
                 "error": null,
                 "response": response,
-                "message": "success"
+                "message": "Succes! All posts retrived."
+            }));
+        }
+    });
+});
+
+
+// Get Sorted list of Posts
+app.get('/getSortedPosts', (req, res) => {
+
+    var basedOn = req.body.basedOn; // can be posting date or cost of service
+    var order = req.body.order;
+
+    // cannot be null
+    if(basedOn == null || order == null){
+        return res.status(400).json({ message: "Not enough information provided for sorting of posts" });
+    }
+    else if (basedOn === "date") {
+        if(order === "ASC") {
+            let query = 'SELECT * FROM Posts ORDER BY DatePosted ASC;';
+        } 
+        else if (order === "DESC") {
+            let query = 'SELECT * FROM Posts ORDER BY DatePosted DESC;';
+        }
+        else {
+            return res.status(400).json({ message: "Invalid request for sorting posts" });
+        }
+    } 
+    else if (basedOn === "cost") {
+        if(order === "ASC") {
+            let query = 'SELECT * FROM Posts ORDER BY money ASC;';
+        } 
+        else if (order === "DESC") {
+            let query = 'SELECT * FROM Posts ORDER BY money DESC;';
+        }
+        else {
+            return res.status(400).json({ message: "Invalid request for sorting posts" });
+        }
+    } 
+    else {
+        return res.status(400).json({ message: "Invalid request for sorting posts" });
+    }
+
+
+    db.query(query, (error, response) => {
+        console.log(response);
+
+        if (error) {
+            res.send(JSON.stringify({
+                "status": 500,
+                "error": error,
+                "message": "Internal server error",
+                "response": null
+            }));
+        }
+
+        else {
+            res.send(JSON.stringify({
+                "status": 200,
+                "error": null,
+                "response": response,
+                "message": "Succes! Sorted posts retrived."
             }));
         }
     });
@@ -214,7 +271,12 @@ app.post('/login', function (req, res) {
 
 
 //Create new post
-app.post('/CreatePost', authMiddleware, function (req, res) {
+app.post('/CreatePost', function (req, res) {
+
+    // Email is needed to connect post to user
+    if (!req.body.email) {
+        return res.status(400).json({ message: "Email of poster not sent" });
+    }
 
     // Headline, Content, PostingType, and Money are required entires that must be provided by users
     if (!req.body.Headline) {
@@ -224,10 +286,10 @@ app.post('/CreatePost', authMiddleware, function (req, res) {
         return res.status(400).json({ message: "Missing Content" });
     }
     if (!req.body.PostingType) {
-        return res.status(400).json({ message: "Missing posting type" });
+        return res.status(400).json({ message: "Missing Posting Type" });
     }
     if (!req.body.money) {
-        return res.status(400).json({ message: "Missing money" });
+        return res.status(400).json({ message: "Missing Money value" });
     }
 
     // initially posting status should be open
@@ -237,95 +299,89 @@ app.post('/CreatePost', authMiddleware, function (req, res) {
     var numLikes = 0;
 
     // set date posted
-    var posted = new Date().toString();
+    var posted = new Date();
 
-    // WILL HAVE TO USE SOMETHING TO INPUT USERID AUTOMATICALLY
+    // get user id using email
+    let query1 = "SELECT idUsers FROM Users WHERE Email = ?";
 
-    var newPost = {
-        Headline: req.body.Headline,
-        Content: req.body.Content,
-        PostingType: req.body.PostingType,
-        money: req.body.money,
-        numLikes: numLikes,
-        Tags: req.body.Tags,
-        PostingStatus: Status,
-        DatePosted: posted,
-        UserID: null
-    };
+    db.query(query1, req.body.email, function (err, resp) {
 
-    let query = "INSERT INTO Posts (Headline, Content, PostingType, money, numLikes, Tags, PostingType, DatePosted, UserID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-    var params = [newPost.Headline, newPost.Content, newPost.PostingType, newPost.money, newPost.numLikes, newPost.Tags, newPost.PostingType, newPost.DatePosted, newPost.UserID];
-
-    db.run(query, params, function (error, response) {
-        console.log(response);
-        if (error) {
+        if (err) {
             res.send(JSON.stringify({
                 "status": 500,
-                "error": error,
+                "error": err,
                 "response": null,
                 "message": "Internal server error"
             }));
         }
-        else {
+
+        // Enter here if no account corresponds to the given email
+        if (resp == null || resp == "") {
             res.send(JSON.stringify({
-                "status": 200,
-                "error": null,
-                "response": response,
-                "message": "success"
+                "status": 401,
+                "response": resp,
+                "message": "Could not find account with this email"
             }));
+        }
+
+        else {
+            // account with given email exists, therefore, proceed with creating a post 
+            let query2 = "INSERT INTO Posts SET ?";
+
+            var newPost = {
+                Headline: req.body.Headline,
+                Content: req.body.Content,
+                PostingType: req.body.PostingType,
+                money: req.body.money,
+                numLikes: numLikes,
+                Tags: req.body.Tags,
+                PostingStatus: Status,
+                DatePosted: posted,
+                UserID: resp[0].idUsers
+            };
+
+            // INSERT INTO POSTS TABLE
+            db.query(query2, newPost, function (error, response) {
+                console.log(response);
+                if (error) {
+                    res.send(JSON.stringify({
+                        "status": 500,
+                        "error": error,
+                        "response": null,
+                        "message": "Internal server error"
+                    }));
+                }
+                else {
+
+                    res.send(JSON.stringify({
+                        "status": 200,
+                        "error": null,
+                        "response": response,
+                        "message": "Success! New Post created!"
+                    }));
+                }
+            });
         }
     });
 });
 
 
 //Edit user profile details
-app.post('/editProfile', authMiddleware, function (req, res) {
+app.post('/EditProfile', function (req, res) {
 
-    var field = req.body.field;
-    var data = req.body.fdata;
+    var email = req.body.email;
+    var name = req.body.name;
+    var desc = req.body.desc;
+    var contact = req.body.contact;
+    var skills = req.body.skills;
+    var edu = req.body.edu;
+    var links = req.body.links;
+
     var auth = req.query.auth;
+    let query = "UPDATE Profiles SET FullName = ?, ContactInfo = ?, Description = ?, SkillsSet = ?, Education = ?, Links = ? WHERE Email = ?";
+    var params = [name, desc, contact, skills, edu, links, email];
 
-    if (field.equals("skills")) {
-
-        field = "SkillsSet";
-    }
-    else if (field.equals("edu")) {
-
-        field = "Education";
-    }
-    else if (field.equals("links")) {
-
-        field = "Links";
-    }
-    else if (field.equals("pic")) {
-
-        field = "Picture";
-    }
-    else if (field.equals("desc")) {
-
-        field = "Description";
-    }
-    else if (field.equals("docs")) {
-
-        field = "Documents";
-    }
-    else if (field.equals("contact")) {
-
-        field = "ContactInfo";
-    }
-    else if (field.equals("name")) {
-
-        field = "Name";
-    }
-    else {
-
-        return res.status(400).json({ message: "invalid_field" });
-    }
-
-    let query = "INSERT INTO Profiles (?) VALUES (?) WHERE idUsers ";
-    var params = [newPost.Headline, newPost.Content, newPost.PostingType, newPost.money, newPost.numLikes, newPost.Tags, newPost.PostingType, newPost.DatePosted, newPost.UserID];
-
-    db.run(query, params, function (error, response) {
+    db.query(query, params, function (error, response) {
         console.log(response);
         if (error) {
             res.send(JSON.stringify({
@@ -340,16 +396,90 @@ app.post('/editProfile', authMiddleware, function (req, res) {
                 "status": 200,
                 "error": null,
                 "response": response,
-                "message": "success"
+                "message": "Success! Profile successfully edited!"
             }));
         }
     });
 });
 
+
+
+// Profile Creation
+app.post('/CreateProfile', (req, res) => {
+
+    var email = req.body.email;
+    var name = req.body.name;
+    var desc = req.body.desc;
+    var contact = req.body.contact;
+    var skills = req.body.skills;
+    var edu = req.body.education;
+    var links = req.body.links;
+
+    // First check if email corresponds to an account in Users Table.
+    var query1 = "SELECT * FROM Users WHERE Email = ?";
+
+    db.query(query1, email, function (error, response) {
+
+        if (error) {
+            res.send(JSON.stringify({
+                "status": 500,
+                "error": error,
+                "response": null,
+                "message": "Internal server error"
+            }));
+        }
+
+        // Enter here if no account corresponds to the given email
+        if (response == null || response == "") {
+            res.send(JSON.stringify({
+                "status": 401,
+                "response": null,
+                "message": "Could not find account with this email"
+            }));
+        }
+
+        else {
+            // Insert profile into Profiles table
+            let query2 = "INSERT INTO Profiles SET ?";
+
+            let userProfile = {
+                Email: email,
+                FullName: name,
+                ContactInfo: contact,
+                Description: desc,
+                SkillsSet: skills,
+                Education: edu,
+                Links: links
+            };
+
+            db.query(query2, userProfile, (err, result) => {
+                console.log(result);
+                if (error) {
+                    res.send(JSON.stringify({
+                        "status": 500,
+                        "error": error,
+                        "response": null,
+                        "message": "Internal server error"
+                    }));
+                }
+                else {
+                    res.send(JSON.stringify({
+                        "status": 200,
+                        "error": null,
+                        "response": result,
+                        "message": "Success! New profile created!"
+                    }));
+                }
+            });
+        }
+    });
+});
+
+
 function createPass(email, password) {
 
     var i = email.length;
-    var salt = email.substring(i/2, i) + email.substring(0, i/2);
+    var salt = email.substring(i / 2, i) + email.substring(0, i / 2);
 
     const cipher = crypto.createCipher('aes192', salt);
 
@@ -359,10 +489,10 @@ function createPass(email, password) {
     return encrypted;
 }
 
-function decipherPass(email, password) {
+function decipherPass(email, encrypted) {
 
     var i = email.length;
-    var salt = email.substring(i/2, i) + email.substring(0, i/2);
+    var salt = email.substring(i / 2, i) + email.substring(0, i / 2);
 
     const decipher = crypto.createDecipher('aes192', salt);
 
@@ -370,3 +500,89 @@ function decipherPass(email, password) {
     decrypted += decipher.final('utf8');
     return decrypted;
 }
+
+// Endpoint to Logout
+app.post('/logout', function (req, res) {
+
+    var signOut = req.body.signOut;
+    var email = req.body.email;
+
+    if (!signOut) {
+        return res.status(401).json({ message: "Logout selection not recieved" });
+    }
+
+    // reset AuthToken and AuthTokenIssued
+    var dbQuery = "UPDATE Users SET AuthToken = ?, AuthTokenIssued = ? WHERE Email = ?";
+    var requestParams = [null, null, email];
+
+    db.query(dbQuery, requestParams, function (err, result) {
+        if (err) {
+            return res.status(500).json({ message: "Internal server error" });
+        } else {
+            return res.status(200).json({ message: "Success! User logged out!" });
+        }
+    });
+});
+
+
+// Endpoint to Change Password
+app.post('/changePassword', (req, res) => {
+
+    var email = req.body.email;
+    var currPassword = req.body.oldPass;
+    var newPassword = req.body.newPass;
+
+    let sql = "SELECT Password FROM Users WHERE Email = ?";
+
+    db.query(sql, email, (error, response) => {
+        console.log(response);
+        if (error) {
+            res.send(JSON.stringify({
+                "status": 500,
+                "error": error,
+                "response": null,
+                "message": "Internal server error - Could not check old Password"
+            }));
+        }
+        else {
+            // check if old password is the same as the one in database
+            var matchCurrPass = decipherPass(email, response[0].Password);
+            if (currPassword === matchCurrPass) {
+                console.log("Current password matches");
+
+                newPassword = createPass(email, newPassword);
+                let query = "UPDATE Users SET Password = ? WHERE Email = ?";
+                let params = [newPassword, email];
+
+                // update password
+                db.query(query, params, (error, response) => {
+                    console.log(response);
+                    if (error) {
+                        res.send(JSON.stringify({
+                            "status": 500,
+                            "error": error,
+                            "response": null,
+                            "message": "Internal server error"
+                        }));
+                    }
+                    else {
+                        res.send(JSON.stringify({
+                            "status": 200,
+                            "error": null,
+                            "response": response,
+                            "message": "Success! User Password Changed!"
+                        }));
+                    }
+                });
+            }
+            else {
+                res.send(JSON.stringify({
+                    "status": 500,
+                    "error": error,
+                    "response": null,
+                    "message": "Current password is not correct"
+                }));
+            }
+        }
+    });
+});
