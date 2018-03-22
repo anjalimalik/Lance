@@ -825,3 +825,34 @@ app.post('/ClickInterested', (req, res) => {
         }
     });
 });
+
+/* THIS ENDPOINT WILL NEED MODIFICATIONS IN SPRINT 3 */
+//Get Profile for user to view it
+app.post('/getProfile', function (req, res) {
+
+    var email = req.body.email;
+
+    var auth = req.query.auth;
+    let query = "SELECT * FROM Profiles WHERE Email = ?";
+    var params = [email];
+
+    db.query(query, params, function (error, response) {
+        console.log(response);
+        if (error) {
+            res.send(JSON.stringify({
+                "status": 500,
+                "error": error,
+                "response": null,
+                "message": "Internal server error"
+            }));
+        }
+        else {
+            res.send(JSON.stringify({
+                "status": 200,
+                "error": null,
+                "response": response,
+                "message": "Success! Profile successfully retrieved!"
+            }));
+        }
+    });
+});
