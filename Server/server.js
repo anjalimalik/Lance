@@ -417,8 +417,12 @@ app.post('/CreateProfile', (req, res) => {
     var edu = req.body.education;
     var links = req.body.links;
 
+    if (!email || !name) {
+        return res.status(400).json({ message: "Missing information" });
+    }
+
     // First check if email corresponds to an account in Users Table.
-    var query1 = "SELECT * FROM Users WHERE Email = ?";
+    var query1 = "SELECT idUsers FROM Users WHERE Email = ?";
 
     db.query(query1, email, function (error, response) {
 
@@ -444,7 +448,13 @@ app.post('/CreateProfile', (req, res) => {
             // Insert profile into Profiles table
             let query2 = "INSERT INTO Profiles SET ?";
 
+            var string = JSON.stringify(response);
+            var json = JSON.parse(string);
+
+            var id = parseInt(json[0].idUsers);
+
             let userProfile = {
+                idUsers: id,
                 Email: email,
                 FullName: name,
                 ContactInfo: contact,
