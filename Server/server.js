@@ -649,7 +649,7 @@ app.post('/getComments', (req, res) => {
         return res.status(400).json({ message: "Missing information" });
     }
 
-    let query = 'SELECT Comments FROM Posts WHERE idPosts = ?';
+    let query = 'SELECT Comment FROM Comments WHERE idPosts = ?';
 
     db.query(query, postId, (error, response) => {
         console.log(response);
@@ -679,7 +679,7 @@ app.post('/WriteComment', (req, res) => {
 
     var postId = req.body.postId;
     var comment = req.body.comment;
-    var email = req.body.email;
+    var email = req.body.email; // email of the person who commented
     var sender = ""; // name of the person who commented
     var userid = 0; // user id of the person who is the owner of the post
 
@@ -689,7 +689,7 @@ app.post('/WriteComment', (req, res) => {
     /* Getting full name of the user who commented */
     let query1 = "SELECT FullName FROM Users WHERE Email = ?";
 
-    db.query(query1, senderEmail, function (err1, resp1) {
+    db.query(query1, email, function (err1, resp1) {
         console.log(resp1);
         if (err1) {
             res.send(JSON.stringify({
