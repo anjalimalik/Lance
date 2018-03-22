@@ -650,9 +650,8 @@ app.post('/getComments', (req, res) => {
     }
 
     let query = 'SELECT Comments FROM Posts WHERE idPosts = ?';
-    let params = [postId];
 
-    db.query(query, params, (error, response) => {
+    db.query(query, postId, (error, response) => {
         console.log(response);
 
         if (error) {
@@ -692,12 +691,11 @@ app.post('/WriteComment', (req, res) => {
     }
 
     let query = "SELECT Comments FROM Posts WHERE idPosts = ?";
-    let params = [postId];
 
     var comments = "";
 
     // get comments
-    db.query(query, params, (error, response) => {
+    db.query(query, postId, (error, response) => {
         console.log(response);
         if (error) {
             res.send(JSON.stringify({
@@ -753,9 +751,8 @@ app.post('/ClosePost', (req, res) => {
     }
 
     let query = 'DELETE FROM Posts WHERE idPosts = ?';
-    let params = [postId];
 
-    db.query(query, params, (error, response) => {
+    db.query(query, postId, (error, response) => {
         console.log(response);
 
         if (error) {
@@ -793,10 +790,9 @@ app.post('/ClickInterested', (req, res) => {
     }
 
     let query = "SELECT numLikes FROM Posts WHERE idPosts = ?";
-    let params = [postId];
 
     // get number of likes
-    db.query(query, params, (error, response) => {
+    db.query(query, postId, (error, response) => {
         console.log(response);
         if (error) {
             res.send(JSON.stringify({
@@ -843,11 +839,9 @@ app.post('/ClickInterested', (req, res) => {
 app.post('/getProfile', function (req, res) {
 
     var email = req.body.email;
-
     let query = "SELECT * FROM Profiles WHERE Email = ?";
-    var params = [email];
 
-    db.query(query, params, function (error, response) {
+    db.query(query, email, function (error, response) {
         console.log(response);
         if (error) {
             res.send(JSON.stringify({
@@ -869,7 +863,7 @@ app.post('/getProfile', function (req, res) {
 });
 
 
-// FUNCTION TO ADD NEW NOTIFICATION
+// Function to add a new notification after every like and comment
 function newNotification(str, postid, senderEmail) {
 
     var notification = "";
@@ -879,9 +873,8 @@ function newNotification(str, postid, senderEmail) {
 
     /* Getting full name of the user who liked or commented */
     let query1 = "SELECT FullName FROM Users WHERE Email = ?";
-    var params1 = [senderEmail];
 
-    db.query(query1, params1, function (err1, resp1) {
+    db.query(query1, senderEmail, function (err1, resp1) {
         console.log(resp1);
         if (err1) {
             res.send(JSON.stringify({
@@ -898,9 +891,8 @@ function newNotification(str, postid, senderEmail) {
 
             /* Next, getting user id of the person who's post was liked or commented on */
             let query2 = "SELECT UserID, Headline FROM Posts WHERE idPosts = ?";
-            let params2 = [postid];
 
-            db.query(query2, params2, function (err2, resp2) {
+            db.query(query2, postid, function (err2, resp2) {
                 console.log(resp2);
                 if (err2) {
                     res.send(JSON.stringify({
@@ -973,3 +965,66 @@ function newNotification(str, postid, senderEmail) {
         }
     });
 }
+
+//Get Notifications for user to view them
+app.post('/getNotifications', function (req, res) {
+
+    var email = req.body.email;
+
+    if (!email) {
+        return res.status(400).json({ message: "Missing information" });
+    }
+
+    let query1 = "SELECT idUsers FROM Users WHERE Email = ?";
+    db.query(query1, email, function (error, response) {
+
+        if (error) {
+            res.send(JSON.stringify({
+                "status": 500,
+                "error": error,
+                "response": null,
+                "message": "Internal server error"
+            }));
+        }
+
+        // Enter here if no account corresponds to the given email
+        if (response == null || response == "") {
+            res.send(JSON.stringify({
+                "status": 401,
+                "response": null,
+                "message": "Could not find account with this email"
+            }));
+        }
+
+        else {
+            // get data from Notifications using the user id recieved fro previous query
+            let query2 = "SELECT Notification FROM Notifications WHERE idUsers = ?";
+
+            var string = JSON.stringify(response);
+            var json = JSON.parse(string);
+
+            var id = parseInt(json[0].idUsers);
+
+            db.query(query2, id, (err, result) => {
+                console.log(result);
+                if (error) {
+                    res.send(JSON.stringify({
+                        "status": 500,
+                        "error": error,
+                        "response": null,
+                        "message": "Internal server error"
+                    }));
+                }
+                else {
+                    res.send(JSON.stringify({
+                        "status": 200,
+                        "error": null,
+                        "response": result,
+                        "message": "Success! All notifications for user retrieved!"
+                    }));
+                }
+            });
+        }
+    });
+});
+
