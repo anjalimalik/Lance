@@ -162,7 +162,7 @@ app.get('/getPosts', (req, res) => {
                 "status": 200,
                 "error": null,
                 "response": response,
-                "message": "Succes! All posts retrived."
+                "message": "Success! All posts retrived."
             }));
         }
     });
@@ -337,7 +337,8 @@ app.post('/CreatePost', function (req, res) {
                 Tags: req.body.Tags,
                 PostingStatus: Status,
                 DatePosted: posted,
-                UserID: resp[0].idUsers
+                UserID: resp[0].idUsers,
+                Comments: ""
             };
 
             // INSERT INTO POSTS TABLE
@@ -594,10 +595,10 @@ app.post('/Report', function (req, res) {
     var postId = req.body.postId;
     let query = "INSERT INTO REPORTS SET ?";
 
-    if(!message || !postId){
+    if (!message || !postId) {
         return res.status(400).json({ message: "Missing information" });
-    } 
-    
+    }
+
     var report = {
         Message: message,
         PostId: postId
@@ -624,4 +625,102 @@ app.post('/Report', function (req, res) {
         }
     });
 
+});
+
+
+
+// Get list of Comments
+app.post('/getComments', (req, res) => {
+
+    var postId = req.body.postId;
+
+    if (!postId) {
+        return res.status(400).json({ message: "Missing information" });
+    }
+
+    let query = 'SELECT Comments FROM Posts WHERE idPosts = ?';
+    let params = [postId];
+
+    db.query(query, params, (error, response) => {
+        console.log(response);
+
+        if (error) {
+            res.send(JSON.stringify({
+                "status": 500,
+                "error": error,
+                "message": "Internal server error",
+                "response": null
+            }));
+        }
+
+        else {
+            res.send(JSON.stringify({
+                "status": 200,
+                "error": null,
+                "response": response,
+                "message": "Success! All comments retrived."
+            }));
+        }
+    });
+});
+
+// Endpoint to write a comment on a post
+app.post('/WriteComment', (req, res) => {
+
+    var postId = req.body.postId;
+    var newComment = req.body.comment;
+    if (!postId || !newComment) {
+        return res.status(400).json({ message: "Missing information" });
+    }
+
+    let query = "SELECT Comments FROM Posts WHERE idPosts = ?";
+    let params = [postId];
+
+    var comments = "";
+
+    // get comments
+    db.query(query, params, (error, response) => {
+        console.log(response);
+        if (error) {
+            res.send(JSON.stringify({
+                "status": 500,
+                "error": error,
+                "response": null,
+                "message": "Internal server error"
+            }));
+        }
+        else {
+            var string = JSON.stringify(response);
+            var json =  JSON.parse(string);
+
+            comments = comments.concat(json[0].Comments);
+            comments = comments.concat(";");
+            comments = comments.concat(newComment);
+
+            let query2 = "UPDATE Posts SET Comments = ? WHERE idPosts = ?";
+            let params2 = [comments, postId];
+
+            // update comments list
+            db.query(query2, params2, (err, resp) => {
+                console.log(resp);
+                if (err) {
+                    res.send(JSON.stringify({
+                        "status": 500,
+                        "error": err,
+                        "response": null,
+                        "message": "Internal server error"
+                    }));
+                }
+                else {
+                    res.send(JSON.stringify({
+                        "status": 200,
+                        "error": null,
+                        "response": resp,
+                        "message": "Success! New comment added!"
+                    }));
+                }
+            });
+            
+        }
+    });
 });
