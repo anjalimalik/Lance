@@ -287,10 +287,11 @@ app.post('/CreatePost', function (req, res) {
     }
     if (!req.body.PostingType) {
         return res.status(400).json({ message: "Missing Posting Type" });
-    }
+    } 
     if (!req.body.money) {
         return res.status(400).json({ message: "Missing Money value" });
     }
+
 
     // initially posting status should be open
     var Status = 1; // 1 is open, 0 is closed
@@ -691,7 +692,7 @@ app.post('/WriteComment', (req, res) => {
         }
         else {
             var string = JSON.stringify(response);
-            var json =  JSON.parse(string);
+            var json = JSON.parse(string);
 
             comments = comments.concat(json[0].Comments);
             comments = comments.concat(";");
@@ -720,7 +721,42 @@ app.post('/WriteComment', (req, res) => {
                     }));
                 }
             });
-            
+
+        }
+    });
+});
+
+// Endpoint to close a post (delete that post from the table)
+app.post('/ClosePost', (req, res) => {
+
+    var postId = req.body.postId;
+
+    if (!postId) {
+        return res.status(400).json({ message: "Missing information" });
+    }
+
+    let query = 'DELETE FROM Posts WHERE idPosts = ?';
+    let params = [postId];
+
+    db.query(query, params, (error, response) => {
+        console.log(response);
+
+        if (error) {
+            res.send(JSON.stringify({
+                "status": 500,
+                "error": error,
+                "message": "Internal server error",
+                "response": null
+            }));
+        }
+
+        else {
+            res.send(JSON.stringify({
+                "status": 200,
+                "error": null,
+                "response": response,
+                "message": "Success! Post closed/deleted."
+            }));
         }
     });
 });
