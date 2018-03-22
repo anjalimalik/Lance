@@ -680,7 +680,14 @@ app.post('/WriteComment', (req, res) => {
 
     var postId = req.body.postId;
     var newComment = req.body.comment;
-    if (!postId || !newComment) {
+
+    // who wrote it 
+    var email = req.body.email;
+
+    // call function to make new notification
+    newNotification(newComment, postId, email);
+
+    if (!postId || !newComment || !email) {
         return res.status(400).json({ message: "Missing information" });
     }
 
@@ -775,7 +782,13 @@ app.post('/ClosePost', (req, res) => {
 app.post('/ClickInterested', (req, res) => {
     var postId = req.body.postId;
 
-    if (!postId) {
+    // who liked it
+    var email = req.body.email;
+
+    // function to send new notification for the like
+    newNotification("like", postId, email);
+
+    if (!postId || !email) {
         return res.status(400).json({ message: "Missing information" });
     }
 
@@ -821,7 +834,6 @@ app.post('/ClickInterested', (req, res) => {
                     }));
                 }
             });
-
         }
     });
 });
@@ -832,7 +844,6 @@ app.post('/getProfile', function (req, res) {
 
     var email = req.body.email;
 
-    var auth = req.query.auth;
     let query = "SELECT * FROM Profiles WHERE Email = ?";
     var params = [email];
 
@@ -856,3 +867,109 @@ app.post('/getProfile', function (req, res) {
         }
     });
 });
+
+
+// FUNCTION TO ADD NEW NOTIFICATION
+function newNotification(str, postid, senderEmail) {
+
+    var notification = "";
+    var sender = ""; // name of the person who liked or commented
+    var userid = 0; // user id of the person who created the post
+    var headline = ""; //headline of the post that was liked or commented on
+
+    /* Getting full name of the user who liked or commented */
+    let query1 = "SELECT FullName FROM Users WHERE Email = ?";
+    var params1 = [senderEmail];
+
+    db.query(query1, params1, function (err1, resp1) {
+        console.log(resp1);
+        if (err1) {
+            res.send(JSON.stringify({
+                "status": 500,
+                "error": err1,
+                "response": null,
+                "message": "Internal server error"
+            }));
+        }
+        else {
+            var string = JSON.stringify(resp1);
+            var json = JSON.parse(string);
+            sender = sender.concat(json[0].FullName);
+
+            /* Next, getting user id of the person who's post was liked or commented on */
+            let query2 = "SELECT UserID, Headline FROM Posts WHERE idPosts = ?";
+            let params2 = [postid];
+
+            db.query(query2, params2, function (err2, resp2) {
+                console.log(resp2);
+                if (err2) {
+                    res.send(JSON.stringify({
+                        "status": 500,
+                        "error": err2,
+                        "response": null,
+                        "message": "Internal server error"
+                    }));
+                }
+                else {
+                    var string = JSON.stringify(resp2);
+                    var json = JSON.parse(string);
+                    userid = json[0].UserID;
+                    headline = headline.concat(json[0].Headline);
+
+                    // if notification is for liking a post
+                    if (str === "like") {
+                        notification = "Your post '";
+                        notification = notification.concat(headline);
+                        notification = notification.concat("' was liked by ");
+                        notification = notification.concat(sender);
+                    }
+                    else {
+                        notification = notification.concat(sender);
+                        notification = notification.concat(" commented '");
+                        notification = notification.concat(str);
+                        notification = notification.concat("' on your post '");
+                        notification = notification.concat(headline);
+                        notification = notification.concat("'");
+                    }
+
+                    var date = new Date();
+                    console.log(sender);
+                    console.log(headline);
+                    notification = notification.concat(" @ ");
+                    notification = notification.concat(date);
+
+                    let query3 = "INSERT INTO Notifications SET ?";
+
+                    var newNotification = {
+                        idUsers: userid,
+                        idPosts: postid,
+                        Notification: notification,
+                        SenderName: sender
+                    };
+
+                    // INSERT INTO Notifications TABLE
+                    db.query(query3, newNotification, function (err, resp) {
+                        console.log(resp);
+                        if (err) {
+                            res.send(JSON.stringify({
+                                "status": 500,
+                                "error": err,
+                                "response": null,
+                                "message": "Internal server error"
+                            }));
+                        }
+                        else {
+                            console.log("Success! New Notification added!");
+                            /* res.send(JSON.stringify({
+                                 "status": 200,
+                                 "error": null,
+                                 "response": resp,
+                                 "message": "Success! New Notification added!"
+                             })); */
+                        }
+                    });
+                }
+            });
+        }
+    });
+}
