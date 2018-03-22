@@ -287,7 +287,7 @@ app.post('/CreatePost', function (req, res) {
     }
     if (!req.body.PostingType) {
         return res.status(400).json({ message: "Missing Posting Type" });
-    } 
+    }
     if (!req.body.money) {
         return res.status(400).json({ message: "Missing Money value" });
     }
@@ -757,6 +757,61 @@ app.post('/ClosePost', (req, res) => {
                 "response": response,
                 "message": "Success! Post closed/deleted."
             }));
+        }
+    });
+});
+
+// Endpoint to click interested (like) on a post
+app.post('/ClickInterested', (req, res) => {
+    var postId = req.body.postId;
+
+    if (!postId) {
+        return res.status(400).json({ message: "Missing information" });
+    }
+
+    let query = "SELECT numLikes FROM Posts WHERE idPosts = ?";
+    let params = [postId];
+
+    // get number of likes
+    db.query(query, params, (error, response) => {
+        console.log(response);
+        if (error) {
+            res.send(JSON.stringify({
+                "status": 500,
+                "error": error,
+                "response": null,
+                "message": "Internal server error"
+            }));
+        }
+        else {
+            var string = JSON.stringify(response);
+            var json = JSON.parse(string);
+            var num = parseInt(json[0].numLikes) + 1;
+
+            let query2 = "UPDATE Posts SET numLikes = ? WHERE idPosts = ?";
+            let params2 = [num, postId];
+
+            // update numLikes
+            db.query(query2, params2, (err, resp) => {
+                console.log(resp);
+                if (err) {
+                    res.send(JSON.stringify({
+                        "status": 500,
+                        "error": err,
+                        "response": null,
+                        "message": "Internal server error"
+                    }));
+                }
+                else {
+                    res.send(JSON.stringify({
+                        "status": 200,
+                        "error": null,
+                        "response": resp,
+                        "message": "Success! Number of likes increased by 1!"
+                    }));
+                }
+            });
+
         }
     });
 });
