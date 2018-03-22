@@ -678,65 +678,81 @@ app.post('/getComments', (req, res) => {
 app.post('/WriteComment', (req, res) => {
 
     var postId = req.body.postId;
-    var newComment = req.body.comment;
-
-    // who wrote it 
+    var comment = req.body.comment;
     var email = req.body.email;
+    var sender = ""; // name of the person who commented
+    var userid = 0; // user id of the person who is the owner of the post
 
     // call function to make new notification
-    newNotification(newComment, postId, email);
+    newNotification(comment, postId, email);
 
-    if (!postId || !newComment || !email) {
-        return res.status(400).json({ message: "Missing information" });
-    }
+    /* Getting full name of the user who commented */
+    let query1 = "SELECT FullName FROM Users WHERE Email = ?";
 
-    let query = "SELECT Comments FROM Posts WHERE idPosts = ?";
-
-    var comments = "";
-
-    // get comments
-    db.query(query, postId, (error, response) => {
-        console.log(response);
-        if (error) {
+    db.query(query1, senderEmail, function (err1, resp1) {
+        console.log(resp1);
+        if (err1) {
             res.send(JSON.stringify({
                 "status": 500,
-                "error": error,
+                "error": err1,
                 "response": null,
                 "message": "Internal server error"
             }));
         }
         else {
-            var string = JSON.stringify(response);
+            var string = JSON.stringify(resp1);
             var json = JSON.parse(string);
+            sender = sender.concat(json[0].FullName);
 
-            comments = comments.concat(json[0].Comments);
-            comments = comments.concat(";");
-            comments = comments.concat(newComment);
+            /* Next, getting user id of the person who's post was commented on */
+            let query2 = "SELECT UserID FROM Posts WHERE idPosts = ?";
 
-            let query2 = "UPDATE Posts SET Comments = ? WHERE idPosts = ?";
-            let params2 = [comments, postId];
-
-            // update comments list
-            db.query(query2, params2, (err, resp) => {
-                console.log(resp);
-                if (err) {
+            db.query(query2, postId, function (err2, resp2) {
+                console.log(resp2);
+                if (err2) {
                     res.send(JSON.stringify({
                         "status": 500,
-                        "error": err,
+                        "error": err2,
                         "response": null,
                         "message": "Internal server error"
                     }));
                 }
                 else {
-                    res.send(JSON.stringify({
-                        "status": 200,
-                        "error": null,
-                        "response": resp,
-                        "message": "Success! New comment added!"
-                    }));
+                    var string = JSON.stringify(resp2);
+                    var json = JSON.parse(string);
+                    userid = parseInt(json[0].UserID);
+
+                    let query3 = "INSERT INTO Comments SET ?";
+
+                    var newComment = {
+                        idOwnerOfPost: userid,
+                        idPosts: postId,
+                        Comment: comment,
+                        SenderName: sender
+                    };
+
+                    // INSERT INTO Comments TABLE
+                    db.query(query3, newComment, function (err, resp) {
+                        console.log(resp);
+                        if (err) {
+                            res.send(JSON.stringify({
+                                "status": 500,
+                                "error": err,
+                                "response": null,
+                                "message": "Internal server error"
+                            }));
+                        }
+                        else {
+                            res.send(JSON.stringify({
+                                "status": 200,
+                                "error": null,
+                                "response": resp,
+                                "message": "Success! New comment added!"
+                            }));
+                        }
+                    });
                 }
             });
-
         }
     });
 });
