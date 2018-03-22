@@ -5,27 +5,14 @@
 <script src="vendor/scripts/profile.js"></script>
 
 
-<!-- Bootstrap core CSS -->
-<link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<body>
+    <form action="php/profileImage.php" method="post" enctype="multipart/form-data">
+       Select image to upload:
+       <input type="file" name="image"/>
+       <input type="submit" name="submit" value="UPLOAD"/>
+   </form>
 
-
-<!-- Ratings Bootstrap core JavaScript -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-<script>
-  window.jQuery || document.write('<script src="assets/js/vendor/jquery.min.js"><\/script>')
-</script>
-<script src="vendor/bootstrap/js/bootstrap.min.js"></script>
-<!------ Include the above in your HEAD tag ---------->
-
-<!--
-    utterly simple Bootstrap 2 solution using a label,
-    opposed to the default button offered @ http://getbootstrap.com/css/
- -->
- <div class="img_container">
-   <label for="files" class="txt_forbtn">Upload Image</label>
-   <input id="files" style="visibility:hidden;" type="file">
- </div>
-
+</body>
 
 <style>
     /*
