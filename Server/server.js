@@ -168,67 +168,6 @@ app.get('/getPosts', (req, res) => {
     });
 });
 
-
-// Get Sorted list of Posts
-app.get('/getSortedPosts', (req, res) => {
-
-    var basedOn = req.body.basedOn; // can be posting date or cost of service
-    var order = req.body.order;
-
-    // cannot be null
-    if (basedOn == null || order == null) {
-        return res.status(400).json({ message: "Not enough information provided for sorting of posts" });
-    }
-    else if (basedOn === "date") {
-        if (order === "ASC") {
-            let query = 'SELECT * FROM Posts ORDER BY DatePosted ASC;';
-        }
-        else if (order === "DESC") {
-            let query = 'SELECT * FROM Posts ORDER BY DatePosted DESC;';
-        }
-        else {
-            return res.status(400).json({ message: "Invalid request for sorting posts" });
-        }
-    }
-    else if (basedOn === "cost") {
-        if (order === "ASC") {
-            let query = 'SELECT * FROM Posts ORDER BY money ASC;';
-        }
-        else if (order === "DESC") {
-            let query = 'SELECT * FROM Posts ORDER BY money DESC;';
-        }
-        else {
-            return res.status(400).json({ message: "Invalid request for sorting posts" });
-        }
-    }
-    else {
-        return res.status(400).json({ message: "Invalid request for sorting posts" });
-    }
-
-
-    db.query(query, (error, response) => {
-        console.log(response);
-
-        if (error) {
-            res.send(JSON.stringify({
-                "status": 500,
-                "error": error,
-                "message": "Internal server error",
-                "response": null
-            }));
-        }
-
-        else {
-            res.send(JSON.stringify({
-                "status": 200,
-                "error": null,
-                "response": response,
-                "message": "Succes! Sorted posts retrived."
-            }));
-        }
-    });
-});
-
 //Login
 app.post('/login', function (req, res) {
 
@@ -302,6 +241,8 @@ app.post('/CreatePost', function (req, res) {
     // set date posted
     var posted = new Date();
 
+    var time = posted.getTime();
+
     // get user id using email
     let query1 = "SELECT idUsers FROM Users WHERE Email = ?";
 
@@ -339,7 +280,7 @@ app.post('/CreatePost', function (req, res) {
                 PostingStatus: Status,
                 DatePosted: posted,
                 UserID: resp[0].idUsers,
-                Comments: ""
+                DateMSEC: time
             };
 
             // INSERT INTO POSTS TABLE
@@ -941,6 +882,7 @@ function newNotification(str, postid, senderEmail) {
                     }
 
                     var date = new Date();
+                    date = date.toString();
                     console.log(sender);
                     console.log(headline);
                     notification = notification.concat(" @ ");
@@ -1044,3 +986,116 @@ app.post('/getNotifications', function (req, res) {
     });
 });
 
+// Get Sorted list of Posts, using either by order - ASCENDING OR DESCENDING or by range - upper/lower bounds (either for money or date posted)
+app.post('/getSortedPosts', (req, res) => {
+
+    var basedOn = req.body.basedOn; // can be posting date or cost of service
+    var order = req.body.order;
+    var upperBound = req.body.upper;
+    var lowerBound = req.body.lower;
+
+    let params = [];
+    let query = "";
+    
+    // cannot be null
+    if (!basedOn || (!order && (!upperBound && !lowerBound))) {
+        return res.status(400).json({ message: "Not enough information provided for sorting of posts" });
+    }
+    else if (basedOn === "date") {
+        if (order && upperBound && lowerBound) {
+            var d1 = Date.parse(lowerBound);
+            var d2 = Date.parse(upperBound);
+            if (order === "ASC") {
+                query = 'SELECT * FROM Posts WHERE DateMSEC BETWEEN ? AND ? ORDER BY DateMSEC ASC;';
+            }
+            else if (order === "DESC") {
+                query = 'SELECT * FROM Posts WHERE DateMSEC BETWEEN ? AND ? ORDER BY DateMSEC DESC;';
+            }
+            else {
+                return res.status(400).json({ message: "Invalid request for sorting posts" });
+            }
+            params = [d1, d2];
+        }
+        else if (!order) {
+            var d1 = Date.parse(lowerBound);
+            var d2 = Date.parse(upperBound);
+            query = 'SELECT * FROM Posts WHERE DateMSEC BETWEEN ? AND ?;';
+            params = [d1, d2];
+        }
+        else if (!upperBound && !lowerBound) {
+            if (order === "ASC") {
+                query = 'SELECT * FROM Posts ORDER BY DatePosted ASC;';
+            }
+            else if (order === "DESC") {
+                query = 'SELECT * FROM Posts ORDER BY DatePosted DESC;';
+            }
+            else {
+                return res.status(400).json({ message: "Invalid request for sorting posts" });
+            }
+        }
+        else {
+            return res.status(400).json({ message: "Not enough information provided for sorting of posts" });
+        }
+    }
+    else if (basedOn === "cost") {
+        if (order && upperBound && lowerBound) {
+            if (order === "ASC") {
+                upperBound = parseFloat(upperBound);
+                lowerBound = parseFloat(lowerBound);
+                query = 'SELECT * FROM Posts WHERE money BETWEEN ? AND ? ORDER BY money ASC;';
+                params = [lowerBound, upperBound];
+            }
+            else if (order === "DESC") {
+                upperBound = parseFloat(upperBound);
+                lowerBound = parseFloat(lowerBound);
+                query = 'SELECT * FROM Posts WHERE money BETWEEN ? AND ? ORDER BY money DESC;';
+                params = [lowerBound, upperBound];
+            }
+            else {
+                return res.status(400).json({ message: "Invalid request for sorting posts" });
+            }
+        }
+        else if (order == null) {
+            upperBound = parseFloat(upperBound);
+            lowerBound = parseFloat(lowerBound);
+            query = 'SELECT * FROM Posts WHERE money BETWEEN ? AND ?;';
+            params = [lowerBound, upperBound];
+        }
+        else {
+            if (order === "ASC") {
+                query = 'SELECT * FROM Posts ORDER BY money ASC;';
+            }
+            else if (order === "DESC") {
+                query = 'SELECT * FROM Posts ORDER BY money DESC;';
+            }
+            else {
+                return res.status(400).json({ message: "Invalid request for sorting posts" });
+            }
+        }
+    }
+    else {
+        return res.status(400).json({ message: "Invalid request for sorting posts" });
+    }
+
+    db.query(query, params, (error, response) => {
+        console.log(response);
+
+        if (error) {
+            res.send(JSON.stringify({
+                "status": 500,
+                "error": error,
+                "message": "Internal server error",
+                "response": null
+            }));
+        }
+
+        else {
+            res.send(JSON.stringify({
+                "status": 200,
+                "error": null,
+                "response": response,
+                "message": "Success! Sorted posts retrived."
+            }));
+        }
+    });
+});
