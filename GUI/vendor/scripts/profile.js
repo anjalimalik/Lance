@@ -22,7 +22,7 @@ function body_onload() {
 }
 
 function displayOptions() {
-
+   document.getElementById("notificationsToggle").style.display = "none";
    var x = document.getElementById("optionsToggle");
 
      if (x.style.display === "none") {
@@ -33,7 +33,7 @@ function displayOptions() {
  }
 
  function displayNotifications() {
-
+   document.getElementById("optionsToggle").style.display = "none";
    var x = document.getElementById("notificationsToggle");
 
      if (x.style.display === "none") {
