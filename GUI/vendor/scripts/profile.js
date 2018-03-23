@@ -10,36 +10,12 @@ function body_onload() {
     desc = localStorage.getItem('desc');
     skills = localStorage.getItem('skills');
 
-    optionsToggle.style.display = "none";
-    notificationsToggle.style.display = "none";
-
     var img = new Image();
     img.src = "./Pictures/spinner.jpg";
     document.getElementById("img_profile").src = "./Pictures/spinner.jpg";
 
+
     populate_profile();
-}
-
-function displayOptions() {
-
-  var x = document.getElementById("optionsToggle");
-
-    if (x.style.display === "none") {
-        x.style.display = "block";
-    } else {
-        x.style.display = "none";
-    }
-}
-
-function displayNotifications() {
-
-  var x = document.getElementById("notificationsToggle");
-
-    if (x.style.display === "none") {
-        x.style.display = "block";
-    } else {
-        x.style.display = "none";
-    }
 }
 
 $(function() {
