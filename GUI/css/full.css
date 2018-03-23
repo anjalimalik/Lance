@@ -4,10 +4,64 @@
  * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap-full/blob/master/LICENSE) http://placehold.it/1920x1080
  */
 
+@import "compass/css3";
+
+* {box-sizing: border-box;}
+
 body {
   background: url('train.jpg') no-repeat center center fixed;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   background-size: cover;
   -o-background-size: cover;
+}
+
+.card_list {
+  position: absolute;
+  top: 95px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  overflow: scroll;
+  margin: 0;
+  padding: 0px;
+  
+  border: 5px solid #000000;
+  
+  font-size: 16px;
+  font-family: Arial, sans-serif;
+  
+  // Again, this is where the magic happens
+  -webkit-overflow-scrolling: touch;
+}
+
+.card {
+  padding: 10px 20px;
+  
+  /*border-bottom: 5px solid #000000;*/
+  /*border: 2px solid #000000;*/
+  
+  &:last-child {
+    border-bottom: none;
+  }
+  
+  &:nth-child(even) {
+    background: #f8f8f8;
+  }
+}
+
+.btn_menu {
+
+	position: absolute;
+    top: 120px;
+    left: 30px;
+    z-index: 1;
+    cursor: pointer;
+}
+
+span.icon {
+    background: url(fa-menu.png) no-repeat;
+    float: left;
+    width: 24px;
+    height: 24px;
 }
