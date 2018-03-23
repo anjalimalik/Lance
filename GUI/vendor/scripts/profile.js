@@ -14,9 +14,34 @@ function body_onload() {
     img.src = "./Pictures/spinner.jpg";
     document.getElementById("img_profile").src = "./Pictures/spinner.jpg";
 
+    optionsToggle.style.display = "none";
+    notificationsToggle.style.display = "none";
+
 
     populate_profile();
 }
+
+function displayOptions() {
+
+   var x = document.getElementById("optionsToggle");
+
+     if (x.style.display === "none") {
+         x.style.display = "block";
+     } else {
+         x.style.display = "none";
+     }
+ }
+
+ function displayNotifications() {
+
+   var x = document.getElementById("notificationsToggle");
+
+     if (x.style.display === "none") {
+         x.style.display = "block";
+     } else {
+         x.style.display = "none";
+     }
+ }
 
 $(function() {
     $(":file").change(function() {
