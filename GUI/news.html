@@ -20,7 +20,7 @@
 
   <body>
 
- 
+
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
   <a class="navbar-brand" href="#">Lance</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
@@ -41,6 +41,37 @@
       <li class="nav-item">
         <a class="nav-link" href="#">About</a>
       </li>
+
+
+      <!-- Options -->
+
+    <li class="nav-item dropdown show">
+      <a href="#" id="options_btn" onclick="displayOptions()" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Options <span class="caret"></span></a>
+      <div id="optionsToggle" class="dropdown-menu show" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 38px, 0px); top: 0px; left: 0px; will-change: transform;">
+          <a class="dropdown-item" href="#">View Profile</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#">Log Out</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#">Settings</a>
+      </div>
+    </li>
+
+
+    <!-- Notifications -->
+
+  <li class="nav-item dropdown show">
+    <a href="#" id="notifications_btn" onclick="displayNotifications()" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Notifications <span class="caret"></span></a>
+    <div id="notificationsToggle" class="dropdown-menu show" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 38px, 0px); top: 0px; left: 0px; will-change: transform;">
+        <a class="dropdown-item" href="#">#1</a>
+        <div class="dropdown-divider"></div>
+        <a class="dropdown-item" href="#">#2</a>
+        <div class="dropdown-divider"></div>
+        <a class="dropdown-item" href="#">#3</a>
+        <div class="dropdown-divider"></div>
+        <a class="dropdown-item" href="#">View all Notifications</a>
+    </div>
+  </li>
+
     </ul>
     <form class="form-inline my-2 my-lg-0">
       <input class="form-control mr-sm-2" type="text" placeholder="Search">
@@ -67,7 +98,7 @@
 </div>
 
 <img class="img-thumbnail" src="train.jpg" width="100" height="1000">
-                
+
 
 
 
