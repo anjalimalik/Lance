@@ -51,9 +51,12 @@
         <div id="optionsToggle" class="dropdown-menu show" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 38px, 0px); top: 0px; left: 415px; will-change: transform;">
             <a class="dropdown-item" href="#">View Profile</a>
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#">Log Out</a>
+            <!--<a class="dropdown-item" href="#">Log Out</a>-->
+            <a href="#" class="dropdown-item btn btn-success btn-sm" style="margin-left: 0px; font-size: 12px;" onclick="btn_logout()">Logout</a>
+            
             <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="#">Settings</a>
+            <button type="button" class="dropdown-item btn btn-success btn-sm" style="margin-left: 0px; font-size: 12px;" data-toggle="modal" data-target="#setModal"
+            onclick="btn_edit()">Settings</button>
         </div>
       </li>
 
