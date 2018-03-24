@@ -1,6 +1,7 @@
 var urlGetPosts = "http://localhost:5500/getPosts"
 var urlReport = "http://localhost:5500/Report"
 var urlLike = "http://localhost:5500/ClickInterested"
+var urlClose = "http://localhost:5500/ClosePost"
 
 function onLoad() {
     getAllPosts();
@@ -36,14 +37,16 @@ function createCard(user, content, headline, postingType, price, postID, date, l
     ul.appendChild(li);
 
     var divCenter = document.createElement("div");
+    divCenter.setAttribute("id", "div".concat(postID));
     divCenter.setAttribute('class', 'card text-center');
     li.appendChild(divCenter);
 
     var divHeader = document.createElement("div");
+    divHeader.setAttribute("id", "head".concat(postID));
     divHeader.setAttribute('class', 'card-header');
     divHeader.style = "height:45px;";
     divCenter.appendChild(divHeader);
-   
+
     /* Price */
     var divTextPrice = document.createElement("kbd");
     divTextPrice.innerHTML = "$".concat(price);
@@ -52,7 +55,7 @@ function createCard(user, content, headline, postingType, price, postID, date, l
 
     /* Offer/Request */
     var ReqOff = document.createElement("p");
-    var str = postingType.concat(" from ", user);
+    var str = postingType.concat(" from ", "<b style=\"", "color:#333399; font-weight:bold\">",user,"</b>");
     ReqOff.style = "color:#666699;margin-left:60px;";
     ReqOff.innerHTML = str;
     divHeader.appendChild(ReqOff);
@@ -90,6 +93,7 @@ function createCard(user, content, headline, postingType, price, postID, date, l
     var btn_close = document.createElement("BUTTON");
     var t2 = document.createTextNode("Close Post");
     btn_close.setAttribute("class", "btn btn-danger btn-sm");
+    btn_close.setAttribute('onclick', "closePost(".concat(postID, ")"));
     btn_close.setAttribute("id", "btnClose");
     btn_close.style = "float:right;margin-bottom:0px;margin-right:15px;margin-top:0px;";
     btn_close.appendChild(t2);
@@ -146,6 +150,13 @@ function createCard(user, content, headline, postingType, price, postID, date, l
     divFooterDate.innerHTML = date;
     divFooterDate.style = "float:right; font-size:14px;";
     divFooter.appendChild(divFooterDate); 
+
+    /* hidden post id */
+    var post_id = document.createElement("LABEL");
+    post_id.setAttribute("id", "postIDHidden");
+    post_id.style.display = "none";
+    post_id.innerHTML = postID;
+    divCenter.appendChild(post_id);
 }
 
 function reportPost() {
@@ -178,8 +189,6 @@ function reportPost() {
         alert("Error: No internet connection!");
         console.log(err.message + ": No Internet Connection");
     });
-    document.getElementById("postIDHidden").remove();
-    document.getElementById("postid").remove();
 }
 
 function clickInterested(postID) {
@@ -215,13 +224,47 @@ function clickInterested(postID) {
         console.log(err.message + ": No Internet Connection");
     });
 }
-
+/*
 function getPostID(id) {
     var ul = document.getElementById('postid');
-    /* This needs to be hidden - Post id */
     var post_id = document.createElement("LABEL");
     post_id.setAttribute("id", "postIDHidden");
     post_id.style.display = "none";
     post_id.innerHTML = id;
     ul.appendChild(post_id);
+}
+*/
+
+function closePost(postID) {
+    postID = parseInt(postID);
+    fetch(urlClose, {
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+            "postId": postID
+        })
+
+    }).then(function (res) {
+        if (res.ok) {
+            var id1 = "div".concat(postID.toString());
+            var id2 = "head".concat(postID.toString());
+            (document.getElementById(id1)).removeChild((document.getElementById(id2)));
+            alert("Your post was closed and removed!");
+            res.json().then(function (data) {
+                console.log("Inside res.ok. Post was closed");
+            }.bind(this));
+        }
+        else {
+            alert("Error: deletion unsuccessful!");
+            res.json().then(function (data) {
+                console.log(data.message);
+            }.bind(this));
+        }
+    }).catch(function (err) {
+        alert("Error: No internet connection!");
+        console.log(err.message + ": No Internet Connection");
+    });
 }
