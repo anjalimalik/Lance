@@ -308,10 +308,6 @@ function getAllComments(postID) {
 }
 
 function expandPost(postID) {
-
-    document.getElementById("xBtn_post").setAttribute('onclick', "removeElements(".concat(postID, ")"));
-    document.getElementById("closeBtn_post").setAttribute('onclick', "removeElements(".concat(postID, ")"));
-
     var lm = document.getElementById("learnMoreFG");
     // comments
     var ulComments = document.createElement("ul");
@@ -402,7 +398,12 @@ function expandPost(postID) {
 
 }
 
+// EXPAND ALL COMMENTS FROM THE SERVER
 function expandComments(postID, num, json) {
+
+    // for later removal
+    document.getElementById("xBtn_post").setAttribute('onclick', "removeElements(".concat(postID, ", ", num, ")"));
+    document.getElementById("closeBtn_post").setAttribute('onclick', "removeElements(".concat(postID, ", ", num, ")"));
 
     var ul = document.getElementById('ulcomments'.concat(postID));
     if (json == null || num === 0) {
@@ -410,6 +411,7 @@ function expandComments(postID, num, json) {
         var pComments = document.createElement("p");
         pComments.setAttribute('id', 'pComments'.concat(postID));
         pComments.setAttribute('class', 'comment');
+        pComments.style = "padding:0px; margin:0px;";
         ul.appendChild(pComments);
         //center
         var center = document.createElement("div");
@@ -433,8 +435,9 @@ function expandComments(postID, num, json) {
     for (i = 0; i < num; i++) {
         //p
         var pComments = document.createElement("p");
-        pComments.setAttribute('id', 'pComments'.concat(postID));
+        pComments.setAttribute('id', 'pComments'.concat(postID, i.toString()));
         pComments.setAttribute('class', 'comment');
+        pComments.style = "padding:0px; margin:0px;";
         ul.appendChild(pComments);
         //center
         var center = document.createElement("div");
@@ -447,6 +450,12 @@ function expandComments(postID, num, json) {
         body.setAttribute('class', 'card-body');
         center.appendChild(body);
 
+        //sender name (content of comment)
+        var sender = document.createElement("kbd");
+        sender.style = "float:left; background-color:lightblue; height:35px; font-size:14px; margin-left:-15px; margin-top:-12px; color:black;";
+        sender.innerHTML = json[i].SenderName;
+        body.appendChild(sender);
+
         //title (content of comment)
         var title = document.createElement("p");
         title.setAttribute('class', 'card-title');
@@ -455,8 +464,13 @@ function expandComments(postID, num, json) {
     }
 }
 
-function removeElements(postID){
-
-    // remove comments
-    (document.getElementById('ulcomments'.concat(postID))).removeChild((document.getElementById('pComments'.concat(postID))));
+// Remove elements in Learn More Post modal
+function removeElements(postID, num){
+    if(num === 0){
+        (document.getElementById('ulcomments'.concat(postID))).removeChild((document.getElementById('pComments'.concat(postID)))); 
+    }
+    for(i = 0; i < num; i++) {
+        // remove comments
+        (document.getElementById('ulcomments'.concat(postID))).removeChild((document.getElementById('pComments'.concat(postID, i.toString()))));  
+    }
 }

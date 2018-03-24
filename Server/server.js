@@ -602,7 +602,7 @@ app.post('/getComments', (req, res) => {
         return res.status(400).json({ message: "Missing information" });
     }
 
-    let query = 'SELECT Comment FROM Comments WHERE idPosts = ?';
+    let query = 'SELECT Comment, SenderName FROM Comments WHERE idPosts = ?';
 
     db.query(query, postId, (error, response) => {
         console.log(response);
@@ -754,7 +754,7 @@ app.post('/ClickInterested', (req, res) => {
     if (!postId || !email) {
         return res.status(400).json({ message: "Missing information" });
     }
-    
+
     // function to send new notification for the like
     newNotification("like", postId, email);
 
