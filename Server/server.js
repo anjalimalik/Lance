@@ -243,8 +243,17 @@ app.post('/CreatePost', function (req, res) {
 
     var time = posted.getTime();
 
+    if(!req.body.Category){
+        var cat = null;
+        var att = null;
+    }
+    else {
+        var cat = req.body.Category;
+        var att = req.body.Attributes;
+    }
+
     // get user id using email
-    let query1 = "SELECT idUsers FROM Users WHERE Email = ?";
+    let query1 = "SELECT idUsers, FullName FROM Users WHERE Email = ?";
 
     db.query(query1, req.body.email, function (err, resp) {
 
@@ -280,7 +289,10 @@ app.post('/CreatePost', function (req, res) {
                 PostingStatus: Status,
                 DatePosted: posted,
                 UserID: resp[0].idUsers,
-                DateMSEC: time
+                DateMSEC: time,
+                Category: cat,
+                Attributes: att,
+                UserName: resp[0].FullName
             };
 
             // INSERT INTO POSTS TABLE
