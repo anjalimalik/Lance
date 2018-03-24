@@ -1,6 +1,9 @@
 
 var email, pass, name, edu, skills, desc, contact, links, pic, docs;
 var urlChangePass = "http://localhost:5500/changePassword"
+var urlNotifications = "http://localhost:5500/getNotifications"
+var numNotifs = 0;
+
 function body_onload() {
     name = localStorage.getItem('name');
     email = localStorage.getItem('email');
@@ -22,30 +25,33 @@ function body_onload() {
 }
 
 function displayOptions() {
-   document.getElementById("notificationsToggle").style.display = "none";
-   var x = document.getElementById("optionsToggle");
+    document.getElementById("notificationsToggle").style.display = "none";
+    var x = document.getElementById("optionsToggle");
 
-     if (x.style.display === "none") {
-         x.style.display = "block";
-     } else {
-         x.style.display = "none";
-     }
- }
+    if (x.style.display === "none") {
+        x.style.display = "block";
+    } else {
+        x.style.display = "none";
+    }
+}
 
- function displayNotifications() {
-   document.getElementById("optionsToggle").style.display = "none";
-   var x = document.getElementById("notificationsToggle");
+function displayNotifications() {
+    document.getElementById("optionsToggle").style.display = "none";
+    var x = document.getElementById("notificationsToggle");
 
-     if (x.style.display === "none") {
-         x.style.display = "block";
-     } else {
-         x.style.display = "none";
-     }
- }
+    if (x.style.display === "none") {
+        x.style.display = "block";
+    } else {
+        x.style.display = "none";
+    }
 
-$(function() {
-    $(":file").change(function() {
-        if(this.files && this.files[0]) {
+    // function to get notifications
+    btn_getNotifications();
+}
+
+$(function () {
+    $(":file").change(function () {
+        if (this.files && this.files[0]) {
             var reader = new FileReader();
             reader.onload = imageIsLoaded;
             reader.readAsDataURL(this.files[0]);
@@ -57,7 +63,7 @@ function imageIsLoaded(e) {
     $('#img_profile').attr('src', e.target.result);
 }
 
-function populate_profile () {
+function populate_profile() {
     document.getElementById("profile_name").innerHTML = name;
     document.getElementById("profile_email").innerHTML = email;
     document.getElementById("profile_edu").innerHTML = edu;
@@ -105,34 +111,91 @@ function btn_passChange() {
     alert("equal");
 
     fetch(urlChangePass, {
-                method: "POST",
-                headers: {
-                    'Accept': 'application/json',
-                    'content-type': 'application/json'
-                },
-                body: JSON.stringify({
-                    "email": email,
-                    "oldPass": currentPass,
-                    "newPass": verifyPass
-                })
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+            "email": email,
+            "oldPass": currentPass,
+            "newPass": verifyPass
+        })
 
-            }).then(function(res) {
-                console.log("Inside res function");
-                if (res.ok) {
-                    res.json().then(function(data) {
-                        alert(data.message);
-                        console.log("Inside res.ok");
-                    }.bind(this));
+    }).then(function (res) {
+        console.log("Inside res function");
+        if (res.ok) {
+            res.json().then(function (data) {
+                alert(data.message);
+                console.log("Inside res.ok");
+            }.bind(this));
+        }
+        else {
+            alert("Error: Change password unsuccessful!");
+            res.json().then(function (data) {
+                console.log(data.message);
+            }.bind(this));
+        }
+    }).catch(function (err) {
+        alert("Error: No internet connection!");
+        console.log(err.message + ": No Internet Connection");
+    });
+
+}
+
+
+function btn_getNotifications() {
+
+    fetch(urlNotifications, {
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+            "email": email
+        })
+
+    }).then(function (res) {
+        console.log("Inside res function");
+        if (res.ok) {
+            res.json().then(function (data) {
+                console.log(data.message);
+                console.log(data.response);
+                console.log("Inside res.ok, Get Notifications successful!");
+                var length = Object.keys(data.response).length;
+                if (length != 0 && numNotifs < length) {
+                    numNotifs = 0;
+                    var json = data.response;
+                    for (i = 0; i < length; i++) {
+                        var ul = document.createElement("a");
+                        ul.setAttribute('class', 'dropdown-item');
+                        ul.innerHTML = (json[i].Notification).toString();
+                        ul.style = "font-color:black;";
+                        document.getElementById("notif").appendChild(ul);
+                        numNotifs++;
+                    }
                 }
-                else {
-                    alert("Error: Change password unsuccessful!");
-                    res.json().then(function(data) {
-                    console.log(data.message);
-                    }.bind(this));
+                else if (numNotifs == 0) {
+                    numNotifs--;
+                    var ul = document.createElement("a");
+                    ul.setAttribute('class', 'dropdown-item');
+                    ul.innerHTML = "No notifications available for you at this time.";
+                    document.getElementById("notif").appendChild(ul);
                 }
-            }).catch(function(err) {
-                alert("Error: No internet connection!");
-                console.log(err.message + ": No Internet Connection");
-        });
+
+
+            }.bind(this));
+        }
+        else {
+            alert("Error: Get notifications unsuccessful!");
+            res.json().then(function (data) {
+                console.log(data.message);
+            }.bind(this));
+        }
+    }).catch(function (err) {
+        alert("Error: No internet connection!");
+        console.log(err.message + ": No Internet Connection");
+    });
 
 }
