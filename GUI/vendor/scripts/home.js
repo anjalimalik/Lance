@@ -94,35 +94,36 @@ function createCard(user, content, headline, postingType, price, postID, date, l
 
     /* Close Post */
     var btn_close = document.createElement("BUTTON");
-    var t2 = document.createTextNode("Close Post");
-    btn_close.setAttribute("class", "btn btn-danger btn-sm");
+    btn_close.setAttribute("class", "btn btn-default btn-sm");
     btn_close.setAttribute('onclick', "closePost(".concat(postID, ")"));
     btn_close.setAttribute("id", "btnClose");
-    btn_close.style = "float:right;margin-bottom:0px;margin-right:15px;margin-top:0px;";
-    btn_close.appendChild(t2);
+    btn_close.style = "float:right;margin-bottom:3px;margin-right:0px;margin-top:0px;";
     divButtons.appendChild(btn_close);
+
+    var imgClose = document.createElement('img');
+    imgClose.setAttribute('src', 'close.png');
+    imgClose.setAttribute('alt', 'Close');
+    imgClose.style = "float:center;width:20px; height:20px;";
+    btn_close.appendChild(imgClose);
 
     /* Report */
     var btn_report = document.createElement("BUTTON");
-    var t1 = document.createTextNode("Report Post");
+    //var t1 = document.createTextNode("Report Post");
     btn_report.setAttribute("id", "btnReport");
-    btn_report.setAttribute("class", "btn btn-warning btn-sm");
+    btn_report.setAttribute("class", "btn btn-default btn-sm");
     //btn_report.setAttribute("onclick", "getPostID(".concat(postID, ")"));
     btn_report.setAttribute("data-toggle", "modal");
     btn_report.setAttribute("data-target", "#myModalReport");
-    btn_report.style = "float:right;margin-bottom:0px;margin-right:10px;margin-top:0px;";
-    btn_report.appendChild(t1);
+    btn_report.style = "float:right;margin-bottom:3px;margin-right:0px;margin-top:0px;";
+    //btn_report.appendChild(t1);
     divButtons.appendChild(btn_report);
 
-    /* Learn More */
-    var divLearnMore = document.createElement("BUTTON");
-    divLearnMore.setAttribute('class', 'btn btn-primary btn-md');
-    divLearnMore.setAttribute("data-toggle", "modal");
-    divLearnMore.setAttribute("data-target", "#myPostModal");
-    divLearnMore.style = "float:right;margin-bottom:7px;margin-right:160px;margin-top:0px; height:40px;";
-    divLearnMore.setAttribute('onclick', "expandPost(".concat(postID, ")"));
-    divLearnMore.innerHTML = "Learn More!";
-    divButtons.appendChild(divLearnMore);
+    var imgFlag = document.createElement('img');
+    imgFlag.setAttribute('src', 'flag.png');
+    imgFlag.setAttribute('alt', 'Report');
+    imgFlag.style = "float:center;width:20px; height:20px;";
+    btn_report.appendChild(imgFlag);
+    
 
     var divFooter = document.createElement('div');
     divFooter.setAttribute('class', 'card-footer');
@@ -133,7 +134,7 @@ function createCard(user, content, headline, postingType, price, postID, date, l
     var aHeart = document.createElement('BUTTON');
     aHeart.setAttribute('class', 'btn btn-default btn-sm');
     aHeart.setAttribute('onclick', "clickInterested(".concat(postID, ")"));
-    aHeart.style = "float:center; outline:none; border: 0; background: transparent; margin-left:130px; margin-top:-12px;";
+    aHeart.style = "float:center; outline:none; border: 0; background: transparent; margin-left:310px; margin-top:-17px;";
     divFooter.appendChild(aHeart);
 
     var imgHeart = document.createElement('img');
@@ -145,7 +146,7 @@ function createCard(user, content, headline, postingType, price, postID, date, l
     var txtlikes = document.createElement("text");
     txtlikes.setAttribute("id", "txtLikes".concat(postID));
     txtlikes.innerHTML = likes.toString();
-    txtlikes.style = "float:center;margin-left:-10px;font-size:14px;color:grey;";
+    txtlikes.style = "float:center;margin-left:-16px;font-size:14px;color:grey;";
     divFooter.appendChild(txtlikes);
 
     /* Date Posted */
@@ -156,6 +157,16 @@ function createCard(user, content, headline, postingType, price, postID, date, l
     divFooterDate.innerHTML = date;
     divFooterDate.style = "float:right; font-size:14px;";
     divFooter.appendChild(divFooterDate);
+
+    /* Comments */
+    var divComments = document.createElement("BUTTON");
+    divComments.setAttribute('class', 'btn btn-outline-primary btn-md');
+    divComments.setAttribute("data-toggle", "modal");
+    divComments.setAttribute("data-target", "#myPostModal");
+    divComments.style = "float:right;margin-bottom:7px;margin-right:195px;margin-top:-10px; height:40px;";
+    divComments.setAttribute('onclick', "expandPost(".concat(postID, ")"));
+    divComments.innerHTML = "Comments";
+    divFooter.appendChild(divComments);
 
     /* hidden post id */
     var post_id = document.createElement("LABEL");
