@@ -36,6 +36,7 @@ function createCard(user, content, headline, postingType, price, postID, date, l
 
     var li = document.createElement('li');
     li.setAttribute('class', 'card_list_el');
+    li.style = "width:70%; margin-left: 100px;";
     ul.appendChild(li);
 
     var divCenter = document.createElement("div");
@@ -118,7 +119,7 @@ function createCard(user, content, headline, postingType, price, postID, date, l
     divLearnMore.setAttribute('class', 'btn btn-primary btn-md');
     divLearnMore.setAttribute("data-toggle", "modal");
     divLearnMore.setAttribute("data-target", "#myPostModal");
-    divLearnMore.style = "float:right;margin-bottom:7px;margin-right:380px;margin-top:0px; height:40px;";
+    divLearnMore.style = "float:right;margin-bottom:7px;margin-right:160px;margin-top:0px; height:40px;";
     divLearnMore.setAttribute('onclick', "expandPost(".concat(postID, ")"));
     divLearnMore.innerHTML = "Learn More!";
     divButtons.appendChild(divLearnMore);
