@@ -17,10 +17,6 @@ function onLoad() {
     });
 }
 
-function report() {
-    
-}
-
 function btn_login() {
     var _email = in_login_email.value;
     var _pass = in_login_pass.value;
