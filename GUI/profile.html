@@ -16,7 +16,6 @@
   <!-- Custom styles for this template -->
   <link href="profile.css" rel="stylesheet">
 
-
 </head>
 
 <body onload="body_onload()">
@@ -46,34 +45,36 @@
 
         <!-- Options -->
 
-      <li class="nav-item dropdown show">
-        <a href="#" id="options_btn" onclick="displayOptions()" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Options <span class="caret"></span></a>
-        <div id="optionsToggle" class="dropdown-menu show" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 38px, 0px); top: 0px; left: 415px; will-change: transform;">
+        <li class="nav-item dropdown show">
+          <a href="#" id="options_btn" onclick="displayOptions()" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button"
+            aria-haspopup="true" aria-expanded="false">Options <span class="caret"></span></a>
+          <div id="optionsToggle" class="dropdown-menu show" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 38px, 0px); top: 0px; left: 415px; will-change: transform;">
             <a class="dropdown-item" href="#">View Profile</a>
             <div class="dropdown-divider"></div>
             <!--<a class="dropdown-item" href="#">Log Out</a>-->
             <a href="#" class="dropdown-item btn btn-success btn-sm" style="margin-left: 0px; font-size: 12px;" onclick="btn_logout()">Logout</a>
-            
+
             <div class="dropdown-divider"></div>
-            <button type="button" class="dropdown-item btn btn-success btn-sm" style="margin-left: 0px; font-size: 12px;" data-toggle="modal" data-target="#setModal"
-            onclick="btn_edit()">Settings</button>
-        </div>
-      </li>
+            <button type="button" class="dropdown-item btn btn-success btn-sm" style="margin-left: 0px; font-size: 12px;" data-toggle="modal"
+              data-target="#setModal" onclick="btn_edit()">Settings</button>
+          </div>
+        </li>
 
 
-      <!-- Notifications -->
+        <!-- Notifications -->
 
-    <li class="nav-item dropdown show">
-      <a href="#" id="notifications_btn" onclick="displayNotifications()" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Notifications <span class="caret"></span></a>
-      <div id="notificationsToggle" class="dropdown-menu show" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 38px, 0px); top: 0px; left: 465px; will-change: transform;">
-        <ul id="notif" > 
-        
-        </ul>
-         <!-- <a class="dropdown-item" href="#">View all Notifications</a>-->
-      </div>
-    </li>
+        <li class="nav-item dropdown show">
+          <a href="#" id="notifications_btn" onclick="displayNotifications()" class="nav-link dropdown-toggle" data-toggle="dropdown"
+            role="button" aria-haspopup="true" aria-expanded="false">Notifications <span class="caret"></span></a>
+          <div id="notificationsToggle" class="dropdown-menu show" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 38px, 0px); top: 0px; left: 465px; will-change: transform;">
+            <ul id="notif">
 
-    <!-- End -->
+            </ul>
+            <!-- <a class="dropdown-item" href="#">View all Notifications</a>-->
+          </div>
+        </li>
+
+        <!-- End -->
 
       </ul>
     </div>
@@ -84,28 +85,29 @@
     <div class="card mb-3" style="width: 650px; margin-left: 25%;">
       <h3 class="card-header" id="profile_name">John Doe</h2>
 
-          <img style="height: 100px; width: 100px; margin-left: 5%; margin-top:2%; display: block;" src="Pictures/user_icon.jpg" id="img_profile" alt="Card image">
+        <img style="height: 100px; width: 100px; margin-left: 5%; margin-top:2%; display: block;" src="Pictures/user_icon.jpg" id="img_profile"
+          alt="Card image">
 
 
 
         <div class="card-body">
-            <!--Upload profile image-->
+          <!--Upload profile image-->
 
-            <div class="img_profile_container">
-                <label for="btn_upload_hidden" class="txt_uploadImg">Upload Image</label>
-                <input id="btn_upload_hidden" style="visibility:hidden" type="file">
-            </div>
+          <div class="img_profile_container">
+            <label for="btn_upload_hidden" class="txt_uploadImg">Upload Image</label>
+            <input id="btn_upload_hidden" style="visibility:hidden" type="file">
+          </div>
 
-            <!--EDIT BUTTON-->
-            <button type="button" class="btn btn-success btn-sm" style="margin-left: 520px; font-size: 12px;" data-toggle="modal" data-target="#myModal2"
+          <!--EDIT BUTTON-->
+          <button type="button" class="btn btn-success btn-sm" style="margin-left: 520px; font-size: 12px;" data-toggle="modal" data-target="#myModal2"
             onclick="btn_edit()">edit</button>
-            <br>
-            <br>
-            <!--SETTINGS BUTTON-->
-            <button type="button" class="btn btn-success btn-sm" style="margin-left: 489px; font-size: 12px;" data-toggle="modal" data-target="#setModal"
+          <br>
+          <br>
+          <!--SETTINGS BUTTON-->
+          <button type="button" class="btn btn-success btn-sm" style="margin-left: 489px; font-size: 12px;" data-toggle="modal" data-target="#setModal"
             onclick="btn_edit()">settings</button>
 
-            <br>
+          <br>
 
 
           <!-- EDIT PROFILE MODAL -->
@@ -238,46 +240,46 @@
           </div>
 
           <!-- SETTINGS MODAL-->
-    <div class="modal" id="setModal" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Password Change</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <div class="modal" id="setModal" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Password Change</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
-          </div>
-          <div class="modal-body">
-
-            <form>
-                <fieldset>
-
-                <div class="form-group">
-                     <label for="in_profile_currentPass">Current Password</label>
-                     <input type="password" class="form-control" id="in_profile_currentPass" placeholder="Password">
                 </div>
+                <div class="modal-body">
 
-                <div class="form-group">
-                     <label for="in_profile_newPass">New Password</label>
-                     <input type="password" class="form-control" id="in_profile_newPass" placeholder="Password">
+                  <form>
+                    <fieldset>
+
+                      <div class="form-group">
+                        <label for="in_profile_currentPass">Current Password</label>
+                        <input type="password" class="form-control" id="in_profile_currentPass" placeholder="Password">
+                      </div>
+
+                      <div class="form-group">
+                        <label for="in_profile_newPass">New Password</label>
+                        <input type="password" class="form-control" id="in_profile_newPass" placeholder="Password">
+                      </div>
+
+                      <div class="form-group">
+                        <label for="in_profile_confirmPass">Confirm Password</label>
+                        <input type="password" class="form-control" id="in_profile_confirmPass" placeholder="Password">
+                      </div>
+
+
+                    </fieldset>
+                  </form>
                 </div>
-
-                <div class="form-group">
-                     <label for="in_profile_confirmPass">Confirm Password</label>
-                     <input type="password" class="form-control" id="in_profile_confirmPass" placeholder="Password">
-                </div>
-
-
-                </fieldset>
-            </form>
-          </div>
-          <div class="modal-footer">
+                <div class="modal-footer">
                   <button type="button" class="btn btn-outline-primary" onclick="btn_passChange()" data-dismiss="modal">Save</button>
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-    </div>
 
 
           <!--Profile Page//-->
@@ -342,8 +344,10 @@
         <!-- Bootstrap core JavaScript -->
         <script src="vendor/jquery/jquery.min.js"></script>
         <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
         <script src="vendor/scripts/index.js"></script>
         <script src="vendor/scripts/profile.js"></script>
+        <script src="vendor/scripts/home.js"></script>
 
 
         <!-- Bootstrap core CSS -->
@@ -359,39 +363,37 @@
   </body>
 
   <style>
-      .img_profile_container {
-          border-top: 1px solid #CCCCCC;
-          border-right: 3px solid #CCCCCC;
-          border-bottom: 3px solid #CCCCCC;
-          border-left: 1px solid #CCCCCC;
-          border-radius: 5px;
-          background-color: #EEEEEE;
-          color: #333333;
-          padding: 2px;
-          width: 120px;
-          height: 30px;
-      }
-      .txt_uploadImg {
-          font-size: 15px;
-          font-weight: bold;
-      }
-      #btn_upload_hidden {
-      }
+    .img_profile_container {
+      border-top: 1px solid #CCCCCC;
+      border-right: 3px solid #CCCCCC;
+      border-bottom: 3px solid #CCCCCC;
+      border-left: 1px solid #CCCCCC;
+      border-radius: 5px;
+      background-color: #EEEEEE;
+      color: #333333;
+      padding: 2px;
+      width: 120px;
+      height: 30px;
+    }
 
-      #options_btn {
-        position: absolute;
-        left: 415px;
-        width: 92px;
-      }
+    .txt_uploadImg {
+      font-size: 15px;
+      font-weight: bold;
+    }
 
-      #notifications_btn {
-        position: absolute;
-        left: 465px;
-        width: 136px;
-      }
+    #btn_upload_hidden {}
 
+    #options_btn {
+      position: absolute;
+      left: 415px;
+      width: 92px;
+    }
 
-
+    #notifications_btn {
+      position: absolute;
+      left: 465px;
+      width: 136px;
+    }
   </style>
 
 </html>

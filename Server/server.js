@@ -751,12 +751,12 @@ app.post('/ClickInterested', (req, res) => {
     // who liked it
     var email = req.body.email;
 
-    // function to send new notification for the like
-    newNotification("like", postId, email);
-
     if (!postId || !email) {
         return res.status(400).json({ message: "Missing information" });
     }
+    
+    // function to send new notification for the like
+    newNotification("like", postId, email);
 
     let query = "SELECT numLikes FROM Posts WHERE idPosts = ?";
 
@@ -846,12 +846,8 @@ function newNotification(str, postid, senderEmail) {
     db.query(query1, senderEmail, function (err1, resp1) {
         console.log(resp1);
         if (err1) {
-            res.send(JSON.stringify({
-                "status": 500,
-                "error": err1,
-                "response": null,
-                "message": "Internal server error"
-            }));
+            console.log("Internal server error");
+            return;
         }
         else {
             var string = JSON.stringify(resp1);
@@ -864,12 +860,8 @@ function newNotification(str, postid, senderEmail) {
             db.query(query2, postid, function (err2, resp2) {
                 console.log(resp2);
                 if (err2) {
-                    res.send(JSON.stringify({
-                        "status": 500,
-                        "error": err2,
-                        "response": null,
-                        "message": "Internal server error"
-                    }));
+                    console.log("Internal server error");
+                    return;
                 }
                 else {
                     var string = JSON.stringify(resp2);
@@ -913,21 +905,10 @@ function newNotification(str, postid, senderEmail) {
                     db.query(query3, newNotification, function (err, resp) {
                         console.log(resp);
                         if (err) {
-                            res.send(JSON.stringify({
-                                "status": 500,
-                                "error": err,
-                                "response": null,
-                                "message": "Internal server error"
-                            }));
+                            console.log("Internal server error");
                         }
                         else {
                             console.log("Success! New Notification added!");
-                            /* res.send(JSON.stringify({
-                                 "status": 200,
-                                 "error": null,
-                                 "response": resp,
-                                 "message": "Success! New Notification added!"
-                             })); */
                         }
                     });
                 }
