@@ -3,6 +3,7 @@ var urlReport = "http://localhost:5500/Report"
 var urlLike = "http://localhost:5500/ClickInterested"
 var urlClose = "http://localhost:5500/ClosePost"
 var urlGetComment = "http://localhost:5500/getComments"
+var urlWriteComment = "http://localhost:5500/WriteComment"
 
 function onLoad() {
     getAllPosts();
@@ -406,6 +407,7 @@ function expandComments(postID, num, json) {
     document.getElementById("closeBtn_post").setAttribute('onclick', "removeElements(".concat(postID, ", ", num, ")"));
 
     var ul = document.getElementById('ulcomments'.concat(postID));
+
     if (json == null || num === 0) {
         //p
         var pComments = document.createElement("p");
@@ -429,8 +431,6 @@ function expandComments(postID, num, json) {
         title.setAttribute('class', 'card-title');
         title.innerHTML = "No comments yet.";
         body.appendChild(title);
-
-        return;
     }
     for (i = 0; i < num; i++) {
         //p
@@ -452,7 +452,7 @@ function expandComments(postID, num, json) {
 
         //sender name (content of comment)
         var sender = document.createElement("kbd");
-        sender.style = "float:left; background-color:lightblue; height:35px; font-size:14px; margin-left:-15px; margin-top:-12px; color:black;";
+        sender.style = "float:left; background-color:lightblue; height:32px; font-size:15px; margin-left:-15px; margin-top:-10px; color:black;";
         sender.innerHTML = json[i].SenderName;
         body.appendChild(sender);
 
@@ -462,15 +462,90 @@ function expandComments(postID, num, json) {
         title.innerHTML = json[i].Comment;
         body.appendChild(title);
     }
+
+    // WRITE COMMENT FIELD
+    //p
+    var pWComments = document.createElement("p");
+    pWComments.setAttribute('id', 'pWComments'.concat(postID));
+    pWComments.setAttribute('class', 'comment');
+    pWComments.style = "padding:0px; margin:0px;";
+    ul.appendChild(pWComments);
+    //center
+    var centerW = document.createElement("div");
+    centerW.setAttribute('class', 'card text-center');
+    centerW.style = "width: 480px; height:55px; margin-left:-47px;";
+    pWComments.appendChild(centerW);
+
+    //body
+    var bodyW = document.createElement("div");
+    bodyW.setAttribute('class', 'card-body');
+    centerW.appendChild(bodyW);
+
+    //input
+    var inputW = document.createElement("INPUT");
+    inputW.setAttribute('class', 'form-control mr-sm-2');
+    inputW.setAttribute('type', 'text');
+    inputW.setAttribute('placeholder', 'Add comment here');
+    inputW.style = "margin-top: -21px;width: 400px; height: 55px; margin-left:-20px;";
+    inputW.setAttribute('id', 'txtComment');
+    bodyW.appendChild(inputW);
+
+    //button
+    var btnAddW = document.createElement("BUTTON");
+    btnAddW.setAttribute('class', 'form-control mr-sm-2');
+    btnAddW.setAttribute('onclick', 'addComment('.concat(postID, ')'));
+    btnAddW.style = "padding:0px; color: #ffffff; margin-left:380px; margin-top: -55px; background-color: #000000; width: 80px; height: 55px; font-size: 13px";
+    btnAddW.setAttribute('id', 'addBtn');
+    btnAddW.setAttribute('data-dismiss', 'modal');
+    btnAddW.setAttribute('onclick', 'addComment('.concat(postID, ",", email, ",", num, ")"));
+    btnAddW.innerHTML = "Add";
+    bodyW.appendChild(btnAddW);
+}
+
+function addComment(postID, email, num){
+    var comment = document.getElementById("txtComment").value;
+    postID = parseInt(postID);
+    fetch(urlWriteComment, {
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+            "postId": postID,
+            "comment": comment,
+            "email": "anjali@purdue.edu" // replace with email
+        })
+
+    }).then(function (res) {
+        if (res.ok) {
+            res.json().then(function (data) {
+                console.log("Inside res.ok. New comment added");
+            }.bind(this));
+        }
+        else {
+            alert("Error: writing comment unsuccessful!");
+            res.json().then(function (data) {
+                console.log(data.message);
+            }.bind(this));
+        }
+    }).catch(function (err) {
+        alert("Error: No internet connection!");
+        console.log(err.message + ": No Internet Connection");
+    });
+
+    removeElements(postID, num);
+    $('#myPostModal').modal('hide');
 }
 
 // Remove elements in Learn More Post modal
-function removeElements(postID, num){
-    if(num === 0){
-        (document.getElementById('ulcomments'.concat(postID))).removeChild((document.getElementById('pComments'.concat(postID)))); 
+function removeElements(postID, num) {
+    if (num === 0) {
+        (document.getElementById('ulcomments'.concat(postID))).removeChild((document.getElementById('pComments'.concat(postID))));
     }
-    for(i = 0; i < num; i++) {
+    for (i = 0; i < num; i++) {
         // remove comments
-        (document.getElementById('ulcomments'.concat(postID))).removeChild((document.getElementById('pComments'.concat(postID, i.toString()))));  
+        (document.getElementById('ulcomments'.concat(postID))).removeChild((document.getElementById('pComments'.concat(postID, i.toString()))));
     }
+    (document.getElementById('ulcomments'.concat(postID))).removeChild((document.getElementById('pWComments'.concat(postID))));
 }
