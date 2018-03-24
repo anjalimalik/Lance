@@ -155,10 +155,10 @@
         <div>
 
           <p>From:</p>
-          <p style="color:black; font-size:14px;"> 0 <input type="range" min="0" max="10000" value="0" class="slider" style="width:200px;" id="priceLower"> 10000
+          <p style="color:black; font-size:14px;"> 0 <input type="range" min="0" max="10000" value="0" class="slider" style="width:225px;" id="priceLower"> 10000
             </p>
           <p>To:</p>
-          <p style="color:black; font-size:14px;"> 0 <input type="range" min="0" max="10000" value="10000" class="slider" style="width:200px;" id="priceUpper"> 10000
+          <p style="color:black; font-size:14px;"> 0 <input type="range" min="0" max="10000" value="10000" class="slider" style="width:225px;" id="priceUpper"> 10000
             </p>
         </div>
 
@@ -178,6 +178,21 @@
             <label for="dateUpper">From:</label>
             <input type="date" class="form-control" id="dateUpper">
           </div>
+
+          <h5 style="position: relative; left: 75px;"> Category </h5>
+
+          <div class="dropdown" style="padding-bottom:20px;">
+              <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Choose Category
+              <span class="caret"></span></button>
+              <ul class="dropdown-menu" style="padding-left:10px;font-size:15px;">
+                <li><a href="#" onclick="filterCategory('ride')">Ride Share</a></li>
+                <li><a href="#" onclick="filterCategory('food')">Food Pickup</a></li>
+                <li><a href="#" onclick="filterCategory('tutor')">Tutor</a></li>
+                <li><a href="#" onclick="filterCategory('sitter')">Baby/Pet Sitter</a></li>
+                <li><a href="#" onclick="filterCategory('housing')">Housing</a></li>
+                <li><a href="#" onclick="filterCategory('sale')">For Sale</a></li>
+              </ul>
+            </div>
 
           <button id="btnFilter" class="btn btn-outline-primary" style="position: relative; margin-left: 160px; width: 120px; height: 40px; text-align: center;"
             onclick="filterPosts()">Filter</button>
