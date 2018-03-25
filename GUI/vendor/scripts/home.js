@@ -732,7 +732,7 @@ function expandCreatePModal(category) {
         // Number of passengers and Contact info.
         var numFG = document.createElement("div");
         numFG.setAttribute('class', 'form-group');
-        document.getElementById("fieldset_createNP").appendChild(numFG);
+        rideDiv.appendChild(numFG);
 
         var numLbl = document.createElement("LABEL");
         numLbl.innerHTML = "# of Passengers: ";
@@ -759,7 +759,7 @@ function expandCreatePModal(category) {
         infoTxt.setAttribute('type', 'text');
         infoTxt.setAttribute('rows', '1');
         infoTxt.setAttribute('class', 'form-control');
-        infoTxt.setAttribute('id', 'ride_info');
+        infoTxt.setAttribute('id', 'info');
         infoTxt.setAttribute('placeholder', 'Phone no. or email (optional)');
         infoTxt.style = "width:200px; display: inline-block; margin-left:125px; padding:10px;text-align:left;overflow:auto;";
         pNum.appendChild(infoTxt);
@@ -800,7 +800,7 @@ function expandCreatePModal(category) {
         infoTxt.setAttribute('type', 'text');
         infoTxt.setAttribute('rows', '1');
         infoTxt.setAttribute('class', 'form-control');
-        infoTxt.setAttribute('id', 'food_info');
+        infoTxt.setAttribute('id', 'info');
         infoTxt.setAttribute('placeholder', 'Phone no. or email (optional)');
         infoTxt.style = "width:210px; display: inline-block; margin-left:20px; padding:10px;text-align:left;overflow:auto;";
         pRes.appendChild(infoTxt);
@@ -808,7 +808,7 @@ function expandCreatePModal(category) {
         // Items
         var itemsFG = document.createElement("div");
         itemsFG.setAttribute('class', 'form-group');
-        document.getElementById("fieldset_createNP").appendChild(itemsFG);
+        foodDiv.appendChild(itemsFG);
 
         var itemsLbl = document.createElement("LABEL");
         itemsLbl.innerHTML = "Items: ";
@@ -852,7 +852,7 @@ function expandCreatePModal(category) {
         // Qualifications
         var qualFG = document.createElement("div");
         qualFG.setAttribute('class', 'form-group');
-        document.getElementById("fieldset_createNP").appendChild(qualFG);
+        tutorDiv.appendChild(qualFG);
 
         var qualLbl = document.createElement("LABEL");
         qualLbl.innerHTML = "Qualifications: ";
@@ -870,7 +870,7 @@ function expandCreatePModal(category) {
         // Contact Info
         var infoFG = document.createElement("div");
         infoFG .setAttribute('class', 'form-group');
-        document.getElementById("fieldset_createNP").appendChild(infoFG);
+        tutorDiv.appendChild(infoFG);
 
         var infoLbl = document.createElement("LABEL");
         infoLbl.innerHTML = "Contact Info: ";
@@ -880,13 +880,51 @@ function expandCreatePModal(category) {
         infoTxt.setAttribute('type', 'text');
         infoTxt.setAttribute('rows', '1');
         infoTxt.setAttribute('class', 'form-control');
-        infoTxt.setAttribute('id', 'tutor_info');
+        infoTxt.setAttribute('id', 'info');
         infoTxt.setAttribute('placeholder', 'Phone no. or email (optional)');
         infoTxt.style = "width:210px; padding:10px;text-align:left;overflow:auto;";
         infoFG.appendChild(infoTxt);
     }
     else if (category === 'Sitter') {
         document.getElementById("pickedCategory").value = "Sitter";
+
+        var sitDiv = document.createElement("div");
+        sitDiv.setAttribute('class', 'catDiv');
+        document.getElementById("fieldset_createNP").appendChild(sitDiv);
+
+        // date
+        var dateFG = document.createElement("div");
+        dateFG.setAttribute('class', 'form-group');
+        sitDiv.appendChild(dateFG);
+
+        var numLbl = document.createElement("LABEL");
+        numLbl.innerHTML = "Date: ";
+        dateFG.appendChild(numLbl);
+
+        var numTxt = document.createElement("input");
+        numTxt.setAttribute('type', 'date');
+        numTxt.setAttribute('class', 'form-control');
+        numTxt.setAttribute('id', 'sitter_date');
+        numTxt.style = "width:200px;padding:10px;text-align:left;overflow:auto;";
+        dateFG.appendChild(numTxt);
+
+        // Contact Info
+        var infoFG = document.createElement("div");
+        infoFG.setAttribute('class', 'form-group');
+        sitDiv.appendChild(infoFG);
+
+        var infoLbl = document.createElement("LABEL");
+        infoLbl.innerHTML = "Contact Info: ";
+        infoFG.appendChild(infoLbl);
+
+        var infoTxt = document.createElement("input");
+        infoTxt.setAttribute('type', 'text');
+        infoTxt.setAttribute('rows', '1');
+        infoTxt.setAttribute('class', 'form-control');
+        infoTxt.setAttribute('id', 'info');
+        infoTxt.setAttribute('placeholder', 'Phone no. or email (optional)');
+        infoTxt.style = "width:200px;padding:10px;text-align:left;overflow:auto;";
+        infoFG.appendChild(infoTxt);
     }
     else if (category === 'Housing') {
         document.getElementById("pickedCategory").value = "Housing";
