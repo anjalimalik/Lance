@@ -20,8 +20,9 @@
 
   <!-- Custom styles for this template -->
   <link href="css/home.css" rel="stylesheet">
-  <script src="vendor/scripts/home.js"></script>
+  <script src="vendor/scripts/index.js"></script>
   <script src="vendor/scripts/profile.js"></script>
+  <script src="vendor/scripts/home.js"></script>
   <!-- Bootstrap core JavaScript -->
   <script src="vendor/jquery/jquery.min.js"></script>
   <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -60,16 +61,12 @@
 
         <li class="nav-item dropdown show">
           <a href="#" id="options_btn" onclick="displayOptions()" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button"
-            aria-haspopup="true" aria-expanded="false" style="margin-left:815px;">Options <span class="caret"></span></a>
-          <div id="optionsToggle" class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 38px, 0px); top: 0px; left: 815px; will-change: transform;">
+            aria-haspopup="true" aria-expanded="false" style="margin-left:405px;">Options <span class="caret"></span></a>
+          <div id="optionsToggle" class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 38px, 0px); top: 0px; left: 805px; will-change: transform;">
             <a class="dropdown-item btn btn-success btn-sm" style="margin-left: 0px; font-size: 12px;" href="#">View Profile</a>
             <div class="dropdown-divider"></div>
             <!--<a class="dropdown-item" href="#">Log Out</a>-->
             <a href="#" class="dropdown-item btn btn-success btn-sm" style="margin-left: 0px; font-size: 12px;" onclick="btn_logout()">Logout</a>
-
-            <div class="dropdown-divider"></div>
-            <button type="button" class="dropdown-item btn btn-success btn-sm" style="margin-left: 0px; font-size: 12px;" data-toggle="modal"
-              data-target="#setModal" onclick="btn_edit()">Settings</button>
           </div>
         </li>
 
@@ -78,8 +75,8 @@
 
         <li class="nav-item dropdown show">
           <a href="#" id="notifications_btn" onclick="displayNotifications()" class="nav-link dropdown-toggle" data-toggle="dropdown"
-            role="button" aria-haspopup="true" aria-expanded="false" >Notifications <span class="caret"></span></a>
-          <div id="notificationsToggle" class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 38px, 0px); top: 0px; will-change: transform;">
+            role="button" aria-haspopup="true" aria-expanded="false" style="margin-left:455px;">Notifications <span class="caret"></span></a>
+          <div id="notificationsToggle" class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 38px, 0px); left: 855px; top: 0px; will-change: transform;">
             <ul id="notif">
 
             </ul>
@@ -145,6 +142,7 @@
       </div>
     </div>
   </div>
+
 
   <!-- START OF CARD LIST -->
   <ul id="news_card_list" class="card_list">
@@ -222,5 +220,19 @@
     <!-- END PAGE CONTENT -->
 
 </body>
+
+<style>
+    #options_btn {
+      position: absolute;
+      left: 415px;
+      width: 92px;
+    }
+
+    #notifications_btn {
+      position: absolute;
+      left: 465px;
+      width: 136px;
+    }
+  </style>
 
 </html>

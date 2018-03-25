@@ -76,7 +76,7 @@ function populate_profile() {
     document.getElementById("profile_links").innerHTML = webLink;
 }
 
-function btn_edit() {
+function btn_EditProfile() {
     document.getElementById("in_profile_edit_email").value = email;
     document.getElementById("in_profile_edit_email").readOnly = true;
     edit_edu.value = edu;
