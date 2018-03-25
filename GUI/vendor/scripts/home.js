@@ -70,7 +70,7 @@ function createCard(user, content, headline, postingType, price, postID, date, l
         /* Category */
         var divCat = document.createElement("kbd");
         divCat.innerHTML = category;
-        divCat.style = "background-color:#333399;color:white;float:right;margin-top:-5px;margin-right:7px;font-size: 14px;";
+        divCat.style = "background-color:#483D8B;color:white;float:right;margin-top:-5px;margin-right:7px;font-size: 14px; height:30px;";
         divHeader.appendChild(divCat);
     }
 

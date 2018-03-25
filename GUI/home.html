@@ -35,7 +35,7 @@
   <!-- Navigation -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
 
-    <a class="navbar-brand"  href="./index.html">LANCE</a>
+    <a class="navbar-brand" href="./index.html">LANCE</a>
 
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01"
       aria-expanded="false" aria-label="Toggle navigation">
@@ -153,7 +153,7 @@
   <!-- MENU BAR -->
   <div class="row">
     <div class="col-md-4">
-      <div class="jumbotron" style="position: absolute; left: 5%; top: 9px; width: 63%; height: auto;">
+      <div class="jumbotron" style="position: absolute; left: 5%; top: 15px; width: 63%; height: auto;">
         <h4 style="position: relative; top: -40px; left: 110px;"> MENU </h4>
 
         <button id="btnRequest" class="btn btn-outline-primary" style="position: relative; top: -30px;margin-left: 10px; width: 120px; height: 40px; text-align: center;"
@@ -170,11 +170,11 @@
         <div>
 
           <p>From:</p>
-          <p style="color:black; font-size:14px;"> 0 <input type="range" min="0" max="5000" value="0" class="slider" style="width:225px;" id="priceLower" oninput="slider_onChange('PL')"> 5000
+          <p style="color:black; font-size:14px;"> 0 <input type="range" min="0" max="5000" value="0" class="slider" style="width:225px;" id="priceLower" oninput="slider_onChange('PL')">            5000
             <div id="outPL" style="position:relative; padding:0px;margin-left:125px;"> </div>
           </p>
           <p>To:</p>
-          <p style="color:black; font-size:14px;"> 0 <input type="range" min="0" max="5000" value="5000" class="slider" style="width:225px;" id="priceUpper" oninput="slider_onChange('PU')"> 5000
+          <p style="color:black; font-size:14px;"> 0 <input type="range" min="0" max="5000" value="5000" class="slider" style="width:225px;" id="priceUpper" oninput="slider_onChange('PU')">            5000
             <div id="outPU" style="position:relative; padding:0px;margin-left:125px;"> </div>
           </p>
         </div>
@@ -217,23 +217,29 @@
       </div>
     </div>
     <!-- END MENU BAR -->
-
+  </div>
+  <div class="row">
+    <!-- Create New Post -->
+    <div class="jumbotron" style="position: absolute; margin-left: 1372px; margin-top: 15px; width: 18%; height: 15%;">
+      <h4 style="position: relative; top: -40px; "> CREATE NEW POST </h4>
+      <button class="btn btn-outline-dark" id="btnNewPost" style="position: relative; border-color:#483D8B; top: -30px; margin-left: 55px;" onclick="btnNewPost_onclick()">New Post</button>
+    </div>
     <!-- END PAGE CONTENT -->
-
+  </div>
 </body>
 
 <style>
-    #options_btn {
-      position: absolute;
-      left: 415px;
-      width: 92px;
-    }
+  #options_btn {
+    position: absolute;
+    left: 415px;
+    width: 92px;
+  }
 
-    #notifications_btn {
-      position: absolute;
-      left: 465px;
-      width: 136px;
-    }
-  </style>
+  #notifications_btn {
+    position: absolute;
+    left: 465px;
+    width: 136px;
+  }
+</style>
 
 </html>
