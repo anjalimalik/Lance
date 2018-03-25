@@ -686,7 +686,8 @@ function slider_onChange(str) {
     }
 }
 
-// expand create new post modal to show attributes related to a category
+// expand create new post modal to show attributes related to a category 
+// UI for all attributes
 function expandCreatePModal(category) {
 
     if (category === 'Ride') {
@@ -1003,5 +1004,69 @@ function expandCreatePModal(category) {
     }
     else if (category === 'Sale') {
         document.getElementById("pickedCategory").value = "Sale";
+
+        var saleDiv = document.createElement("div");
+        saleDiv.setAttribute('class', 'catDiv');
+        document.getElementById("fieldset_createNP").appendChild(saleDiv);
+
+        // Item name and Contact info.
+        var itemFG = document.createElement("div");
+        itemFG.setAttribute('class', 'form-group');
+        saleDiv.appendChild(itemFG);
+
+        var itemLbl = document.createElement("LABEL");
+        itemLbl.innerHTML = "Item: ";
+        itemFG.appendChild(itemLbl);
+
+        var infoLbl = document.createElement("LABEL");
+        infoLbl.innerHTML = "Contact Info: ";
+        infoLbl.style = "margin-left:205px;";
+        itemFG.appendChild(infoLbl);
+
+        var pItem = document.createElement("p");
+        itemFG.appendChild(pItem);
+
+        var itemTxt = document.createElement("textarea");
+        itemTxt.setAttribute('type', 'text');
+        itemTxt.setAttribute('rows', '1');
+        itemTxt.setAttribute('class', 'form-control');
+        itemTxt.setAttribute('id', 'sale_item');
+        itemTxt.style = "width:220px; display:inline-block;padding:10px;text-align:left;overflow:auto;";
+        pItem.appendChild(itemTxt);
+
+        var infoTxt = document.createElement("textarea");
+        infoTxt.setAttribute('type', 'text');
+        infoTxt.setAttribute('rows', '1');
+        infoTxt.setAttribute('class', 'form-control');
+        infoTxt.setAttribute('id', 'info');
+        infoTxt.setAttribute('placeholder', 'Phone no. or email (optional)');
+        infoTxt.style = "width:220px; display: inline-block; margin-left:20px; padding:10px;text-align:left;overflow:auto;";
+        pItem.appendChild(infoTxt);
+
+        // Condition radios
+        var condFG = document.createElement("div");
+        condFG.setAttribute('class', 'form-group');
+        saleDiv.appendChild(condFG);
+
+        var usedLbl = document.createElement("LABEL");
+        usedLbl.innerHTML = " Used ";
+        usedLbl.setAttribute('class', 'radio-inline');
+        usedLbl.style = "margin-right:20px; margin-top: 20px;";
+        condFG.appendChild(usedLbl);
+        
+        var usedR = document.createElement("input");
+        usedR.setAttribute('type', 'radio');
+        usedR.setAttribute('name', 'condition');
+        usedLbl.appendChild(usedR);
+
+        var newLbl = document.createElement("LABEL");
+        newLbl.innerHTML = " New ";
+        newLbl.setAttribute('class', 'radio-inline');
+        condFG.appendChild(newLbl);
+        
+        var newR = document.createElement("input");
+        newR.setAttribute('type', 'radio');
+        newR.setAttribute('name', 'condition');
+        newLbl.appendChild(newR);
     }
 }
