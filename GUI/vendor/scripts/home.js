@@ -928,6 +928,78 @@ function expandCreatePModal(category) {
     }
     else if (category === 'Housing') {
         document.getElementById("pickedCategory").value = "Housing";
+
+        var housingDiv = document.createElement("div");
+        housingDiv.setAttribute('class', 'catDiv');
+        document.getElementById("fieldset_createNP").appendChild(housingDiv);
+
+        // Location
+        var locFG = document.createElement("div");
+        locFG.setAttribute('class', 'form-group');
+        housingDiv.appendChild(locFG);
+
+        var locLbl = document.createElement("LABEL");
+        locLbl.innerHTML = "Location: ";
+        locFG.appendChild(locLbl);
+
+        var locTxt = document.createElement("textarea");
+        locTxt.setAttribute('rows', '1');
+        locTxt.setAttribute('class', 'form-control');
+        locTxt.setAttribute('id', 'housing_loc');
+        locTxt.style = "width:210px;padding:10px;text-align:left;overflow:auto;";
+        locFG.appendChild(locTxt);
+
+        // Duration
+        var durFG = document.createElement("div");
+        durFG.setAttribute('class', 'form-group');
+        housingDiv.appendChild(durFG);
+
+        var durLbl = document.createElement("LABEL");
+        durLbl.innerHTML = "Duration: ";
+        durFG.appendChild(durLbl);
+
+        var durTxt = document.createElement("textarea");
+        durTxt.setAttribute('rows', '1');
+        durTxt.setAttribute('cols', '1');
+        durTxt.setAttribute('class', 'form-control');
+        durTxt.setAttribute('id', 'housing_dur');
+        durTxt.style = "padding:10px;text-align:left;overflow:auto;";
+        durFG.appendChild(durTxt);
+
+        // Number of Rooms and Contact info.
+        var numFG = document.createElement("div");
+        numFG.setAttribute('class', 'form-group');
+        housingDiv.appendChild(numFG);
+
+        var numLbl = document.createElement("LABEL");
+        numLbl.innerHTML = "# of Rooms: ";
+        numFG.appendChild(numLbl);
+
+        var infoLbl = document.createElement("LABEL");
+        infoLbl.innerHTML = "Contact Info: ";
+        infoLbl.style = "margin-left:50px;";
+        numFG.appendChild(infoLbl);
+
+        var pNum = document.createElement("p");
+        numFG.appendChild(pNum);
+
+        var numTxt = document.createElement("input");
+        numTxt.setAttribute('type', 'number');
+        numTxt.setAttribute('rows', '1');
+        numTxt.setAttribute('class', 'form-control');
+        numTxt.setAttribute('id', 'housing_num');
+        numTxt.setAttribute('placeholder', '#');
+        numTxt.style = "width:50px; display:inline-block;padding:10px;text-align:left;overflow:auto;";
+        pNum.appendChild(numTxt);
+
+        var infoTxt = document.createElement("input");
+        infoTxt.setAttribute('type', 'text');
+        infoTxt.setAttribute('rows', '1');
+        infoTxt.setAttribute('class', 'form-control');
+        infoTxt.setAttribute('id', 'info');
+        infoTxt.setAttribute('placeholder', 'Phone no. or email (optional)');
+        infoTxt.style = "width:200px; display: inline-block; margin-left:90px; padding:10px;text-align:left;overflow:auto;";
+        pNum.appendChild(infoTxt);
     }
     else if (category === 'Sale') {
         document.getElementById("pickedCategory").value = "Sale";
