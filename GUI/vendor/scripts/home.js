@@ -6,6 +6,7 @@ var urlGetComment = "http://localhost:5500/getComments"
 var urlWriteComment = "http://localhost:5500/WriteComment"
 var urlSortPosts = "http://localhost:5500/getSortedPosts"
 var urlFilterPosts = "http://localhost:5500/getFilteredPosts"
+var urlCreatePost = "http://localhost:5500/CreatePost"
 
 function onLoad() {
     getAllPosts();
@@ -70,7 +71,7 @@ function createCard(user, content, headline, postingType, price, postID, date, l
         /* Category */
         var divCat = document.createElement("kbd");
         divCat.innerHTML = category;
-        divCat.style = "background-color:#333399;color:white;float:right;margin-top:-5px;margin-right:7px;font-size: 14px;";
+        divCat.style = "background-color:#483D8B;color:white;float:right;margin-top:-5px;margin-right:7px;font-size: 14px; height:30px;";
         divHeader.appendChild(divCat);
     }
 
@@ -337,6 +338,7 @@ function getAllComments(postID) {
     });
 }
 
+// expand post to get all comments
 function expandPost(postID) {
     var lm = document.getElementById("learnMoreFG");
     // comments
@@ -346,86 +348,6 @@ function expandPost(postID) {
     lm.appendChild(ulComments);
 
     getAllComments(postID);
-
-    /*var ul = document.getElementById('myPostModal');
-    ul.setAttribute('aria-hidden', 'false');
-
-    // dialog
-    var divDialog = document.createElement('div');
-    divDialog.setAttribute('class', 'modal-dialog');
-    divDialog.setAttribute('role', 'document');
-    ul.appendChild(divDialog);
-
-    // content
-    var divContent = document.createElement("div");
-    divContent.setAttribute('class', 'modal-content');
-    divDialog.appendChild(divContent);
-
-    // body
-    var divBody = document.createElement("div");
-    divBody.setAttribute('class', 'modal-body');
-    divContent.appendChild(divBody);
-
-    // header
-    var divHeader = document.createElement("div");
-    divHeader.setAttribute('class', 'modal-header');
-    //divHeader.style = "height:45px;";
-    divBody.appendChild(divHeader);
-
-    // title
-    var hTitle = document.createElement("h5");
-    hTitle.setAttribute('class', 'modal-title');
-    hTitle.innerHTML = ""; // headline
-    divHeader.appendChild(hTitle);
-
-    // button &times
-    var btnX = document.createElement("BUTTON");
-    btnX.setAttribute('class', 'close');
-    btnX.setAttribute('data-dismiss', 'modal');
-    btnX.setAttribute('aria-label', 'Close');
-    divHeader.appendChild(btnX);
-
-    var spanX = document.createElement("BUTTON");
-    spanX.setAttribute('aria-hidden', 'true');
-    spanX.innerHTML = "&times;";
-    btnX.appendChild(spanX);
-
-    //form fieldset
-    var form = document.createElement("form");
-    divBody.appendChild(form);
-    var fieldset = document.createElement("fieldset");
-    form.appendChild(fieldset);
-
-    // form group
-    var divFG = document.createElement("div");
-    divFG.setAttribute('class', 'form-group');
-    fieldset.appendChild(divFG);
-
-    // label
-    var lbl = document.createElement("LABEL");
-    lbl.innerHTML = ""; //
-    divFG.appendChild(lbl);
-
-    // footer
-    var divFooter = document.createElement("div");
-    divFooter.setAttribute('class', 'modal-footer');
-    form.appendChild(divFooter);
-
-    // comments
-    var ulComments = document.createElement("ul");
-    ulComments.setAttribute('id', 'ulcomments'.concat(postID));
-    ulComments.setAttribute('class', 'comments_list');
-    divFooter.appendChild(ulComments);
-
-    getAllComments(postID);
-
-    // button &times
-    var btnClose = document.createElement("BUTTON");
-    btnClose.setAttribute('class', 'btn btn-secondary');
-    btnClose.setAttribute('data-dismiss', 'modal');
-    btnClose.innerHTML = 'Close';
-    divFooter.appendChild(btnClose); */
-
 }
 
 // EXPAND ALL COMMENTS FROM THE SERVER
@@ -652,8 +574,10 @@ function filterPosts(category, type) {
     });
 
 }
+
+// function to filter posts according to price and date posted
 function filterWRange() {
-    if (parseInt(document.getElementById("priceLower").value) !== 0 || parseInt(document.getElementById("priceUpper").value) !== 10000) {
+    if (parseInt(document.getElementById("priceLower").value) !== 0 || parseInt(document.getElementById("priceUpper").value) !== 5000) {
         if (parseInt(document.getElementById("priceUpper").value) <= parseInt(document.getElementById("priceLower").value)) {
             alert("Price input range is invalid.");
             return;
@@ -662,7 +586,7 @@ function filterWRange() {
             sortPosts("cost", null, document.getElementById("priceUpper").value, document.getElementById("priceLower").value);
         }
     } else if (document.getElementById("dateUpper").value && document.getElementById("priceLower").value) {
-        
+
         var dateLow = new Date(document.getElementById("dateLower").value);
         var dateUpp = new Date(document.getElementById("dateUpper").value);
 
@@ -676,6 +600,7 @@ function filterWRange() {
     }
 }
 
+// shows values selected by user on price range slider
 function slider_onChange(str) {
     var out = document.getElementById("out".concat(str));
     if (str === 'PL') {
@@ -683,4 +608,505 @@ function slider_onChange(str) {
     } else {
         out.innerHTML = priceUpper.value;
     }
+}
+
+function createPost() {
+    var title = document.getElementById("in_title_newpost").value;
+    var desc = document.getElementById("in_content_newpost").value;
+    var price = document.getElementById("in_price_newpost").value;
+    var type = document.getElementsByName("postType");
+    var type_value = null;
+    if (type[0].checked) {
+        type_value = type[0].value;
+    }
+    else if (type[1].checked) {
+        type_value = type[1].value;
+    }
+    else {
+        alert ("Not enough information provided");
+        document.getElementById("postClose").click();
+        return;
+    }
+
+    // Only category is optional
+    if(!price || !title || !desc) {
+        alert ("Not enough information provided");
+        document.getElementById("postClose").click();
+        return;
+    }
+    var attributes = null;
+    var category = document.getElementById("pickedCategory").value;
+
+    // make string for attributes according to the category 
+    if (category === "Ride") {
+        attributes = "";
+        attributes = attributes.concat("From: ", document.getElementById("ride_from").value, "|", "To: ", document.getElementById("ride_to").value, "|");
+        attributes = attributes.concat("# of Passengers: ", document.getElementById("ride_num").value, "|");
+    }
+    else if (category === "Food") {
+        attributes = "";
+        attributes = attributes.concat("Restaurant: ", document.getElementById("food_res").value, "|");
+        attributes = attributes.concat("Items: ", document.getElementById("food_items").value, "|");
+    }
+    else if (category === "Tutor") {
+        attributes = "";
+        attributes = attributes.concat("Course(s): ", document.getElementById("tutor_class").value, "|");
+        attributes = attributes.concat("Qualifications: ", document.getElementById("tutor_qual").value, "|");
+    }
+    else if (category === "Sitter") {
+        attributes = "";
+        attributes = attributes.concat("Date: ", document.getElementById("sitter_date").value, "|");
+    }
+    else if (category === "Housing") {
+        attributes = "";
+        attributes = attributes.concat("Location: ", document.getElementById("housing_loc").value, "|");
+        attributes = attributes.concat("# of Rooms: ", document.getElementById("housing_num").value, "|");
+        attributes = attributes.concat("Duration: ", document.getElementById("housing_dur").value, "|");
+    }
+    else if (category === "Sale") {
+        attributes = "";
+        attributes = attributes.concat("Item: ", document.getElementById("sale_item").value, "|");
+        attributes = attributes.concat("Condition: ", document.querySelector('input[name="sale_condition"]:checked').value, "|");
+    }
+    if (category) {
+        attributes = attributes.concat("Contact Info: ", document.getElementById("info").value);
+    }
+
+    // send to server
+    fetch(urlCreatePost, {
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+            "email": "test@purdue.edu",
+            "Headline": title,
+            "Content": desc,
+            "PostingType": type_value,
+            "money": price,
+            "Category": category,
+            "Attributes": attributes
+        })
+
+    }).then(function (res) {
+        if (res.ok) {
+            res.json().then(function (data) {
+                console.log("Inside res.ok. New post added");
+                alert("New Post created!");
+            }.bind(this));
+            $('.card_list_el').remove();
+            getAllPosts();
+        }
+        else {
+            alert("Error: creating post unsuccessful!");
+            res.json().then(function (data) {
+                console.log(data.message);
+            }.bind(this));
+        }
+    }).catch(function (err) {
+        alert("Error: No internet connection!");
+        console.log(err.message + ": No Internet Connection");
+    });
+
+    closeNewPostModal();
+}
+
+// expand create new post modal to show attributes related to a category 
+// UI for all attributes
+function expandCreatePModal(category) {
+
+    // remove elements if clicked on a category again
+    $('.catDiv').remove();
+
+    if (category === 'Ride') {
+        document.getElementById("pickedCategory").value = "Ride";
+
+        var rideDiv = document.createElement("div");
+        rideDiv.setAttribute('class', 'catDiv');
+        document.getElementById("fieldset_createNP").appendChild(rideDiv);
+
+        // From (location) & To
+        var fromFG = document.createElement("div");
+        fromFG.setAttribute('class', 'form-group');
+        rideDiv.appendChild(fromFG);
+
+        var fromLbl = document.createElement("LABEL");
+        fromLbl.innerHTML = "From: ";
+        fromFG.appendChild(fromLbl);
+
+        var toLbl = document.createElement("LABEL");
+        toLbl.innerHTML = "To:";
+        toLbl.style = "margin-left:190px;";
+        fromFG.appendChild(toLbl);
+
+        var pLoc = document.createElement("p");
+        fromFG.appendChild(pLoc);
+
+        var fromTxt = document.createElement("textarea");
+        fromTxt.setAttribute('rows', '1');
+        fromTxt.setAttribute('class', 'form-control');
+        fromTxt.setAttribute('id', 'ride_from');
+        fromTxt.setAttribute('placeholder', 'Location');
+        fromTxt.style = "width:210px;display:inline-block;padding:10px;text-align:left;overflow:auto;";
+        pLoc.appendChild(fromTxt);
+
+        var toTxt = document.createElement("textarea");
+        toTxt.setAttribute('rows', '1');
+        toTxt.setAttribute('class', 'form-control');
+        toTxt.setAttribute('id', 'ride_to');
+        toTxt.setAttribute('placeholder', 'Location');
+        toTxt.style = "width:210px;margin-left:20px;display:inline-block;padding:10px;text-align:left;overflow:auto;";
+        pLoc.appendChild(toTxt);
+
+        // Number of passengers and Contact info.
+        var numFG = document.createElement("div");
+        numFG.setAttribute('class', 'form-group');
+        rideDiv.appendChild(numFG);
+
+        var numLbl = document.createElement("LABEL");
+        numLbl.innerHTML = "# of Passengers: ";
+        numFG.appendChild(numLbl);
+
+        var infoLbl = document.createElement("LABEL");
+        infoLbl.innerHTML = "Contact Info: ";
+        infoLbl.style = "margin-left:55px;";
+        numFG.appendChild(infoLbl);
+
+        var pNum = document.createElement("p");
+        numFG.appendChild(pNum);
+
+        var numTxt = document.createElement("input");
+        numTxt.setAttribute('type', 'number');
+        numTxt.setAttribute('rows', '1');
+        numTxt.setAttribute('class', 'form-control');
+        numTxt.setAttribute('id', 'ride_num');
+        numTxt.setAttribute('placeholder', '#');
+        numTxt.style = "width:50px; display:inline-block;padding:10px;text-align:left;overflow:auto;";
+        pNum.appendChild(numTxt);
+
+        var infoTxt = document.createElement("input");
+        infoTxt.setAttribute('type', 'text');
+        infoTxt.setAttribute('rows', '1');
+        infoTxt.setAttribute('class', 'form-control');
+        infoTxt.setAttribute('id', 'info');
+        infoTxt.setAttribute('placeholder', 'Phone no. or email (optional)');
+        infoTxt.style = "width:200px; display: inline-block; margin-left:125px; padding:10px;text-align:left;overflow:auto;";
+        pNum.appendChild(infoTxt);
+    }
+    else if (category === 'Food') {
+        document.getElementById("pickedCategory").value = "Food";
+
+        var foodDiv = document.createElement("div");
+        foodDiv.setAttribute('class', 'catDiv');
+        document.getElementById("fieldset_createNP").appendChild(foodDiv);
+
+        // Restaurant & Contact Info
+        var resFG = document.createElement("div");
+        resFG.setAttribute('class', 'form-group');
+        foodDiv.appendChild(resFG);
+
+        var resLbl = document.createElement("LABEL");
+        resLbl.innerHTML = "Restaurant: ";
+        resFG.appendChild(resLbl);
+
+        var infoLbl = document.createElement("LABEL");
+        infoLbl.innerHTML = "Contact Info: ";
+        infoLbl.style = "margin-left:150px;";
+        resFG.appendChild(infoLbl);
+
+        var pRes = document.createElement("p");
+        resFG.appendChild(pRes);
+
+        var resTxt = document.createElement("textarea");
+        resTxt.setAttribute('rows', '1');
+        resTxt.setAttribute('class', 'form-control');
+        resTxt.setAttribute('id', 'food_res');
+        resTxt.style = "width:210px;display:inline-block;padding:10px;text-align:left;overflow:auto;";
+        pRes.appendChild(resTxt);
+
+        var infoTxt = document.createElement("textarea");
+        infoTxt.setAttribute('type', 'text');
+        infoTxt.setAttribute('rows', '1');
+        infoTxt.setAttribute('class', 'form-control');
+        infoTxt.setAttribute('id', 'info');
+        infoTxt.setAttribute('placeholder', 'Phone no. or email (optional)');
+        infoTxt.style = "width:210px; display: inline-block; margin-left:20px; padding:10px;text-align:left;overflow:auto;";
+        pRes.appendChild(infoTxt);
+
+        // Items
+        var itemsFG = document.createElement("div");
+        itemsFG.setAttribute('class', 'form-group');
+        foodDiv.appendChild(itemsFG);
+
+        var itemsLbl = document.createElement("LABEL");
+        itemsLbl.innerHTML = "Items: ";
+        itemsFG.appendChild(itemsLbl);
+
+        var itemsTxt = document.createElement("textarea");
+        itemsTxt.setAttribute('cols', '1');
+        itemsTxt.setAttribute('rows', '2');
+        itemsTxt.setAttribute('class', 'form-control');
+        itemsTxt.setAttribute('id', 'food_items');
+        itemsTxt.setAttribute('placeholder', '');
+        itemsTxt.style = "padding:10px;text-align:left;overflow:auto;";
+        itemsFG.appendChild(itemsTxt);
+
+    }
+    else if (category === 'Tutor') {
+        document.getElementById("pickedCategory").value = "Tutor";
+
+        var tutorDiv = document.createElement("div");
+        tutorDiv.setAttribute('class', 'catDiv');
+        document.getElementById("fieldset_createNP").appendChild(tutorDiv);
+
+        // Class Name
+        var classFG = document.createElement("div");
+        classFG.setAttribute('class', 'form-group');
+        tutorDiv.appendChild(classFG);
+
+        var classLbl = document.createElement("LABEL");
+        classLbl.innerHTML = "Course(s): ";
+        classFG.appendChild(classLbl);
+
+        var classTxt = document.createElement("textarea");
+        classTxt.setAttribute('cols', '1');
+        classTxt.setAttribute('rows', '1');
+        classTxt.setAttribute('class', 'form-control');
+        classTxt.setAttribute('id', 'tutor_class');
+        classTxt.setAttribute('placeholder', 'name or course no. at Purdue');
+        classTxt.style = "padding:10px;text-align:left;overflow:auto;";
+        classFG.appendChild(classTxt);
+
+        // Qualifications
+        var qualFG = document.createElement("div");
+        qualFG.setAttribute('class', 'form-group');
+        tutorDiv.appendChild(qualFG);
+
+        var qualLbl = document.createElement("LABEL");
+        qualLbl.innerHTML = "Qualifications: ";
+        qualFG.appendChild(qualLbl);
+
+        var qualTxt = document.createElement("textarea");
+        qualTxt.setAttribute('cols', '1');
+        qualTxt.setAttribute('rows', '2');
+        qualTxt.setAttribute('class', 'form-control');
+        qualTxt.setAttribute('id', 'tutor_qual');
+        qualTxt.setAttribute('placeholder', '');
+        qualTxt.style = "padding:10px;text-align:left;overflow:auto;";
+        qualFG.appendChild(qualTxt);
+
+        // Contact Info
+        var infoFG = document.createElement("div");
+        infoFG.setAttribute('class', 'form-group');
+        tutorDiv.appendChild(infoFG);
+
+        var infoLbl = document.createElement("LABEL");
+        infoLbl.innerHTML = "Contact Info: ";
+        infoFG.appendChild(infoLbl);
+
+        var infoTxt = document.createElement("textarea");
+        infoTxt.setAttribute('type', 'text');
+        infoTxt.setAttribute('rows', '1');
+        infoTxt.setAttribute('class', 'form-control');
+        infoTxt.setAttribute('id', 'info');
+        infoTxt.setAttribute('placeholder', 'Phone no. or email (optional)');
+        infoTxt.style = "width:210px; padding:10px;text-align:left;overflow:auto;";
+        infoFG.appendChild(infoTxt);
+    }
+    else if (category === 'Sitter') {
+        document.getElementById("pickedCategory").value = "Sitter";
+
+        var sitDiv = document.createElement("div");
+        sitDiv.setAttribute('class', 'catDiv');
+        document.getElementById("fieldset_createNP").appendChild(sitDiv);
+
+        // date
+        var dateFG = document.createElement("div");
+        dateFG.setAttribute('class', 'form-group');
+        sitDiv.appendChild(dateFG);
+
+        var numLbl = document.createElement("LABEL");
+        numLbl.innerHTML = "Date: ";
+        dateFG.appendChild(numLbl);
+
+        var numTxt = document.createElement("input");
+        numTxt.setAttribute('type', 'date');
+        numTxt.setAttribute('class', 'form-control');
+        numTxt.setAttribute('id', 'sitter_date');
+        numTxt.style = "width:200px;padding:10px;text-align:left;overflow:auto;";
+        dateFG.appendChild(numTxt);
+
+        // Contact Info
+        var infoFG = document.createElement("div");
+        infoFG.setAttribute('class', 'form-group');
+        sitDiv.appendChild(infoFG);
+
+        var infoLbl = document.createElement("LABEL");
+        infoLbl.innerHTML = "Contact Info: ";
+        infoFG.appendChild(infoLbl);
+
+        var infoTxt = document.createElement("input");
+        infoTxt.setAttribute('type', 'text');
+        infoTxt.setAttribute('rows', '1');
+        infoTxt.setAttribute('class', 'form-control');
+        infoTxt.setAttribute('id', 'info');
+        infoTxt.setAttribute('placeholder', 'Phone no. or email (optional)');
+        infoTxt.style = "width:200px;padding:10px;text-align:left;overflow:auto;";
+        infoFG.appendChild(infoTxt);
+    }
+    else if (category === 'Housing') {
+        document.getElementById("pickedCategory").value = "Housing";
+
+        var housingDiv = document.createElement("div");
+        housingDiv.setAttribute('class', 'catDiv');
+        document.getElementById("fieldset_createNP").appendChild(housingDiv);
+
+        // Location
+        var locFG = document.createElement("div");
+        locFG.setAttribute('class', 'form-group');
+        housingDiv.appendChild(locFG);
+
+        var locLbl = document.createElement("LABEL");
+        locLbl.innerHTML = "Location: ";
+        locFG.appendChild(locLbl);
+
+        var locTxt = document.createElement("textarea");
+        locTxt.setAttribute('rows', '1');
+        locTxt.setAttribute('class', 'form-control');
+        locTxt.setAttribute('id', 'housing_loc');
+        locTxt.style = "width:210px;padding:10px;text-align:left;overflow:auto;";
+        locFG.appendChild(locTxt);
+
+        // Duration
+        var durFG = document.createElement("div");
+        durFG.setAttribute('class', 'form-group');
+        housingDiv.appendChild(durFG);
+
+        var durLbl = document.createElement("LABEL");
+        durLbl.innerHTML = "Duration: ";
+        durFG.appendChild(durLbl);
+
+        var durTxt = document.createElement("textarea");
+        durTxt.setAttribute('rows', '1');
+        durTxt.setAttribute('cols', '1');
+        durTxt.setAttribute('class', 'form-control');
+        durTxt.setAttribute('id', 'housing_dur');
+        durTxt.style = "padding:10px;text-align:left;overflow:auto;";
+        durFG.appendChild(durTxt);
+
+        // Number of Rooms and Contact info.
+        var numFG = document.createElement("div");
+        numFG.setAttribute('class', 'form-group');
+        housingDiv.appendChild(numFG);
+
+        var numLbl = document.createElement("LABEL");
+        numLbl.innerHTML = "# of Rooms: ";
+        numFG.appendChild(numLbl);
+
+        var infoLbl = document.createElement("LABEL");
+        infoLbl.innerHTML = "Contact Info: ";
+        infoLbl.style = "margin-left:50px;";
+        numFG.appendChild(infoLbl);
+
+        var pNum = document.createElement("p");
+        numFG.appendChild(pNum);
+
+        var numTxt = document.createElement("input");
+        numTxt.setAttribute('type', 'number');
+        numTxt.setAttribute('rows', '1');
+        numTxt.setAttribute('class', 'form-control');
+        numTxt.setAttribute('id', 'housing_num');
+        numTxt.setAttribute('placeholder', '#');
+        numTxt.style = "width:50px; display:inline-block;padding:10px;text-align:left;overflow:auto;";
+        pNum.appendChild(numTxt);
+
+        var infoTxt = document.createElement("input");
+        infoTxt.setAttribute('type', 'text');
+        infoTxt.setAttribute('rows', '1');
+        infoTxt.setAttribute('class', 'form-control');
+        infoTxt.setAttribute('id', 'info');
+        infoTxt.setAttribute('placeholder', 'Phone no. or email (optional)');
+        infoTxt.style = "width:200px; display: inline-block; margin-left:90px; padding:10px;text-align:left;overflow:auto;";
+        pNum.appendChild(infoTxt);
+    }
+    else if (category === 'Sale') {
+        document.getElementById("pickedCategory").value = "Sale";
+
+        var saleDiv = document.createElement("div");
+        saleDiv.setAttribute('class', 'catDiv');
+        document.getElementById("fieldset_createNP").appendChild(saleDiv);
+
+        // Item name and Contact info.
+        var itemFG = document.createElement("div");
+        itemFG.setAttribute('class', 'form-group');
+        saleDiv.appendChild(itemFG);
+
+        var itemLbl = document.createElement("LABEL");
+        itemLbl.innerHTML = "Item: ";
+        itemFG.appendChild(itemLbl);
+
+        var infoLbl = document.createElement("LABEL");
+        infoLbl.innerHTML = "Contact Info: ";
+        infoLbl.style = "margin-left:205px;";
+        itemFG.appendChild(infoLbl);
+
+        var pItem = document.createElement("p");
+        itemFG.appendChild(pItem);
+
+        var itemTxt = document.createElement("textarea");
+        itemTxt.setAttribute('type', 'text');
+        itemTxt.setAttribute('rows', '1');
+        itemTxt.setAttribute('class', 'form-control');
+        itemTxt.setAttribute('id', 'sale_item');
+        itemTxt.style = "width:220px; display:inline-block;padding:10px;text-align:left;overflow:auto;";
+        pItem.appendChild(itemTxt);
+
+        var infoTxt = document.createElement("textarea");
+        infoTxt.setAttribute('type', 'text');
+        infoTxt.setAttribute('rows', '1');
+        infoTxt.setAttribute('class', 'form-control');
+        infoTxt.setAttribute('id', 'info');
+        infoTxt.setAttribute('placeholder', 'Phone no. or email (optional)');
+        infoTxt.style = "width:220px; display: inline-block; margin-left:20px; padding:10px;text-align:left;overflow:auto;";
+        pItem.appendChild(infoTxt);
+
+        // Condition radios
+        var condFG = document.createElement("div");
+        condFG.setAttribute('class', 'form-group');
+        saleDiv.appendChild(condFG);
+
+        var usedLbl = document.createElement("LABEL");
+        usedLbl.innerHTML = " Used ";
+        usedLbl.setAttribute('class', 'radio-inline');
+        usedLbl.style = "margin-right:20px; margin-top: 20px;";
+        condFG.appendChild(usedLbl);
+
+        var usedR = document.createElement("input");
+        usedR.setAttribute('type', 'radio');
+        usedR.setAttribute('name', 'sale_condition');
+        usedLbl.appendChild(usedR);
+
+        var newLbl = document.createElement("LABEL");
+        newLbl.innerHTML = " New ";
+        newLbl.setAttribute('class', 'radio-inline');
+        condFG.appendChild(newLbl);
+
+        var newR = document.createElement("input");
+        newR.setAttribute('type', 'radio');
+        newR.setAttribute('name', 'sale_condition');
+        newLbl.appendChild(newR);
+    }
+}
+
+// close new post modal and remove previous enteries
+function closeNewPostModal() {
+    $('.catDiv').remove();
+    document.getElementById("in_title_newpost").value = null;
+    document.getElementById("in_content_newpost").value = null;
+    document.getElementById("in_price_newpost").value = null;
+    var type = document.getElementsByName("postType");
+    type[0].checked = false;
+    type[1].checked = false;
+    document.getElementById("pickedCategory").value = null;
 }
