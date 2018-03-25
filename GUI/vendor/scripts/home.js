@@ -580,11 +580,6 @@ function removeElements(postID, num) {
 }
 
 function sortPosts(basedOn, order, upper, lower) {
-
-    console.log(basedOn);
-    console.log(order);
-    console.log(upper);
-    console.log(lower);
     fetch(urlSortPosts, {
         method: "POST",
         headers: {
@@ -678,5 +673,14 @@ function filterWRange() {
         else {
             sortPosts("date", null, dateUpp, dateLow);
         }
+    }
+}
+
+function slider_onChange(str) {
+    var out = document.getElementById("out".concat(str));
+    if (str === 'PL') {
+        out.innerHTML = priceLower.value;
+    } else {
+        out.innerHTML = priceUpper.value;
     }
 }

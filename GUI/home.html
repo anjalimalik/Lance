@@ -170,10 +170,12 @@
         <div>
 
           <p>From:</p>
-          <p style="color:black; font-size:14px;"> 0 <input type="range" min="0" max="10000" value="0" class="slider" style="width:225px;" id="priceLower"> 10000
+          <p style="color:black; font-size:14px;"> 0 <input type="range" min="0" max="5000" value="0" class="slider" style="width:225px;" id="priceLower" oninput="slider_onChange('PL')"> 5000
+            <div id="outPL" style="position:relative; padding:0px;margin-left:125px;"> </div>
           </p>
           <p>To:</p>
-          <p style="color:black; font-size:14px;"> 0 <input type="range" min="0" max="10000" value="10000" class="slider" style="width:225px;" id="priceUpper"> 10000
+          <p style="color:black; font-size:14px;"> 0 <input type="range" min="0" max="5000" value="5000" class="slider" style="width:225px;" id="priceUpper" oninput="slider_onChange('PU')"> 5000
+            <div id="outPU" style="position:relative; padding:0px;margin-left:125px;"> </div>
           </p>
         </div>
 
@@ -190,7 +192,7 @@
             <input type="date" class="form-control" id="dateLower">
           </div>
           <div class="form-group">
-            <label for="dateUpper">From:</label>
+            <label for="dateUpper">To:</label>
             <input type="date" class="form-control" id="dateUpper">
           </div>
 
