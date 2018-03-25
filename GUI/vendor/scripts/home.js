@@ -685,3 +685,26 @@ function slider_onChange(str) {
         out.innerHTML = priceUpper.value;
     }
 }
+
+// expand create new post modal to show attributes related to a category
+function expandCreatePModal(category){
+
+    if(category === 'Ride'){
+        var fromFG = document.createElement("div");
+        fromFG.setAttribute('class', 'form-group');
+        document.getElementById("fieldset_createNP").appendChild(fromFG);
+        
+        var fromLbl = document.createElement("LABEL");
+        fromLbl.innerHTML = "From: ";
+        fromFG.appendChild(fromLbl);
+
+        var fromTxt = document.createElement("textarea");
+        fromTxt.setAttribute('cols', '1');
+        fromTxt.setAttribute('rows', '1');
+        fromTxt.setAttribute('class', 'form-control');
+        fromTxt.setAttribute('id', 'ride_from');
+        fromTxt.setAttribute('placeholder', 'Location');
+        fromTxt.style = "padding:10px;text-align:left;overflow:auto;";
+        fromFG.appendChild(fromTxt);
+    }
+}
