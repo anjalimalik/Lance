@@ -20,7 +20,7 @@ function getAllPosts() {
                 var json = data.response;
 
                 for (i = 0; i < numPost; i++) {
-                    createCard(json[i].UserName, json[i].Content, json[i].Headline, json[i].PostingType, json[i].money, json[i].idPosts, json[i].DatePosted, json[i].numLikes);
+                    createCard(json[i].UserName, json[i].Content, json[i].Headline, json[i].PostingType, json[i].money, json[i].idPosts, json[i].DatePosted, json[i].numLikes, json[i].Category);
                 }
             });
 
@@ -32,7 +32,7 @@ function getAllPosts() {
 }
 
 // CREATE A NEW CARD FOR EVERY POST FROM SERVER (/getPosts)
-function createCard(user, content, headline, postingType, price, postID, date, likes) {
+function createCard(user, content, headline, postingType, price, postID, date, likes, category) {
 
     var ul = document.getElementById('news_card_list');
 
@@ -59,14 +59,28 @@ function createCard(user, content, headline, postingType, price, postID, date, l
     divTextPrice.style = "background-color:lightgrey;color:black;float:right;margin-top:-5px;margin-right:-7px;font-size: 16px;";
     divHeader.appendChild(divTextPrice);
 
+    if (category) {
+        if(category === "Sitter"){
+            category = "Baby/Pet Sitter";
+        } else if(category === "Ride"){
+            category = "Ride Share";
+        } else if(category === "Sale"){
+            category = "For Sale";
+        }
+        /* Category */
+        var divCat = document.createElement("kbd");
+        divCat.innerHTML = category;
+        divCat.style = "background-color:#333399;color:white;float:right;margin-top:-5px;margin-right:7px;font-size: 14px;";
+        divHeader.appendChild(divCat);
+    }
+
     /* Offer/Request */
     var ReqOff = document.createElement("p");
     var str = postingType.concat(" from ", "<b style=\"", "color:#333399; font-weight:bold\">", user, "</b>");
-    ReqOff.style = "color:#666699;margin-left:60px;";
+    ReqOff.style = "color:#666699;float:left;";
     ReqOff.innerHTML = str;
     divHeader.appendChild(ReqOff);
-
-
+    
     var divBody = document.createElement("div");
     divBody.setAttribute('class', 'card-body');
     divCenter.appendChild(divBody);
@@ -111,14 +125,12 @@ function createCard(user, content, headline, postingType, price, postID, date, l
 
     /* Report */
     var btn_report = document.createElement("BUTTON");
-    //var t1 = document.createTextNode("Report Post");
     btn_report.setAttribute("id", "btnReport");
     btn_report.setAttribute("class", "btn btn-default btn-sm");
     //btn_report.setAttribute("onclick", "getPostID(".concat(postID, ")"));
     btn_report.setAttribute("data-toggle", "modal");
     btn_report.setAttribute("data-target", "#myModalReport");
     btn_report.style = "float:right;margin-bottom:3px;margin-right:0px;margin-top:0px;";
-    //btn_report.appendChild(t1);
     divButtons.appendChild(btn_report);
 
     var imgFlag = document.createElement('img');
@@ -126,7 +138,7 @@ function createCard(user, content, headline, postingType, price, postID, date, l
     imgFlag.setAttribute('alt', 'Report');
     imgFlag.style = "float:center;width:20px; height:20px;";
     btn_report.appendChild(imgFlag);
-    
+
 
     var divFooter = document.createElement('div');
     divFooter.setAttribute('class', 'card-footer');
@@ -256,7 +268,7 @@ function getPostID(id) {
 */
 
 function closePost(postID) {
-    if(window.confirm("Are you sure you want to delete this post?")){
+    if (window.confirm("Are you sure you want to delete this post?")) {
         postID = parseInt(postID);
         fetch(urlClose, {
             method: "POST",
@@ -267,7 +279,7 @@ function closePost(postID) {
             body: JSON.stringify({
                 "postId": postID
             })
-    
+
         }).then(function (res) {
             if (res.ok) {
                 var id1 = "div".concat(postID.toString());
@@ -288,7 +300,7 @@ function closePost(postID) {
             alert("Error: No internet connection!");
             console.log(err.message + ": No Internet Connection");
         });
-    } 
+    }
 }
 
 function getAllComments(postID) {
@@ -519,7 +531,7 @@ function expandComments(postID, num, json) {
     bodyW.appendChild(btnAddW);
 }
 
-function addComment(postID, email, num){
+function addComment(postID, email, num) {
     var comment = document.getElementById("txtComment").value;
     postID = parseInt(postID);
     fetch(urlWriteComment, {
@@ -600,11 +612,11 @@ function sortPosts(basedOn, order) {
 
 }
 
-function getSortedPosts(json){
+function getSortedPosts(json) {
     $('.card_list_el').remove();
     var num = Object.keys(json).length;
     for (i = 0; i < num; i++) {
-        createCard(json[i].UserName, json[i].Content, json[i].Headline, json[i].PostingType, json[i].money, json[i].idPosts, json[i].DatePosted, json[i].numLikes);
+        createCard(json[i].UserName, json[i].Content, json[i].Headline, json[i].PostingType, json[i].money, json[i].idPosts, json[i].DatePosted, json[i].numLikes, json[i].Category);
     }
 }
 
