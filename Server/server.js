@@ -143,7 +143,7 @@ app.post('/signUp', (req, res) => {
 
 // Get list of Posts
 app.get('/getPosts', (req, res) => {
-    let query = 'SELECT * FROM Posts';
+    let query = 'SELECT * FROM Posts ORDER BY DatePosted DESC';
 
     db.query(query, (error, response) => {
         console.log(response);

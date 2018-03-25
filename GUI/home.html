@@ -148,7 +148,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">Create Post</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeNewPostModal()">
           <span aria-hidden="true">&times;</span>
         </button>
         </div>
@@ -169,8 +169,8 @@
                 <label>Price: </label></br>
                 <input type="number" size="5" style="padding:10px;width:100px;float:left;margin-right:200px;text-align:left;overflow:auto;"
                   class="form-control" id="in_price_newpost" placeholder="$$$"></textarea>
-                <label style="margin-right:20px; margin-top: 20px;" class="radio-inline"><input type="radio" name="postType">   Offer    </label>
-                <label class="radio-inline"><input type="radio" name="postType">    Request   </label>
+                <label style="margin-right:20px; margin-top: 20px;" class="radio-inline"><input type="radio" name="postType" value="Offer">   Offer    </label>
+                <label class="radio-inline"><input type="radio" name="postType" value="Request">    Request   </label>
               </div>
             </br>
               <div class="form-group">
@@ -191,8 +191,8 @@
               <div id="pickedCategory" visible="false"></div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-dismiss="modal">Publish</button>
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="createPost()">Publish</button>
+          <button id="postClose" type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeNewPostModal()">Close</button>
         </div>
       </div>
     </div>

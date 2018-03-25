@@ -6,6 +6,7 @@ var urlGetComment = "http://localhost:5500/getComments"
 var urlWriteComment = "http://localhost:5500/WriteComment"
 var urlSortPosts = "http://localhost:5500/getSortedPosts"
 var urlFilterPosts = "http://localhost:5500/getFilteredPosts"
+var urlCreatePost = "http://localhost:5500/CreatePost"
 
 function onLoad() {
     getAllPosts();
@@ -337,6 +338,7 @@ function getAllComments(postID) {
     });
 }
 
+// expand post to get all comments
 function expandPost(postID) {
     var lm = document.getElementById("learnMoreFG");
     // comments
@@ -346,86 +348,6 @@ function expandPost(postID) {
     lm.appendChild(ulComments);
 
     getAllComments(postID);
-
-    /*var ul = document.getElementById('myPostModal');
-    ul.setAttribute('aria-hidden', 'false');
-
-    // dialog
-    var divDialog = document.createElement('div');
-    divDialog.setAttribute('class', 'modal-dialog');
-    divDialog.setAttribute('role', 'document');
-    ul.appendChild(divDialog);
-
-    // content
-    var divContent = document.createElement("div");
-    divContent.setAttribute('class', 'modal-content');
-    divDialog.appendChild(divContent);
-
-    // body
-    var divBody = document.createElement("div");
-    divBody.setAttribute('class', 'modal-body');
-    divContent.appendChild(divBody);
-
-    // header
-    var divHeader = document.createElement("div");
-    divHeader.setAttribute('class', 'modal-header');
-    //divHeader.style = "height:45px;";
-    divBody.appendChild(divHeader);
-
-    // title
-    var hTitle = document.createElement("h5");
-    hTitle.setAttribute('class', 'modal-title');
-    hTitle.innerHTML = ""; // headline
-    divHeader.appendChild(hTitle);
-
-    // button &times
-    var btnX = document.createElement("BUTTON");
-    btnX.setAttribute('class', 'close');
-    btnX.setAttribute('data-dismiss', 'modal');
-    btnX.setAttribute('aria-label', 'Close');
-    divHeader.appendChild(btnX);
-
-    var spanX = document.createElement("BUTTON");
-    spanX.setAttribute('aria-hidden', 'true');
-    spanX.innerHTML = "&times;";
-    btnX.appendChild(spanX);
-
-    //form fieldset
-    var form = document.createElement("form");
-    divBody.appendChild(form);
-    var fieldset = document.createElement("fieldset");
-    form.appendChild(fieldset);
-
-    // form group
-    var divFG = document.createElement("div");
-    divFG.setAttribute('class', 'form-group');
-    fieldset.appendChild(divFG);
-
-    // label
-    var lbl = document.createElement("LABEL");
-    lbl.innerHTML = ""; //
-    divFG.appendChild(lbl);
-
-    // footer
-    var divFooter = document.createElement("div");
-    divFooter.setAttribute('class', 'modal-footer');
-    form.appendChild(divFooter);
-
-    // comments
-    var ulComments = document.createElement("ul");
-    ulComments.setAttribute('id', 'ulcomments'.concat(postID));
-    ulComments.setAttribute('class', 'comments_list');
-    divFooter.appendChild(ulComments);
-
-    getAllComments(postID);
-
-    // button &times
-    var btnClose = document.createElement("BUTTON");
-    btnClose.setAttribute('class', 'btn btn-secondary');
-    btnClose.setAttribute('data-dismiss', 'modal');
-    btnClose.innerHTML = 'Close';
-    divFooter.appendChild(btnClose); */
-
 }
 
 // EXPAND ALL COMMENTS FROM THE SERVER
@@ -652,8 +574,10 @@ function filterPosts(category, type) {
     });
 
 }
+
+// function to filter posts according to price and date posted
 function filterWRange() {
-    if (parseInt(document.getElementById("priceLower").value) !== 0 || parseInt(document.getElementById("priceUpper").value) !== 10000) {
+    if (parseInt(document.getElementById("priceLower").value) !== 0 || parseInt(document.getElementById("priceUpper").value) !== 5000) {
         if (parseInt(document.getElementById("priceUpper").value) <= parseInt(document.getElementById("priceLower").value)) {
             alert("Price input range is invalid.");
             return;
@@ -686,9 +610,114 @@ function slider_onChange(str) {
     }
 }
 
+function createPost() {
+    var title = document.getElementById("in_title_newpost").value;
+    var desc = document.getElementById("in_content_newpost").value;
+    var price = document.getElementById("in_price_newpost").value;
+    var type = document.getElementsByName("postType");
+    var type_value = null;
+    if (type[0].checked) {
+        type_value = type[0].value;
+    }
+    else if (type[1].checked) {
+        type_value = type[1].value;
+    }
+    else {
+        alert ("Not enough information provided");
+        document.getElementById("postClose").click();
+        return;
+    }
+
+    // Only category is optional
+    if(!price || !title || !desc) {
+        alert ("Not enough information provided");
+        document.getElementById("postClose").click();
+        return;
+    }
+    var attributes = null;
+    var category = document.getElementById("pickedCategory").value;
+
+    // make string for attributes according to the category 
+    if (category === "Ride") {
+        attributes = "";
+        attributes = attributes.concat("From: ", document.getElementById("ride_from").value, "|", "To: ", document.getElementById("ride_to").value, "|");
+        attributes = attributes.concat("# of Passengers: ", document.getElementById("ride_num").value, "|");
+    }
+    else if (category === "Food") {
+        attributes = "";
+        attributes = attributes.concat("Restaurant: ", document.getElementById("food_res").value, "|");
+        attributes = attributes.concat("Items: ", document.getElementById("food_items").value, "|");
+    }
+    else if (category === "Tutor") {
+        attributes = "";
+        attributes = attributes.concat("Course(s): ", document.getElementById("tutor_class").value, "|");
+        attributes = attributes.concat("Qualifications: ", document.getElementById("tutor_qual").value, "|");
+    }
+    else if (category === "Sitter") {
+        attributes = "";
+        attributes = attributes.concat("Date: ", document.getElementById("sitter_date").value, "|");
+    }
+    else if (category === "Housing") {
+        attributes = "";
+        attributes = attributes.concat("Location: ", document.getElementById("housing_loc").value, "|");
+        attributes = attributes.concat("# of Rooms: ", document.getElementById("housing_num").value, "|");
+        attributes = attributes.concat("Duration: ", document.getElementById("housing_dur").value, "|");
+    }
+    else if (category === "Sale") {
+        attributes = "";
+        attributes = attributes.concat("Item: ", document.getElementById("sale_item").value, "|");
+        attributes = attributes.concat("Condition: ", document.querySelector('input[name="sale_condition"]:checked').value, "|");
+    }
+    if (category) {
+        attributes = attributes.concat("Contact Info: ", document.getElementById("info").value);
+    }
+
+    // send to server
+    fetch(urlCreatePost, {
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+            "email": "test@purdue.edu",
+            "Headline": title,
+            "Content": desc,
+            "PostingType": type_value,
+            "money": price,
+            "Category": category,
+            "Attributes": attributes
+        })
+
+    }).then(function (res) {
+        if (res.ok) {
+            res.json().then(function (data) {
+                console.log("Inside res.ok. New post added");
+                alert("New Post created!");
+            }.bind(this));
+            $('.card_list_el').remove();
+            getAllPosts();
+        }
+        else {
+            alert("Error: creating post unsuccessful!");
+            res.json().then(function (data) {
+                console.log(data.message);
+            }.bind(this));
+        }
+    }).catch(function (err) {
+        alert("Error: No internet connection!");
+        console.log(err.message + ": No Internet Connection");
+    });
+
+    closeNewPostModal();
+}
+
 // expand create new post modal to show attributes related to a category 
 // UI for all attributes
 function expandCreatePModal(category) {
+
+    // remove elements if clicked on a category again
+    $('.catDiv').remove();
 
     if (category === 'Ride') {
         document.getElementById("pickedCategory").value = "Ride";
@@ -793,7 +822,6 @@ function expandCreatePModal(category) {
         resTxt.setAttribute('rows', '1');
         resTxt.setAttribute('class', 'form-control');
         resTxt.setAttribute('id', 'food_res');
-        resTxt.setAttribute('placeholder', 'Location');
         resTxt.style = "width:210px;display:inline-block;padding:10px;text-align:left;overflow:auto;";
         pRes.appendChild(resTxt);
 
@@ -834,7 +862,7 @@ function expandCreatePModal(category) {
 
         // Class Name
         var classFG = document.createElement("div");
-        classFG .setAttribute('class', 'form-group');
+        classFG.setAttribute('class', 'form-group');
         tutorDiv.appendChild(classFG);
 
         var classLbl = document.createElement("LABEL");
@@ -870,12 +898,12 @@ function expandCreatePModal(category) {
 
         // Contact Info
         var infoFG = document.createElement("div");
-        infoFG .setAttribute('class', 'form-group');
+        infoFG.setAttribute('class', 'form-group');
         tutorDiv.appendChild(infoFG);
 
         var infoLbl = document.createElement("LABEL");
         infoLbl.innerHTML = "Contact Info: ";
-        infoFG.appendChild(infoLbl); 
+        infoFG.appendChild(infoLbl);
 
         var infoTxt = document.createElement("textarea");
         infoTxt.setAttribute('type', 'text');
@@ -1053,20 +1081,32 @@ function expandCreatePModal(category) {
         usedLbl.setAttribute('class', 'radio-inline');
         usedLbl.style = "margin-right:20px; margin-top: 20px;";
         condFG.appendChild(usedLbl);
-        
+
         var usedR = document.createElement("input");
         usedR.setAttribute('type', 'radio');
-        usedR.setAttribute('name', 'condition');
+        usedR.setAttribute('name', 'sale_condition');
         usedLbl.appendChild(usedR);
 
         var newLbl = document.createElement("LABEL");
         newLbl.innerHTML = " New ";
         newLbl.setAttribute('class', 'radio-inline');
         condFG.appendChild(newLbl);
-        
+
         var newR = document.createElement("input");
         newR.setAttribute('type', 'radio');
-        newR.setAttribute('name', 'condition');
+        newR.setAttribute('name', 'sale_condition');
         newLbl.appendChild(newR);
     }
+}
+
+// close new post modal and remove previous enteries
+function closeNewPostModal() {
+    $('.catDiv').remove();
+    document.getElementById("in_title_newpost").value = null;
+    document.getElementById("in_content_newpost").value = null;
+    document.getElementById("in_price_newpost").value = null;
+    var type = document.getElementsByName("postType");
+    type[0].checked = false;
+    type[1].checked = false;
+    document.getElementById("pickedCategory").value = null;
 }
