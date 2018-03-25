@@ -662,7 +662,7 @@ function filterWRange() {
             sortPosts("cost", null, document.getElementById("priceUpper").value, document.getElementById("priceLower").value);
         }
     } else if (document.getElementById("dateUpper").value && document.getElementById("priceLower").value) {
-        
+
         var dateLow = new Date(document.getElementById("dateLower").value);
         var dateUpp = new Date(document.getElementById("dateUpper").value);
 
@@ -687,24 +687,91 @@ function slider_onChange(str) {
 }
 
 // expand create new post modal to show attributes related to a category
-function expandCreatePModal(category){
+function expandCreatePModal(category) {
 
-    if(category === 'Ride'){
+    if (category === 'Ride') {
+        document.getElementById("pickedCategory").value = "Ride";
+        // From (location) & To
         var fromFG = document.createElement("div");
         fromFG.setAttribute('class', 'form-group');
         document.getElementById("fieldset_createNP").appendChild(fromFG);
-        
+
         var fromLbl = document.createElement("LABEL");
         fromLbl.innerHTML = "From: ";
         fromFG.appendChild(fromLbl);
 
+        var toLbl = document.createElement("LABEL");
+        toLbl.innerHTML = "To:";
+        toLbl.style = "margin-left:190px;";
+        fromFG.appendChild(toLbl);
+
+        var pLoc = document.createElement("p");
+        fromFG.appendChild(pLoc);
+
         var fromTxt = document.createElement("textarea");
-        fromTxt.setAttribute('cols', '1');
         fromTxt.setAttribute('rows', '1');
         fromTxt.setAttribute('class', 'form-control');
         fromTxt.setAttribute('id', 'ride_from');
         fromTxt.setAttribute('placeholder', 'Location');
-        fromTxt.style = "padding:10px;text-align:left;overflow:auto;";
-        fromFG.appendChild(fromTxt);
+        fromTxt.style = "width:210px;display:inline-block;padding:10px;text-align:left;overflow:auto;";
+        pLoc.appendChild(fromTxt);
+
+        var toTxt = document.createElement("textarea");
+        toTxt.setAttribute('rows', '1');
+        toTxt.setAttribute('class', 'form-control');
+        toTxt.setAttribute('id', 'ride_to');
+        toTxt.setAttribute('placeholder', 'Location');
+        toTxt.style = "width:210px;margin-left:20px;display:inline-block;padding:10px;text-align:left;overflow:auto;";
+        pLoc.appendChild(toTxt);
+
+        // Number of passengers and Contact info.
+        var numFG = document.createElement("div");
+        numFG.setAttribute('class', 'form-group');
+        document.getElementById("fieldset_createNP").appendChild(numFG);
+
+        var numLbl = document.createElement("LABEL");
+        numLbl.innerHTML = "# of Passengers: ";
+        numFG.appendChild(numLbl);
+
+        var infoLbl = document.createElement("LABEL");
+        infoLbl.innerHTML = "Contact Info: ";
+        infoLbl.style = "margin-left:55px;";
+        numFG.appendChild(infoLbl);
+
+        var pNum = document.createElement("p");
+        numFG.appendChild(pNum);
+
+        var numTxt = document.createElement("input");
+        numTxt.setAttribute('type', 'number');
+        numTxt.setAttribute('rows', '1');
+        numTxt.setAttribute('class', 'form-control');
+        numTxt.setAttribute('id', 'ride_num');
+        numTxt.setAttribute('placeholder', '#');
+        numTxt.style = "width:50px; display:inline-block;padding:10px;text-align:left;overflow:auto;";
+        pNum.appendChild(numTxt);
+
+        var infoTxt = document.createElement("input");
+        infoTxt.setAttribute('type', 'text');
+        infoTxt.setAttribute('rows', '1');
+        infoTxt.setAttribute('class', 'form-control');
+        infoTxt.setAttribute('id', 'ride_info');
+        infoTxt.setAttribute('placeholder', 'Phone no. or email (optional)');
+        infoTxt.style = "width:200px; display: inline-block; margin-left:125px; padding:10px;text-align:left;overflow:auto;";
+        pNum.appendChild(infoTxt);
+    }
+    else if (category === 'Food') {
+        document.getElementById("pickedCategory").value = "Food";
+    }
+    else if (category === 'Tutor') {
+        document.getElementById("pickedCategory").value = "Tutor";
+    }
+    else if (category === 'Sitter') {
+        document.getElementById("pickedCategory").value = "Sitter";
+    }
+    else if (category === 'Housing') {
+        document.getElementById("pickedCategory").value = "Housing";
+    }
+    else if (category === 'Sale') {
+        document.getElementById("pickedCategory").value = "Sale";
     }
 }
