@@ -97,19 +97,36 @@ function btn_finish_edit() {
 
 }
 
+function passMatch(){
+    $('.text.text-success').remove();
+    var newPass = in_profile_newPass.value;
+    var confirmPass = in_profile_confirmPass.value;
+    if (newPass != confirmPass) {
+        return;
+    } 
+    else {
+        var match = document.createElement("div");
+        match.setAttribute('class', 'text text-success');
+        match.innerHTML = "Passwords match!";
+        document.getElementById("fieldset_passChange").appendChild(match);
+    }
+}
+
+function clearSetModal(){
+    in_profile_currentPass.value = ""
+    in_profile_newPass.value = "";
+    in_profile_confirmPass.value = "";
+    $('.text.text-success').remove();
+}
+
 function btn_passChange() {
     var currentPass = in_profile_currentPass.value;
     var newPass = in_profile_newPass.value;
     var confirmPass = in_profile_confirmPass.value;
 
     if (newPass != confirmPass) {
-        alert(currentPass);
-        alert(newPass);
-        alert(confirmPass);
         return;
     }
-    alert("equal");
-
     fetch(urlChangePass, {
         method: "POST",
         headers: {
@@ -140,7 +157,7 @@ function btn_passChange() {
         alert("Error: No internet connection!");
         console.log(err.message + ": No Internet Connection");
     });
-
+    clearSetModal();
 }
 
 

@@ -107,7 +107,7 @@ app.post('/signUp', (req, res) => {
     var password = req.body.pass;
     var name = req.body.name;
 
-    //password = createPass(email, password);
+    password = createPass(email, password);
 
     let user = {
         Email: email,
