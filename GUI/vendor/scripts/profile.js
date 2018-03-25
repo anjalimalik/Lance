@@ -5,8 +5,11 @@ var urlNotifications = "http://localhost:5500/getNotifications"
 var numNotifs = 0;
 
 function body_onload() {
+    var url = window.location.href;
+    var str = url.split("?email=");
+    email = str[1];
     name = localStorage.getItem('name');
-    email = localStorage.getItem('email');
+    //email = localStorage.getItem('email');
     edu = localStorage.getItem('edu');
     links = localStorage.getItem('links');
     contact = localStorage.getItem('contact');
@@ -19,7 +22,6 @@ function body_onload() {
 
     optionsToggle.style.display = "none";
     notificationsToggle.style.display = "none";
-
 
     populate_profile();
 }
@@ -94,7 +96,6 @@ function btn_finish_edit() {
     skills = edit_skills.value;
 
     populate_profile();
-
 }
 
 function passMatch(){
