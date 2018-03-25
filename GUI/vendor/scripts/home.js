@@ -230,6 +230,7 @@ function reportPost() {
 }
 
 function clickInterested(postID) {
+    $('.notifClass.dropdown-item').remove();
     postID = parseInt(postID);
     fetch(urlLike, {
         method: "POST",
@@ -459,6 +460,7 @@ function expandComments(postID, num, json) {
 }
 
 function addComment(postID, email, num) {
+    $('.notifClass.dropdown-item').remove();
     var comment = document.getElementById("txtComment").value;
     postID = parseInt(postID);
     fetch(urlWriteComment, {
@@ -1090,6 +1092,7 @@ function expandCreatePModal(category) {
         var usedR = document.createElement("input");
         usedR.setAttribute('type', 'radio');
         usedR.setAttribute('name', 'sale_condition');
+        usedR.setAttribute('value', 'Used');
         usedLbl.appendChild(usedR);
 
         var newLbl = document.createElement("LABEL");
@@ -1100,6 +1103,7 @@ function expandCreatePModal(category) {
         var newR = document.createElement("input");
         newR.setAttribute('type', 'radio');
         newR.setAttribute('name', 'sale_condition');
+        newR.setAttribute('value', 'New');
         newLbl.appendChild(newR);
     }
 }
@@ -1117,6 +1121,7 @@ function closeNewPostModal() {
 }
 
 function showNotifications() {
+   
     document.getElementById("optionsToggle").style.display = "none";
     var x = document.getElementById("notificationsToggle");
 
@@ -1130,6 +1135,7 @@ function showNotifications() {
     getNotifications();
 }
 
+// get notifications in dropdown list 
 function getNotifications() {
 
     console.log(emailAdd);
@@ -1156,9 +1162,9 @@ function getNotifications() {
                     var json = data.response;
                     for (i = 0; i < length; i++) {
                         var ul = document.createElement("a");
-                        ul.setAttribute('class', 'dropdown-item');
+                        ul.setAttribute('class', 'notifClass dropdown-item');
                         ul.innerHTML = (json[i].Notification).toString();
-                        ul.style = "font-color:black;";
+                        ul.style = "border-bottom: 1px solid #ccc; margin-left:-40px;font-color:black;";
                         document.getElementById("notif").appendChild(ul);
                         numNotifs++;
                     }
@@ -1166,8 +1172,9 @@ function getNotifications() {
                 else if (numNotifs == 0) {
                     numNotifs--;
                     var ul = document.createElement("a");
-                    ul.setAttribute('class', 'dropdown-item');
+                    ul.setAttribute('class', 'notifClass dropdown-item half-rule');
                     ul.innerHTML = "No notifications available for you at this time.";
+                    ul.style = "border-bottom: 1px solid #ccc;";
                     document.getElementById("notif").appendChild(ul);
                 }
 

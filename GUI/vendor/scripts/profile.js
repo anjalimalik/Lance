@@ -136,12 +136,17 @@ function btn_finish_edit() {
     populate_profile();
 }
 
+// "Passwords Match"
 function passMatch(){
     $('.text.text-success').remove();
+    $('.text.text-danger').remove();
     var newPass = in_profile_newPass.value;
     var confirmPass = in_profile_confirmPass.value;
     if (newPass != confirmPass) {
-        return;
+        var match = document.createElement("div");
+        match.setAttribute('class', 'text text-danger');
+        match.innerHTML = "Passwords do not match!";
+        document.getElementById("fieldset_passChange").appendChild(match);
     } 
     else {
         var match = document.createElement("div");
@@ -151,6 +156,7 @@ function passMatch(){
     }
 }
 
+// clear settings modal 
 function clearSetModal(){
     in_profile_currentPass.value = ""
     in_profile_newPass.value = "";
@@ -158,6 +164,7 @@ function clearSetModal(){
     $('.text.text-success').remove();
 }
 
+// Password change function 
 function btn_passChange() {
     var currentPass = in_profile_currentPass.value;
     var newPass = in_profile_newPass.value;
@@ -226,9 +233,9 @@ function btn_getNotifications() {
                     var json = data.response;
                     for (i = 0; i < length; i++) {
                         var ul = document.createElement("a");
-                        ul.setAttribute('class', 'dropdown-item');
+                        ul.setAttribute('class', 'notifClass dropdown-item');
                         ul.innerHTML = (json[i].Notification).toString();
-                        ul.style = "font-color:black;";
+                        ul.style = "border-bottom: 1px solid #ccc; margin-left:-40px;font-color:black;";
                         document.getElementById("notif").appendChild(ul);
                         numNotifs++;
                     }
@@ -236,12 +243,11 @@ function btn_getNotifications() {
                 else if (numNotifs == 0) {
                     numNotifs--;
                     var ul = document.createElement("a");
-                    ul.setAttribute('class', 'dropdown-item');
+                    ul.setAttribute('class', 'notifClass dropdown-item');
                     ul.innerHTML = "No notifications available for you at this time.";
+                    ul.style = "border-bottom: 1px solid #ccc;";
                     document.getElementById("notif").appendChild(ul);
                 }
-
-
             }.bind(this));
         }
         else {
