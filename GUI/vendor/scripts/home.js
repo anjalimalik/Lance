@@ -761,6 +761,59 @@ function expandCreatePModal(category) {
     }
     else if (category === 'Food') {
         document.getElementById("pickedCategory").value = "Food";
+        
+        // Restaurant & Contact Info
+        var resFG = document.createElement("div");
+        resFG.setAttribute('class', 'form-group');
+        document.getElementById("fieldset_createNP").appendChild(resFG);
+
+        var resLbl = document.createElement("LABEL");
+        resLbl.innerHTML = "Restaurant: ";
+        resFG.appendChild(resLbl);
+
+        var infoLbl = document.createElement("LABEL");
+        infoLbl.innerHTML = "Contact Info: ";
+        infoLbl.style = "margin-left:150px;";
+        resFG.appendChild(infoLbl);
+
+        var pRes = document.createElement("p");
+        resFG.appendChild(pRes);
+
+        var resTxt = document.createElement("textarea");
+        resTxt.setAttribute('rows', '1');
+        resTxt.setAttribute('class', 'form-control');
+        resTxt.setAttribute('id', 'food_res');
+        resTxt.setAttribute('placeholder', 'Location');
+        resTxt.style = "width:210px;display:inline-block;padding:10px;text-align:left;overflow:auto;";
+        pRes.appendChild(resTxt);
+        
+        var infoTxt = document.createElement("textarea");
+        infoTxt.setAttribute('type', 'text');
+        infoTxt.setAttribute('rows', '1');
+        infoTxt.setAttribute('class', 'form-control');
+        infoTxt.setAttribute('id', 'food_info');
+        infoTxt.setAttribute('placeholder', 'Phone no. or email (optional)');
+        infoTxt.style = "width:210px; display: inline-block; margin-left:20px; padding:10px;text-align:left;overflow:auto;";
+        pRes.appendChild(infoTxt);
+
+        // Items
+        var itemsFG = document.createElement("div");
+        itemsFG.setAttribute('class', 'form-group');
+        document.getElementById("fieldset_createNP").appendChild(itemsFG);
+
+        var itemsLbl = document.createElement("LABEL");
+        itemsLbl.innerHTML = "Items: ";
+        itemsFG.appendChild(itemsLbl);
+
+        var itemsTxt = document.createElement("textarea");
+        itemsTxt.setAttribute('cols', '1');
+        itemsTxt.setAttribute('rows', '2');
+        itemsTxt.setAttribute('class', 'form-control');
+        itemsTxt.setAttribute('id', 'ride_to');
+        itemsTxt.setAttribute('placeholder', '');
+        itemsTxt.style = "padding:10px;text-align:left;overflow:auto;";
+        itemsFG.appendChild(itemsTxt);
+
     }
     else if (category === 'Tutor') {
         document.getElementById("pickedCategory").value = "Tutor";
