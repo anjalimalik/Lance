@@ -7,7 +7,7 @@ var email, pass, fName, lName, edu, skills, desc, contact, links, pic, docs, nam
 var verifyFlag;
 
 //LOGIN
-function onLoad() {
+function on_load() {
     document.getElementById("in_login_pass")
         .addEventListener("keyup", function(event) {
         event.preventDefault();
@@ -15,10 +15,6 @@ function onLoad() {
             document.getElementById("btn_modal_login").click();
         }
     });
-}
-
-function report() {
-    
 }
 
 function btn_login() {

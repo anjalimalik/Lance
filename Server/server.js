@@ -107,7 +107,7 @@ app.post('/signUp', (req, res) => {
     var password = req.body.pass;
     var name = req.body.name;
 
-    //password = createPass(email, password);
+    password = createPass(email, password);
 
     let user = {
         Email: email,
@@ -243,8 +243,17 @@ app.post('/CreatePost', function (req, res) {
 
     var time = posted.getTime();
 
+    if (!req.body.Category) {
+        var cat = null;
+        var att = null;
+    }
+    else {
+        var cat = req.body.Category;
+        var att = req.body.Attributes;
+    }
+
     // get user id using email
-    let query1 = "SELECT idUsers FROM Users WHERE Email = ?";
+    let query1 = "SELECT idUsers, FullName FROM Users WHERE Email = ?";
 
     db.query(query1, req.body.email, function (err, resp) {
 
@@ -280,7 +289,10 @@ app.post('/CreatePost', function (req, res) {
                 PostingStatus: Status,
                 DatePosted: posted,
                 UserID: resp[0].idUsers,
-                DateMSEC: time
+                DateMSEC: time,
+                Category: cat,
+                Attributes: att,
+                UserName: resp[0].FullName
             };
 
             // INSERT INTO POSTS TABLE
@@ -590,7 +602,7 @@ app.post('/getComments', (req, res) => {
         return res.status(400).json({ message: "Missing information" });
     }
 
-    let query = 'SELECT Comment FROM Comments WHERE idPosts = ?';
+    let query = 'SELECT Comment, SenderName FROM Comments WHERE idPosts = ?';
 
     db.query(query, postId, (error, response) => {
         console.log(response);
@@ -739,12 +751,12 @@ app.post('/ClickInterested', (req, res) => {
     // who liked it
     var email = req.body.email;
 
-    // function to send new notification for the like
-    newNotification("like", postId, email);
-
     if (!postId || !email) {
         return res.status(400).json({ message: "Missing information" });
     }
+
+    // function to send new notification for the like
+    newNotification("like", postId, email);
 
     let query = "SELECT numLikes FROM Posts WHERE idPosts = ?";
 
@@ -834,12 +846,8 @@ function newNotification(str, postid, senderEmail) {
     db.query(query1, senderEmail, function (err1, resp1) {
         console.log(resp1);
         if (err1) {
-            res.send(JSON.stringify({
-                "status": 500,
-                "error": err1,
-                "response": null,
-                "message": "Internal server error"
-            }));
+            console.log("Internal server error");
+            return;
         }
         else {
             var string = JSON.stringify(resp1);
@@ -852,12 +860,8 @@ function newNotification(str, postid, senderEmail) {
             db.query(query2, postid, function (err2, resp2) {
                 console.log(resp2);
                 if (err2) {
-                    res.send(JSON.stringify({
-                        "status": 500,
-                        "error": err2,
-                        "response": null,
-                        "message": "Internal server error"
-                    }));
+                    console.log("Internal server error");
+                    return;
                 }
                 else {
                     var string = JSON.stringify(resp2);
@@ -901,21 +905,10 @@ function newNotification(str, postid, senderEmail) {
                     db.query(query3, newNotification, function (err, resp) {
                         console.log(resp);
                         if (err) {
-                            res.send(JSON.stringify({
-                                "status": 500,
-                                "error": err,
-                                "response": null,
-                                "message": "Internal server error"
-                            }));
+                            console.log("Internal server error");
                         }
                         else {
                             console.log("Success! New Notification added!");
-                            /* res.send(JSON.stringify({
-                                 "status": 200,
-                                 "error": null,
-                                 "response": resp,
-                                 "message": "Success! New Notification added!"
-                             })); */
                         }
                     });
                 }
@@ -996,7 +989,7 @@ app.post('/getSortedPosts', (req, res) => {
 
     let params = [];
     let query = "";
-    
+
     // cannot be null
     if (!basedOn || (!order && (!upperBound && !lowerBound))) {
         return res.status(400).json({ message: "Not enough information provided for sorting of posts" });
@@ -1099,3 +1092,50 @@ app.post('/getSortedPosts', (req, res) => {
         }
     });
 });
+
+
+// Get Filtered list of Posts - by Offer/Requests, or Categories
+app.post('/getFilteredPosts', (req, res) => {
+
+    var category = req.body.category; // can be posting date or cost of service
+    var type = req.body.type;
+
+    let query = "";
+    let params = [];
+    
+    // cannot be null
+    if (!category && !type) {
+        return res.status(400).json({ message: "Not enough information provided for filtering of posts" });
+    }
+    else if (type) {
+        query = "SELECT * FROM Posts WHERE PostingType = ?"; 
+        params = [type];      
+    }
+    else {
+        query = "SELECT * FROM Posts WHERE Category = ?"; 
+        params = [category]; 
+    }
+
+    db.query(query, params, (error, response) => {
+        console.log(response);
+
+        if (error) {
+            res.send(JSON.stringify({
+                "status": 500,
+                "error": error,
+                "message": "Internal server error",
+                "response": null
+            }));
+        }
+
+        else {
+            res.send(JSON.stringify({
+                "status": 200,
+                "error": null,
+                "response": response,
+                "message": "Success! Filtered posts retrived."
+            }));
+        }
+    });
+});
+

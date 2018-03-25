@@ -18,9 +18,11 @@
   <!-- Custom styles for this template -->
   <link href="css/full.css" rel="stylesheet">
   <script src="vendor/scripts/index.js"></script>
+  <script src="vendor/scripts/profile.js"></script>
+  <script src="vendor/scripts/home.js"></script>
 </head>
 
- <body onload="onLoad()">
+ <body onload="on_load()">
 
   <!-- Navigation -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
@@ -36,26 +38,6 @@
         <li class="nav-item">
           <a class="nav-link" href="about.html">About</a>
         </li>
-
-        <li class="nav-item">
-            <div class="btn-group">
-            <a href="#" class="btn btn-success" color="black" onclick="btn_logout()">Logout</a>
-            <a href="#" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="caret"></span></a>
-            <ul class="dropdown-menu">
-              <li><a href="#">Action</a></li>
-              <li><a href="#">Another action</a></li>
-              <li><a href="#">Something else here</a></li>
-              <li class="divider"></li>
-              <li><a href="#">Separated link</a></li>
-            </ul>
-          </div>
-        </li>
-
-        <li class="nav-item">
-            <button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#myModalReport" onclick="report()">
-              <span class="glyphicon glyphicon-flag"></span> Flag</button>
-        </li>
-
       </ul>
 
     </div>
@@ -78,36 +60,6 @@
         <!-- LOG IN/REGISTER BUTTON  -->
         <button class="btn btn-outline-primary" data-toggle="modal" data-target="#myModal1" onclick="clearModal1()">Login</button>
         <button class="btn btn-outline-primary" data-toggle="modal" data-target="#myModal2" onclick="clearModal2()">Register</button>
-
-        <!-- Report MODAL -->
-        <div class="modal" id="myModalReport" aria-hidden="true">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title">Report</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-              </div>
-              <div class="modal-body">
-
-                <form>
-                  <fieldset>
-                    <div class="form-group">
-                      <label for="exampleInputEmail1">Report Message</label>
-                      <input type="email" class="form-control" id="in_login_email" placeholder="boilermaker@purdue.edu">
-                    </div>
-
-
-
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="btn_modal_login" onclick="btn_login()">Log In</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              </div>
-            </div>
-          </div>
-        </div>
 
         <!-- LOG IN MODAL -->
         <div class="modal" id="myModal1" aria-hidden="true">
