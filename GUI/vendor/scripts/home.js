@@ -691,10 +691,15 @@ function expandCreatePModal(category) {
 
     if (category === 'Ride') {
         document.getElementById("pickedCategory").value = "Ride";
+
+        var rideDiv = document.createElement("div");
+        rideDiv.setAttribute('class', 'catDiv');
+        document.getElementById("fieldset_createNP").appendChild(rideDiv);
+
         // From (location) & To
         var fromFG = document.createElement("div");
         fromFG.setAttribute('class', 'form-group');
-        document.getElementById("fieldset_createNP").appendChild(fromFG);
+        rideDiv.appendChild(fromFG);
 
         var fromLbl = document.createElement("LABEL");
         fromLbl.innerHTML = "From: ";
@@ -761,11 +766,15 @@ function expandCreatePModal(category) {
     }
     else if (category === 'Food') {
         document.getElementById("pickedCategory").value = "Food";
-        
+
+        var foodDiv = document.createElement("div");
+        foodDiv.setAttribute('class', 'catDiv');
+        document.getElementById("fieldset_createNP").appendChild(foodDiv);
+
         // Restaurant & Contact Info
         var resFG = document.createElement("div");
         resFG.setAttribute('class', 'form-group');
-        document.getElementById("fieldset_createNP").appendChild(resFG);
+        foodDiv.appendChild(resFG);
 
         var resLbl = document.createElement("LABEL");
         resLbl.innerHTML = "Restaurant: ";
@@ -786,7 +795,7 @@ function expandCreatePModal(category) {
         resTxt.setAttribute('placeholder', 'Location');
         resTxt.style = "width:210px;display:inline-block;padding:10px;text-align:left;overflow:auto;";
         pRes.appendChild(resTxt);
-        
+
         var infoTxt = document.createElement("textarea");
         infoTxt.setAttribute('type', 'text');
         infoTxt.setAttribute('rows', '1');
@@ -809,7 +818,7 @@ function expandCreatePModal(category) {
         itemsTxt.setAttribute('cols', '1');
         itemsTxt.setAttribute('rows', '2');
         itemsTxt.setAttribute('class', 'form-control');
-        itemsTxt.setAttribute('id', 'ride_to');
+        itemsTxt.setAttribute('id', 'food_items');
         itemsTxt.setAttribute('placeholder', '');
         itemsTxt.style = "padding:10px;text-align:left;overflow:auto;";
         itemsFG.appendChild(itemsTxt);
@@ -817,6 +826,64 @@ function expandCreatePModal(category) {
     }
     else if (category === 'Tutor') {
         document.getElementById("pickedCategory").value = "Tutor";
+
+        var tutorDiv = document.createElement("div");
+        tutorDiv.setAttribute('class', 'catDiv');
+        document.getElementById("fieldset_createNP").appendChild(tutorDiv);
+
+        // Class Name
+        var classFG = document.createElement("div");
+        classFG .setAttribute('class', 'form-group');
+        tutorDiv.appendChild(classFG);
+
+        var classLbl = document.createElement("LABEL");
+        classLbl.innerHTML = "Course(s): ";
+        classFG.appendChild(classLbl);
+
+        var classTxt = document.createElement("textarea");
+        classTxt.setAttribute('cols', '1');
+        classTxt.setAttribute('rows', '1');
+        classTxt.setAttribute('class', 'form-control');
+        classTxt.setAttribute('id', 'tutor_class');
+        classTxt.setAttribute('placeholder', 'name or course no. at Purdue');
+        classTxt.style = "padding:10px;text-align:left;overflow:auto;";
+        classFG.appendChild(classTxt);
+
+        // Qualifications
+        var qualFG = document.createElement("div");
+        qualFG.setAttribute('class', 'form-group');
+        document.getElementById("fieldset_createNP").appendChild(qualFG);
+
+        var qualLbl = document.createElement("LABEL");
+        qualLbl.innerHTML = "Qualifications: ";
+        qualFG.appendChild(qualLbl);
+
+        var qualTxt = document.createElement("textarea");
+        qualTxt.setAttribute('cols', '1');
+        qualTxt.setAttribute('rows', '2');
+        qualTxt.setAttribute('class', 'form-control');
+        qualTxt.setAttribute('id', 'tutor_qual');
+        qualTxt.setAttribute('placeholder', '');
+        qualTxt.style = "padding:10px;text-align:left;overflow:auto;";
+        qualFG.appendChild(qualTxt);
+
+        // Contact Info
+        var infoFG = document.createElement("div");
+        infoFG .setAttribute('class', 'form-group');
+        document.getElementById("fieldset_createNP").appendChild(infoFG);
+
+        var infoLbl = document.createElement("LABEL");
+        infoLbl.innerHTML = "Contact Info: ";
+        infoFG.appendChild(infoLbl); 
+
+        var infoTxt = document.createElement("textarea");
+        infoTxt.setAttribute('type', 'text');
+        infoTxt.setAttribute('rows', '1');
+        infoTxt.setAttribute('class', 'form-control');
+        infoTxt.setAttribute('id', 'tutor_info');
+        infoTxt.setAttribute('placeholder', 'Phone no. or email (optional)');
+        infoTxt.style = "width:210px; padding:10px;text-align:left;overflow:auto;";
+        infoFG.appendChild(infoTxt);
     }
     else if (category === 'Sitter') {
         document.getElementById("pickedCategory").value = "Sitter";
