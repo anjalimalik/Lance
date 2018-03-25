@@ -253,37 +253,39 @@ function getPostID(id) {
 */
 
 function closePost(postID) {
-    postID = parseInt(postID);
-    fetch(urlClose, {
-        method: "POST",
-        headers: {
-            'Accept': 'application/json',
-            'content-type': 'application/json'
-        },
-        body: JSON.stringify({
-            "postId": postID
-        })
-
-    }).then(function (res) {
-        if (res.ok) {
-            var id1 = "div".concat(postID.toString());
-            var id2 = "head".concat(postID.toString());
-            (document.getElementById(id1)).removeChild((document.getElementById(id2)));
-            alert("Your post was closed and removed!");
-            res.json().then(function (data) {
-                console.log("Inside res.ok. Post was closed");
-            }.bind(this));
-        }
-        else {
-            alert("Error: deletion unsuccessful!");
-            res.json().then(function (data) {
-                console.log(data.message);
-            }.bind(this));
-        }
-    }).catch(function (err) {
-        alert("Error: No internet connection!");
-        console.log(err.message + ": No Internet Connection");
-    });
+    if(window.confirm("Are you sure you want to delete this post?")){
+        postID = parseInt(postID);
+        fetch(urlClose, {
+            method: "POST",
+            headers: {
+                'Accept': 'application/json',
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify({
+                "postId": postID
+            })
+    
+        }).then(function (res) {
+            if (res.ok) {
+                var id1 = "div".concat(postID.toString());
+                var id2 = "head".concat(postID.toString());
+                (document.getElementById(id1)).removeChild((document.getElementById(id2)));
+                alert("Your post was closed and removed!");
+                res.json().then(function (data) {
+                    console.log("Inside res.ok. Post was closed");
+                }.bind(this));
+            }
+            else {
+                alert("Error: deletion unsuccessful!");
+                res.json().then(function (data) {
+                    console.log(data.message);
+                }.bind(this));
+            }
+        }).catch(function (err) {
+            alert("Error: No internet connection!");
+            console.log(err.message + ": No Internet Connection");
+        });
+    } 
 }
 
 function getAllComments(postID) {
