@@ -60,11 +60,11 @@ function createCard(user, content, headline, postingType, price, postID, date, l
     divHeader.appendChild(divTextPrice);
 
     if (category) {
-        if(category === "Sitter"){
+        if (category === "Sitter") {
             category = "Baby/Pet Sitter";
-        } else if(category === "Ride"){
+        } else if (category === "Ride") {
             category = "Ride Share";
-        } else if(category === "Sale"){
+        } else if (category === "Sale") {
             category = "For Sale";
         }
         /* Category */
@@ -80,7 +80,7 @@ function createCard(user, content, headline, postingType, price, postID, date, l
     ReqOff.style = "color:#666699;float:left;";
     ReqOff.innerHTML = str;
     divHeader.appendChild(ReqOff);
-    
+
     var divBody = document.createElement("div");
     divBody.setAttribute('class', 'card-body');
     divCenter.appendChild(divBody);
@@ -579,7 +579,12 @@ function removeElements(postID, num) {
     (document.getElementById('ulcomments'.concat(postID))).removeChild((document.getElementById('pWComments'.concat(postID))));
 }
 
-function sortPosts(basedOn, order) {
+function sortPosts(basedOn, order, upper, lower) {
+
+    console.log(basedOn);
+    console.log(order);
+    console.log(upper);
+    console.log(lower);
     fetch(urlSortPosts, {
         method: "POST",
         headers: {
@@ -589,8 +594,8 @@ function sortPosts(basedOn, order) {
         body: JSON.stringify({
             "basedOn": basedOn,
             "order": order,
-            "upper": null,
-            "lower": null
+            "upper": upper,
+            "lower": lower
         })
     }).then(function (res) {
         if (res.ok) {
@@ -614,9 +619,11 @@ function sortPosts(basedOn, order) {
 
 function getSortedPosts(json) {
     $('.card_list_el').remove();
-    var num = Object.keys(json).length;
-    for (i = 0; i < num; i++) {
-        createCard(json[i].UserName, json[i].Content, json[i].Headline, json[i].PostingType, json[i].money, json[i].idPosts, json[i].DatePosted, json[i].numLikes, json[i].Category);
+    if (json) {
+        var num = Object.keys(json).length;
+        for (i = 0; i < num; i++) {
+            createCard(json[i].UserName, json[i].Content, json[i].Headline, json[i].PostingType, json[i].money, json[i].idPosts, json[i].DatePosted, json[i].numLikes, json[i].Category);
+        }
     }
 }
 
@@ -649,4 +656,27 @@ function filterPosts(category, type) {
         console.log(err.message + ": No Internet Connection");
     });
 
+}
+function filterWRange() {
+    if (parseInt(document.getElementById("priceLower").value) !== 0 || parseInt(document.getElementById("priceUpper").value) !== 10000) {
+        if (parseInt(document.getElementById("priceUpper").value) <= parseInt(document.getElementById("priceLower").value)) {
+            alert("Price input range is invalid.");
+            return;
+        }
+        else {
+            sortPosts("cost", null, document.getElementById("priceUpper").value, document.getElementById("priceLower").value);
+        }
+    } else if (document.getElementById("dateUpper").value && document.getElementById("priceLower").value) {
+        
+        var dateLow = new Date(document.getElementById("dateLower").value);
+        var dateUpp = new Date(document.getElementById("dateUpper").value);
+
+        if (Date.parse(dateUpp) <= Date.parse(dateLow)) {
+            alert("Date input range is invalid.");
+            return;
+        }
+        else {
+            sortPosts("date", null, dateUpp, dateLow);
+        }
+    }
 }

@@ -164,7 +164,7 @@
         <h5 style="position: relative; top: -40px; left: 110px;"> Price </h5>
 
         <div style="margin-left:60px; margin-top:-40px;">
-          <button id="btnASCPrice" class="btn btn-outline-secondary" onclick="sortPosts('cost', 'ASC')">&uarr;</button>
+          <button id="btnASCPrice" class="btn btn-outline-secondary" onclick="sortPosts('cost', 'ASC', null, null)">&uarr;</button>
           <button id="btnDESCPrice" class="btn btn-outline-secondary" onclick="sortPosts('cost', 'DESC')">&darr;</button>
         </div>
         <div>
@@ -180,8 +180,8 @@
         <h5 style="position: relative; left: 75px;"> Date Posted </h5>
 
         <div style="margin-left:60px;">
-          <button id="btnASCDate" class="btn btn-outline-secondary" onclick="sortPosts('date', 'ASC')">&uarr;</button>
-          <button id="btnDESCDate" class="btn btn-outline-secondary" onclick="sortPosts('date', 'DESC')">&darr;</button>
+          <button id="btnASCDate" class="btn btn-outline-secondary" onclick="sortPosts('date', 'ASC', null, null)">&uarr;</button>
+          <button id="btnDESCDate" class="btn btn-outline-secondary" onclick="sortPosts('date', 'DESC', null, null)">&darr;</button>
         </div>
         <div>
 
@@ -210,7 +210,7 @@
           </div>
 
           <button id="btnFilter" class="btn btn-outline-primary" style="position: relative; margin-left: 160px; width: 120px; height: 40px; text-align: center;"
-            onclick="filterPosts()">Filter</button>
+            onclick="filterWRange()">Filter</button>
         </div>
       </div>
     </div>
