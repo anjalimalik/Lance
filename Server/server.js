@@ -891,6 +891,7 @@ function newNotification(str, postid, senderEmail) {
                     console.log(headline);
                     notification = notification.concat(" @ ");
                     notification = notification.concat(date);
+                    var msec = (new Date(date)).getTime();
 
                     let query3 = "INSERT INTO Notifications SET ?";
 
@@ -898,7 +899,8 @@ function newNotification(str, postid, senderEmail) {
                         idUsers: userid,
                         idPosts: postid,
                         Notification: notification,
-                        SenderName: sender
+                        SenderName: sender,
+                        msec: msec
                     };
 
                     // INSERT INTO Notifications TABLE
@@ -949,7 +951,7 @@ app.post('/getNotifications', function (req, res) {
 
         else {
             // get data from Notifications using the user id recieved fro previous query
-            let query2 = "SELECT Notification FROM Notifications WHERE idUsers = ?";
+            let query2 = "SELECT Notification FROM Notifications WHERE idUsers = ? ORDER BY msec DESC";
 
             var string = JSON.stringify(response);
             var json = JSON.parse(string);

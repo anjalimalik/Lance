@@ -1,29 +1,67 @@
-
 var email, pass, name, edu, skills, desc, contact, links, pic, docs;
 var urlChangePass = "http://localhost:5500/changePassword"
 var urlNotifications = "http://localhost:5500/getNotifications"
+var urlGetProfile = "http://localhost:5500/getProfile"
 var numNotifs = 0;
 
 function body_onload() {
-    var url = window.location.href;
-    var str = url.split("?email=");
-    email = str[1];
-    name = localStorage.getItem('name');
-    //email = localStorage.getItem('email');
-    edu = localStorage.getItem('edu');
-    links = localStorage.getItem('links');
-    contact = localStorage.getItem('contact');
-    desc = localStorage.getItem('desc');
-    skills = localStorage.getItem('skills');
-
-    var img = new Image();
-    img.src = "./Pictures/spinner.jpg";
-    document.getElementById("img_profile").src = "./Pictures/spinner.jpg";
 
     optionsToggle.style.display = "none";
     notificationsToggle.style.display = "none";
 
-    populate_profile();
+    var url = window.location.href;
+    var str = url.split("?email=");
+    email = str[1];
+
+    fetch(urlGetProfile, {
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+            "email": email
+        })
+
+    }).then(function (res) {
+        console.log("Inside res function");
+        if (res.ok) {
+            res.json().then(function (data) {
+
+                console.log(data.response);
+                console.log("Inside res.ok");
+                var json = data.response;
+                name = json[0].FullName;
+                edu = json[0].Education;
+                links = json[0].Links;
+                contact = json[0].ContactInfo;
+                desc = json[0].Description;
+                skills = json[0].SkillsSet;
+                populate_profile();
+
+            }.bind(this));
+        }
+        else {
+            alert("Error: get profile unsuccessful!");
+            res.json().then(function (data) {
+                console.log(data.message);
+            }.bind(this));
+            return;
+        }
+    }).catch(function (err) {
+        alert("Error: No internet connection!");
+        console.log(err.message + ": No Internet Connection");
+        return;
+    });
+
+    var img = new Image();
+    img.src = "./Pictures/spinner.jpg";
+    document.getElementById("img_profile").src = "./Pictures/user_icon.jpg";
+}
+
+function goToHome() {
+    var u = 'home.html?email='.concat(email);
+    window.location.href = u;
 }
 
 function displayOptions() {
@@ -164,6 +202,7 @@ function btn_passChange() {
 
 function btn_getNotifications() {
 
+    console.log(email);
     fetch(urlNotifications, {
         method: "POST",
         headers: {

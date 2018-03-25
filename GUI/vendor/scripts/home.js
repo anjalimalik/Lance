@@ -8,7 +8,12 @@ var urlSortPosts = "http://localhost:5500/getSortedPosts"
 var urlFilterPosts = "http://localhost:5500/getFilteredPosts"
 var urlCreatePost = "http://localhost:5500/CreatePost"
 
+var emailAdd;
+
 function onLoad() {
+    var url = window.location.href;
+    var str = url.split("?email=");
+    emailAdd = str[1];
     getAllPosts();
 }
 
@@ -233,7 +238,7 @@ function clickInterested(postID) {
             'content-type': 'application/json'
         },
         body: JSON.stringify({
-            "email": "test5@purdue.edu",
+            "email": emailAdd,
             "postId": postID
         })
 
@@ -465,7 +470,7 @@ function addComment(postID, email, num) {
         body: JSON.stringify({
             "postId": postID,
             "comment": comment,
-            "email": "anjali@purdue.edu" // replace with email
+            "email": emailAdd
         })
 
     }).then(function (res) {
@@ -623,14 +628,14 @@ function createPost() {
         type_value = type[1].value;
     }
     else {
-        alert ("Not enough information provided");
+        alert("Not enough information provided");
         document.getElementById("postClose").click();
         return;
     }
 
     // Only category is optional
-    if(!price || !title || !desc) {
-        alert ("Not enough information provided");
+    if (!price || !title || !desc) {
+        alert("Not enough information provided");
         document.getElementById("postClose").click();
         return;
     }
@@ -680,7 +685,7 @@ function createPost() {
             'content-type': 'application/json'
         },
         body: JSON.stringify({
-            "email": "test@purdue.edu",
+            "email": emailAdd,
             "Headline": title,
             "Content": desc,
             "PostingType": type_value,
@@ -1109,4 +1114,75 @@ function closeNewPostModal() {
     type[0].checked = false;
     type[1].checked = false;
     document.getElementById("pickedCategory").value = null;
+}
+
+function showNotifications() {
+    document.getElementById("optionsToggle").style.display = "none";
+    var x = document.getElementById("notificationsToggle");
+
+    if (x.style.display === "none") {
+        x.style.display = "block";
+    } else {
+        x.style.display = "none";
+    }
+
+    // function to get notifications
+    getNotifications();
+}
+
+function getNotifications() {
+
+    console.log(emailAdd);
+    fetch(urlNotifications, {
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+            "email": emailAdd
+        })
+
+    }).then(function (res) {
+        console.log("Inside res function");
+        if (res.ok) {
+            res.json().then(function (data) {
+                console.log(data.message);
+                console.log(data.response);
+                console.log("Inside res.ok, Get Notifications successful!");
+                var length = Object.keys(data.response).length;
+                if (length != 0 && numNotifs < length) {
+                    numNotifs = 0;
+                    var json = data.response;
+                    for (i = 0; i < length; i++) {
+                        var ul = document.createElement("a");
+                        ul.setAttribute('class', 'dropdown-item');
+                        ul.innerHTML = (json[i].Notification).toString();
+                        ul.style = "font-color:black;";
+                        document.getElementById("notif").appendChild(ul);
+                        numNotifs++;
+                    }
+                }
+                else if (numNotifs == 0) {
+                    numNotifs--;
+                    var ul = document.createElement("a");
+                    ul.setAttribute('class', 'dropdown-item');
+                    ul.innerHTML = "No notifications available for you at this time.";
+                    document.getElementById("notif").appendChild(ul);
+                }
+
+
+            }.bind(this));
+        }
+        else {
+            alert("Error: Get notifications unsuccessful!");
+            res.json().then(function (data) {
+                console.log(data.message);
+            }.bind(this));
+        }
+    }).catch(function (err) {
+        alert("Error: No internet connection!");
+        console.log(err.message + ": No Internet Connection");
+    });
+
 }
