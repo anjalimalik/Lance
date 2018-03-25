@@ -676,6 +676,7 @@ function filterWRange() {
     }
 }
 
+// shows values selected by user on price range slider
 function slider_onChange(str) {
     var out = document.getElementById("out".concat(str));
     if (str === 'PL') {

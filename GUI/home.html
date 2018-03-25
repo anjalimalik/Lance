@@ -142,6 +142,44 @@
     </div>
   </div>
 
+  <!-- Create New Post MODAL -->
+  <div class="modal" id="myModalNewPost" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Create Post</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <fieldset>
+                  <div class="form-group">
+                      <label>Title: </label>
+                      <textarea cols="1" rows="1" style="padding:10px;text-align:left;overflow:auto;"
+                      class="form-control" id="in_title_newpost" placeholder=""></textarea>
+                    </div>
+                <div class="form-group">
+                  <label>Content: </label>
+                  <textarea cols="10" rows="5" style="padding:10px;float:left;margin-bottom:20px;text-align:left;overflow:auto;"
+                    class="form-control" id="in_content_newpost" placeholder="Description"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Price: </label></br>
+                    <input type="number" size="5" style="padding:10px;width:100px;float:left;margin-right:200px;text-align:left;overflow:auto;"
+                      class="form-control" id="in_price_newpost" placeholder="$$$"></textarea>
+                      <label style="margin-right:20px; margin-top: 20px;" class="radio-inline"><input type="radio" name="postType">   Offer    </label>
+                      <label class="radio-inline"><input type="radio" name="postType">    Request   </label>
+                  </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-dismiss="modal">Publish</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
   <!-- START OF CARD LIST -->
   <ul id="news_card_list" class="card_list">
@@ -222,7 +260,7 @@
     <!-- Create New Post -->
     <div class="jumbotron" style="position: absolute; margin-left: 1372px; margin-top: 15px; width: 18%; height: 15%;">
       <h4 style="position: relative; top: -40px; "> CREATE NEW POST </h4>
-      <button class="btn btn-outline-dark" id="btnNewPost" style="position: relative; border-color:#483D8B; top: -30px; margin-left: 55px;" onclick="btnNewPost_onclick()">New Post</button>
+      <div class="btn btn-outline-dark" id="btnNewPost" data-toggle="modal" data-target="#myModalNewPost" style="position: relative; border-color:#483D8B; top: -30px; margin-left: 55px;" >New Post</div>
     </div>
     <!-- END PAGE CONTENT -->
   </div>
