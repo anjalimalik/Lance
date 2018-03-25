@@ -5,6 +5,7 @@ var urlClose = "http://localhost:5500/ClosePost"
 var urlGetComment = "http://localhost:5500/getComments"
 var urlWriteComment = "http://localhost:5500/WriteComment"
 var urlSortPosts = "http://localhost:5500/getSortedPosts"
+var urlFilterPosts = "http://localhost:5500/getFilteredPosts"
 
 function onLoad() {
     getAllPosts();
@@ -600,11 +601,40 @@ function sortPosts(basedOn, order) {
 }
 
 function getSortedPosts(json){
-    //(document.getElementByClassName('news_card_list').removeChild((document.getElementByClassName('card_list_el'))));
     $('.card_list_el').remove();
     var num = Object.keys(json).length;
-
     for (i = 0; i < num; i++) {
         createCard(json[i].UserName, json[i].Content, json[i].Headline, json[i].PostingType, json[i].money, json[i].idPosts, json[i].DatePosted, json[i].numLikes);
     }
+}
+
+function filterPosts(category, type) {
+    fetch(urlFilterPosts, {
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+            "category": category,
+            "type": type
+        })
+    }).then(function (res) {
+        if (res.ok) {
+            res.json().then(function (data) {
+                getSortedPosts(data.response);
+                console.log("Inside res.ok. Filtered Posts retrieved");
+            }.bind(this));
+        }
+        else {
+            alert("Error: filtering of posts unsuccessful!");
+            res.json().then(function (data) {
+                console.log(data.message);
+            }.bind(this));
+        }
+    }).catch(function (err) {
+        alert("Error: No internet connection!");
+        console.log(err.message + ": No Internet Connection");
+    });
+
 }

@@ -243,7 +243,7 @@ app.post('/CreatePost', function (req, res) {
 
     var time = posted.getTime();
 
-    if(!req.body.Category){
+    if (!req.body.Category) {
         var cat = null;
         var att = null;
     }
@@ -989,7 +989,7 @@ app.post('/getSortedPosts', (req, res) => {
 
     let params = [];
     let query = "";
-    
+
     // cannot be null
     if (!basedOn || (!order && (!upperBound && !lowerBound))) {
         return res.status(400).json({ message: "Not enough information provided for sorting of posts" });
@@ -1092,3 +1092,50 @@ app.post('/getSortedPosts', (req, res) => {
         }
     });
 });
+
+
+// Get Filtered list of Posts - by Offer/Requests, or Categories
+app.post('/getFilteredPosts', (req, res) => {
+
+    var category = req.body.category; // can be posting date or cost of service
+    var type = req.body.type;
+
+    let query = "";
+    let params = [];
+    
+    // cannot be null
+    if (!category && !type) {
+        return res.status(400).json({ message: "Not enough information provided for filtering of posts" });
+    }
+    else if (type) {
+        query = "SELECT * FROM Posts WHERE PostingType = ?"; 
+        params = [type];      
+    }
+    else {
+        query = "SELECT * FROM Posts WHERE Category = ?"; 
+        params = [category]; 
+    }
+
+    db.query(query, params, (error, response) => {
+        console.log(response);
+
+        if (error) {
+            res.send(JSON.stringify({
+                "status": 500,
+                "error": error,
+                "message": "Internal server error",
+                "response": null
+            }));
+        }
+
+        else {
+            res.send(JSON.stringify({
+                "status": 200,
+                "error": null,
+                "response": response,
+                "message": "Success! Filtered posts retrived."
+            }));
+        }
+    });
+});
+

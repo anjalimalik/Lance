@@ -157,9 +157,9 @@
         <h4 style="position: relative; top: -40px; left: 110px;"> MENU </h4>
 
         <button id="btnRequest" class="btn btn-outline-primary" style="position: relative; top: -30px;margin-left: 10px; width: 120px; height: 40px; text-align: center;"
-          onclick="clearModalRequest()">Request</button>
+          onclick="filterPosts(null, 'Request')">Request</button>
         <button id="btnOffer" class="btn btn-outline-primary" style="position: relative; top: -70px;margin-left: 160px; width: 120px; height: 40px; text-align: center;"
-          onclick="clearModalOffer()">Offer</button>
+          onclick="filterPosts(null, 'Offer')">Offer</button>
 
         <h5 style="position: relative; top: -40px; left: 110px;"> Price </h5>
 
@@ -181,7 +181,7 @@
 
         <div style="margin-left:60px;">
           <button id="btnASCDate" class="btn btn-outline-secondary" onclick="sortPosts('date', 'ASC')">&uarr;</button>
-          <button id="btnDESCDate" class="btn btn-outline-secondary" onclick="sortPosts('date', 'ASC')">&darr;</button>
+          <button id="btnDESCDate" class="btn btn-outline-secondary" onclick="sortPosts('date', 'DESC')">&darr;</button>
         </div>
         <div>
 
@@ -200,12 +200,12 @@
             <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Choose Category
               <span class="caret"></span></button>
             <ul class="dropdown-menu" style="padding-left:10px;font-size:15px;">
-              <li><a href="#" onclick="filterCategory('ride')">Ride Share</a></li>
-              <li><a href="#" onclick="filterCategory('food')">Food Pickup</a></li>
-              <li><a href="#" onclick="filterCategory('tutor')">Tutor</a></li>
-              <li><a href="#" onclick="filterCategory('sitter')">Baby/Pet Sitter</a></li>
-              <li><a href="#" onclick="filterCategory('housing')">Housing</a></li>
-              <li><a href="#" onclick="filterCategory('sale')">For Sale</a></li>
+              <li><a href="#" onclick="filterPosts('Ride', null)">Ride Share</a></li>
+              <li><a href="#" onclick="filterPosts('Food', null)">Food Pickup</a></li>
+              <li><a href="#" onclick="filterPosts('Tutor', null)">Tutor</a></li>
+              <li><a href="#" onclick="filterPosts('Sitter', null)">Baby/Pet Sitter</a></li>
+              <li><a href="#" onclick="filterPosts('Housing', null)">Housing</a></li>
+              <li><a href="#" onclick="filterPosts('Sale', null)">For Sale</a></li>
             </ul>
           </div>
 
