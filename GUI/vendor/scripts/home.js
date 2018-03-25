@@ -4,6 +4,7 @@ var urlLike = "http://localhost:5500/ClickInterested"
 var urlClose = "http://localhost:5500/ClosePost"
 var urlGetComment = "http://localhost:5500/getComments"
 var urlWriteComment = "http://localhost:5500/WriteComment"
+var urlSortPosts = "http://localhost:5500/getSortedPosts"
 
 function onLoad() {
     getAllPosts();
@@ -36,6 +37,7 @@ function createCard(user, content, headline, postingType, price, postID, date, l
 
     var li = document.createElement('li');
     li.setAttribute('class', 'card_list_el');
+    li.setAttribute('id', 'card_child');
     li.style = "width:70%; margin-left: 100px;";
     ul.appendChild(li);
 
@@ -562,4 +564,47 @@ function removeElements(postID, num) {
         (document.getElementById('ulcomments'.concat(postID))).removeChild((document.getElementById('pComments'.concat(postID, i.toString()))));
     }
     (document.getElementById('ulcomments'.concat(postID))).removeChild((document.getElementById('pWComments'.concat(postID))));
+}
+
+function sortPosts(basedOn, order) {
+    fetch(urlSortPosts, {
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+            "basedOn": basedOn,
+            "order": order,
+            "upper": null,
+            "lower": null
+        })
+    }).then(function (res) {
+        if (res.ok) {
+            res.json().then(function (data) {
+                getSortedPosts(data.response);
+                console.log("Inside res.ok. Sorted Posts retrieved");
+            }.bind(this));
+        }
+        else {
+            alert("Error: sorting of posts unsuccessful!");
+            res.json().then(function (data) {
+                console.log(data.message);
+            }.bind(this));
+        }
+    }).catch(function (err) {
+        alert("Error: No internet connection!");
+        console.log(err.message + ": No Internet Connection");
+    });
+
+}
+
+function getSortedPosts(json){
+    //(document.getElementByClassName('news_card_list').removeChild((document.getElementByClassName('card_list_el'))));
+    $('.card_list_el').remove();
+    var num = Object.keys(json).length;
+
+    for (i = 0; i < num; i++) {
+        createCard(json[i].UserName, json[i].Content, json[i].Headline, json[i].PostingType, json[i].money, json[i].idPosts, json[i].DatePosted, json[i].numLikes);
+    }
 }

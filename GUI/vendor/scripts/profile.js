@@ -48,7 +48,7 @@ function displayNotifications() {
     // function to get notifications
     btn_getNotifications();
 }
-
+/*
 $(function () {
     $(":file").change(function () {
         if (this.files && this.files[0]) {
@@ -62,7 +62,7 @@ $(function () {
 function imageIsLoaded(e) {
     $('#img_profile').attr('src', e.target.result);
 }
-
+*/
 function populate_profile() {
     document.getElementById("profile_name").innerHTML = name;
     document.getElementById("profile_email").innerHTML = email;

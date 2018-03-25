@@ -63,13 +63,12 @@
           <a href="#" id="options_btn" onclick="displayOptions()" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button"
             aria-haspopup="true" aria-expanded="false" style="margin-left:405px;">Options <span class="caret"></span></a>
           <div id="optionsToggle" class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 38px, 0px); top: 0px; left: 805px; will-change: transform;">
-            <a class="dropdown-item btn btn-success btn-sm" style="margin-left: 0px; font-size: 12px;" href="#">View Profile</a>
+            <a class="dropdown-item btn btn-success btn-sm" style="margin-left: 0px; font-size: 12px;" href="./profile.html">View Profile</a>
             <div class="dropdown-divider"></div>
             <!--<a class="dropdown-item" href="#">Log Out</a>-->
             <a href="#" class="dropdown-item btn btn-success btn-sm" style="margin-left: 0px; font-size: 12px;" onclick="btn_logout()">Logout</a>
           </div>
         </li>
-
 
         <!-- Notifications -->
 
@@ -165,8 +164,8 @@
         <h5 style="position: relative; top: -40px; left: 110px;"> Price </h5>
 
         <div style="margin-left:60px; margin-top:-40px;">
-          <button id="btnASCPrice" class="btn btn-outline-secondary" onclick="">&uarr;</button>
-          <button id="btnDESCPrice" class="btn btn-outline-secondary" onclick="">&darr;</button>
+          <button id="btnASCPrice" class="btn btn-outline-secondary" onclick="sortPosts('cost', 'ASC')">&uarr;</button>
+          <button id="btnDESCPrice" class="btn btn-outline-secondary" onclick="sortPosts('cost', 'DESC')">&darr;</button>
         </div>
         <div>
 
@@ -181,8 +180,8 @@
         <h5 style="position: relative; left: 75px;"> Date Posted </h5>
 
         <div style="margin-left:60px;">
-          <button id="btnASCDate" class="btn btn-outline-secondary" onclick="">&uarr;</button>
-          <button id="btnDESCDate" class="btn btn-outline-secondary" onclick="">&darr;</button>
+          <button id="btnASCDate" class="btn btn-outline-secondary" onclick="sortPosts('date', 'ASC')">&uarr;</button>
+          <button id="btnDESCDate" class="btn btn-outline-secondary" onclick="sortPosts('date', 'ASC')">&darr;</button>
         </div>
         <div>
 
