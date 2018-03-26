@@ -10,7 +10,7 @@ var urlCreatePost = "http://localhost:5500/CreatePost"
 
 var emailAdd;
 
-function onLoad() {
+function onLoad_home() {
     var url = window.location.href;
     var str = url.split("?email=");
     emailAdd = str[1];
@@ -162,15 +162,15 @@ function createCard(user, content, headline, postingType, price, postID, date, l
 
     var divFooter = document.createElement('div');
     divFooter.setAttribute('class', 'card-footer');
-    divFooter.style = "height:60px;";
+    divFooter.style = "height:45px;";
     divCenter.appendChild(divFooter);
 
     /* LIKE/INTERESTED */
     var aHeart = document.createElement('BUTTON');
     aHeart.setAttribute('class', 'btn btn-default btn-sm');
     aHeart.setAttribute('onclick', "clickInterested(".concat(postID, ")"));
-    aHeart.style = "float:left; outline:none; border: 0; background: transparent; margin-left:0px; margin-top:-3px;";
-    divButtons.appendChild(aHeart);
+    aHeart.style = "float:center; outline:none; border: 0; background: transparent; margin-left:310px; margin-top:-17px;";
+    divFooter.appendChild(aHeart);
 
     var imgHeart = document.createElement('img');
     imgHeart.setAttribute('src', 'heart.png');
@@ -181,7 +181,7 @@ function createCard(user, content, headline, postingType, price, postID, date, l
     var txtlikes = document.createElement("text");
     txtlikes.setAttribute("id", "txtLikes".concat(postID));
     txtlikes.innerHTML = likes.toString().concat(" likes");
-    txtlikes.style = "float:left;margin-left:15px;font-size:14px;color:grey;";
+    txtlikes.style = "float:center;margin-left:-16px;font-size:14px;color:grey;";
     divFooter.appendChild(txtlikes);
 
     /* Date Posted */
@@ -198,7 +198,7 @@ function createCard(user, content, headline, postingType, price, postID, date, l
     divComments.setAttribute('class', 'btn btn-outline-primary btn-md');
     divComments.setAttribute("data-toggle", "modal");
     divComments.setAttribute("data-target", "#myCommentsModal");
-    divComments.style = "float:center; margin-top:1px;margin-right:-20%;height:40px;";
+    divComments.style = "float:right;margin-bottom:7px;margin-right:195px;margin-top:-10px; height:40px;";
     divComments.setAttribute('onclick', "expandPost(".concat(postID, ")"));
     divComments.innerHTML = "Comments";
     divFooter.appendChild(divComments);

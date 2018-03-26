@@ -943,7 +943,7 @@ app.post('/getNotifications', function (req, res) {
 
         else {
             // get data from Notifications using the user id recieved fro previous query
-            let query2 = "SELECT Notification FROM Notifications WHERE idUsers = ? ORDER BY msec DESC";
+            let query2 = "SELECT Notification FROM Notifications WHERE idUsers = ? ORDER BY msec DESC LIMIT 20";
 
             var string = JSON.stringify(response);
             var json = JSON.parse(string);
