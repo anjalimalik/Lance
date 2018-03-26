@@ -236,16 +236,16 @@
       <div class="jumbotron" style="position: absolute; left: 5%; top: 15px; width: 63%; height: auto;">
         <h4 style="position: relative; top: -40px; left: 110px;"> MENU </h4>
 
-        <button id="btnRequest" class="btn btn-outline-primary" style="position: relative; top: -30px;margin-left: 10px; width: 120px; height: 40px; text-align: center;"
-          onclick="filterPosts(null, 'Request')">Request</button>
-        <button id="btnOffer" class="btn btn-outline-primary" style="position: relative; top: -70px;margin-left: 160px; width: 120px; height: 40px; text-align: center;"
-          onclick="filterPosts(null, 'Offer')">Offer</button>
+        <input type="button" value="Request" id="btnRequest" class="btn btn-outline-primary" style="position: relative; top: -30px;margin-left: 10px; width: 120px; height: 40px; text-align: center;"
+          onclick="filterPosts(null, 'Request')"></input>
+        <input type="button" value="Offer" id="btnOffer" class="btn btn-outline-primary" style="position: relative; top: -70px;margin-left: 160px; width: 120px; height: 40px; text-align: center;"
+          onclick="filterPosts(null, 'Offer')"></input>
 
         <h5 style="position: relative; top: -40px; left: 110px;"> Price </h5>
 
         <div style="margin-left:60px; margin-top:-40px;">
-          <button id="btnASCPrice" class="btn btn-outline-secondary" onclick="sortPosts('cost', 'ASC', null, null)">&uarr;</button>
-          <button id="btnDESCPrice" class="btn btn-outline-secondary" onclick="sortPosts('cost', 'DESC')">&darr;</button>
+          <input type="button" value="&uarr;" id="btnASCPrice" class="btn btn-outline-secondary" onclick="sortPosts('cost', 'ASC', null, null)"></input>
+          <input type="button" value="&darr;" id="btnDESCPrice" class="btn btn-outline-secondary" onclick="sortPosts('cost', 'DESC')"></input>
         </div>
         <div>
 
@@ -262,8 +262,8 @@
         <h5 style="position: relative; left: 75px;"> Date Posted </h5>
 
         <div style="margin-left:60px;">
-          <button id="btnASCDate" class="btn btn-outline-secondary" onclick="sortPosts('date', 'ASC', null, null)">&uarr;</button>
-          <button id="btnDESCDate" class="btn btn-outline-secondary" onclick="sortPosts('date', 'DESC', null, null)">&darr;</button>
+          <input type="button" value="&uarr;" id="btnASCDate" class="btn btn-outline-secondary" onclick="sortPosts('date', 'ASC', null, null)"></input>
+          <input type="button" value="&darr;" id="btnDESCDate" class="btn btn-outline-secondary" onclick="sortPosts('date', 'DESC', null, null)"></input>
         </div>
         <div>
 
@@ -279,8 +279,8 @@
           <h5 style="position: relative; left: 75px;"> Category </h5>
 
           <div class="dropdown" style="padding-bottom:20px;">
-            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Choose Category
-              <span class="caret"></span></button>
+            <input type="button" value="Choose Category" class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+            <span class="caret"></span></input>
             <ul class="dropdown-menu" style="padding-left:10px;font-size:15px;">
               <li><a href="#" onclick="filterPosts('Ride', null)">Ride Share</a></li>
               <li><a href="#" onclick="filterPosts('Food', null)">Food Pickup</a></li>
@@ -291,8 +291,8 @@
             </ul>
           </div>
 
-          <button id="btnFilter" class="btn btn-outline-primary" style="position: relative; margin-left: 160px; width: 120px; height: 40px; text-align: center;"
-            onclick="filterWRange()">Filter</button>
+          <input type="button" value="Filter" id="btnFilter" class="btn btn-outline-primary" style="position: relative; margin-left: 160px; width: 120px; height: 40px; text-align: center;"
+            onclick="filterWRange()"></input>
         </div>
       </div>
     </div>
