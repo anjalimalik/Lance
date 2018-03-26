@@ -93,7 +93,7 @@ function displayNotifications() {
     // function to get notifications
     btn_getNotifications();
 }
-/*
+
 $(function () {
     $(":file").change(function () {
         if (this.files && this.files[0]) {
@@ -107,7 +107,7 @@ $(function () {
 function imageIsLoaded(e) {
     $('#img_profile').attr('src', e.target.result);
 }
-*/
+
 function populate_profile() {
     document.getElementById("profile_name").innerHTML = name;
     document.getElementById("profile_email").innerHTML = email;
@@ -169,7 +169,7 @@ function passMatch() {
     }
 }
 
-// clear settings modal 
+// clear settings modal
 function clearSetModal() {
     in_profile_currentPass.value = ""
     in_profile_newPass.value = "";
@@ -178,7 +178,7 @@ function clearSetModal() {
     $('.text.text-danger').remove();
 }
 
-// Password change function 
+// Password change function
 function btn_passChange() {
     var currentPass = in_profile_currentPass.value;
     var newPass = in_profile_newPass.value;

@@ -38,8 +38,9 @@ function btn_login() {
         if (res.ok) {
             res.json().then(function (data) {
                 if(confirm("Login successful!")) {
-                    var u = 'profile.html?email='.concat(_email);
-                    window.location.href = u;
+                    //var u = 'profile.html?email='.concat(_email);
+                    //window.location.href = u;
+                    window.location.href = 'home.html';
                 }
                 else {
                     var u = 'profile.html?email='.concat(_email);
@@ -137,7 +138,7 @@ function btn_register_finish() {
     localStorage.setItem('desc', desc);
     localStorage.setItem('skills', skills);
 
-    window.location.href = "profile.html";
+    window.location.href = "home.html";
 
     fetch(urlCreateProfile, {
         method: "POST",

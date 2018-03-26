@@ -48,6 +48,7 @@ function getAllPosts() {
 // CREATE A NEW CARD FOR EVERY POST FROM SERVER (/getPosts)
 function createCard(user, content, headline, postingType, price, postID, date, likes, category, attributes) {
 
+    /* Adding the cards from information from the database */
     var ul = document.getElementById('news_card_list');
 
     var li = document.createElement('li');
@@ -149,27 +150,27 @@ function createCard(user, content, headline, postingType, price, postID, date, l
     //btn_report.setAttribute("onclick", "getPostID(".concat(postID, ")"));
     btn_report.setAttribute("data-toggle", "modal");
     btn_report.setAttribute("data-target", "#myModalReport");
-    btn_report.style = "float:right;margin-bottom:3px;margin-right:0px;margin-top:0px;";
+    btn_report.style = "float:left;margin-bottom:3px;margin-right:-20px;";
     divButtons.appendChild(btn_report);
 
     var imgFlag = document.createElement('img');
     imgFlag.setAttribute('src', 'flag.png');
     imgFlag.setAttribute('alt', 'Report');
-    imgFlag.style = "float:center;width:20px; height:20px;";
+    imgFlag.style = "float:left;width:20px; height:20px;";
     btn_report.appendChild(imgFlag);
 
 
     var divFooter = document.createElement('div');
     divFooter.setAttribute('class', 'card-footer');
-    divFooter.style = "height:45px;";
+    divFooter.style = "height:60px;";
     divCenter.appendChild(divFooter);
 
     /* LIKE/INTERESTED */
     var aHeart = document.createElement('BUTTON');
     aHeart.setAttribute('class', 'btn btn-default btn-sm');
     aHeart.setAttribute('onclick', "clickInterested(".concat(postID, ")"));
-    aHeart.style = "float:center; outline:none; border: 0; background: transparent; margin-left:310px; margin-top:-17px;";
-    divFooter.appendChild(aHeart);
+    aHeart.style = "float:left; outline:none; border: 0; background: transparent; margin-left:0px; margin-top:-3px;";
+    divButtons.appendChild(aHeart);
 
     var imgHeart = document.createElement('img');
     imgHeart.setAttribute('src', 'heart.png');
@@ -179,8 +180,8 @@ function createCard(user, content, headline, postingType, price, postID, date, l
 
     var txtlikes = document.createElement("text");
     txtlikes.setAttribute("id", "txtLikes".concat(postID));
-    txtlikes.innerHTML = likes.toString();
-    txtlikes.style = "float:center;margin-left:-16px;font-size:14px;color:grey;";
+    txtlikes.innerHTML = likes.toString().concat(" likes");
+    txtlikes.style = "float:left;margin-left:15px;font-size:14px;color:grey;";
     divFooter.appendChild(txtlikes);
 
     /* Date Posted */
@@ -197,7 +198,7 @@ function createCard(user, content, headline, postingType, price, postID, date, l
     divComments.setAttribute('class', 'btn btn-outline-primary btn-md');
     divComments.setAttribute("data-toggle", "modal");
     divComments.setAttribute("data-target", "#myCommentsModal");
-    divComments.style = "float:right;margin-bottom:7px;margin-right:195px;margin-top:-10px; height:40px;";
+    divComments.style = "float:center; margin-top:1px;margin-right:-20%;height:40px;";
     divComments.setAttribute('onclick', "expandPost(".concat(postID, ")"));
     divComments.innerHTML = "Comments";
     divFooter.appendChild(divComments);
@@ -261,7 +262,12 @@ function clickInterested(postID) {
             res.json().then(function (data) {
                 var likesid = "txtLikes".concat(postID);
                 var num = parseInt(document.getElementById(likesid).textContent);
-                document.getElementById(likesid).innerHTML = (num + 1).toString();
+                if (num == 0) {
+                    document.getElementById(likesid).innerHTML = (num + 1).toString().concat(" like");
+                }
+                else {
+                    document.getElementById(likesid).innerHTML = (num + 1).toString().concat(" likes");
+                }
                 console.log("Inside res.ok. Number of Likes increased.");
             }.bind(this));
         }
@@ -646,7 +652,7 @@ function createPost() {
     var attributes = null;
     var category = document.getElementById("pickedCategory").value;
 
-    // make string for attributes according to the category 
+    // make string for attributes according to the category
     if (category === "Ride") {
         attributes = "";
         attributes = attributes.concat("From: ", document.getElementById("ride_from").value, "|", "To: ", document.getElementById("ride_to").value, "|");
@@ -721,7 +727,7 @@ function createPost() {
     closeNewPostModal();
 }
 
-// expand create new post modal to show attributes related to a category 
+// expand create new post modal to show attributes related to a category
 // UI for all attributes
 function expandCreatePModal(category) {
 
@@ -1137,7 +1143,7 @@ function showNotifications() {
     getNotifications();
 }
 
-// get notifications in dropdown list 
+// get notifications in dropdown list
 function getNotifications() {
 
     console.log(emailAdd);
@@ -1273,4 +1279,3 @@ function categoryModal(postID) {
         console.log(err.message + ": No Internet Connection");
     });
 }
-
