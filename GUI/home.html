@@ -23,7 +23,7 @@
   <script src="vendor/scripts/index.js"></script>
   <script src="vendor/scripts/profile.js"></script>
   <script src="vendor/scripts/home.js"></script>
-  <!-- Bootstrap core JavaScript -->
+  <!-- Bootstrap core JavaScript, jquery -->
   <script src="vendor/jquery/jquery.min.js"></script>
   <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
@@ -58,7 +58,6 @@
         </li>
 
         <!-- Notifications -->
-
         <li class="nav-item dropdown show">
           <a href="#" id="notifications_btn" onclick="showNotifications()" class="nav-link dropdown-toggle" data-toggle="dropdown"
             role="button" aria-haspopup="true" aria-expanded="false" style="margin-left:150px;">Notifications <span class="caret"></span></a>
@@ -69,9 +68,9 @@
             <!-- <a class="dropdown-item" href="#">View all Notifications</a>-->
           </div>
         </li>
+        <!-- End Notifications -->
 
         <!-- Options -->
-
         <li class="nav-item dropdown show">
           <a href="#" id="options_btn" onclick="displayOptions()" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button"
             aria-haspopup="true" aria-expanded="false" style="margin-left:305px;">Options <span class="caret"></span></a>
@@ -82,9 +81,7 @@
             <a href="#" class="dropdown-item btn btn-success btn-sm" style="margin-left: 0px; font-size: 12px;" onclick="btn_logout()">Logout</a>
           </div>
         </li>
-
-
-
+        <!-- End Options -->
         <!-- End -->
 
       </ul>
@@ -94,7 +91,7 @@
 
   <!-- PAGE CONTENT -->
   <!-- Report MODAL -->
-  <div class="modal" id="myModalReport" aria-hidden="true">
+  <div class="modal" style="margin-top:150px;" id="myModalReport" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -119,9 +116,10 @@
       </div>
     </div>
   </div>
+  <!-- End Report -->
 
   <!-- Expand Comments MODAL -->
-  <div class="modal" id="myCommentsModal" aria-hidden="true">
+  <div class="modal" style="margin-top:100px;" id="myCommentsModal" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -143,9 +141,10 @@
       </div>
     </div>
   </div>
+  <!-- End Comments -->
 
   <!-- Expand Category MODAL -->
-  <div class="modal" id="categoryModal" aria-hidden="true">
+  <div class="modal" style="margin-top:150px;" id="categoryModal" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -166,9 +165,10 @@
       </div>
     </div>
   </div>
+  <!-- End Category -->
 
   <!-- Create New Post MODAL -->
-  <div class="modal" id="myModalNewPost" aria-hidden="true">
+  <div class="modal" style="margin-top:100px;" id="myModalNewPost" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -222,15 +222,13 @@
       </div>
     </div>
   </div>
-
+  <!-- End New Post -->
 
   <!-- START OF CARD LIST -->
   <ul id="news_card_list" class="card_list">
     <!-- List Items added in JS -->
   </ul>
   <!-- END OF CARD LIST -->
-
-
 
   <!-- MENU BAR -->
   <div class="row">
@@ -243,6 +241,7 @@
         <input type="button" value="Offer" id="btnOffer" class="btn btn-outline-primary" style="position: relative; top: -70px;margin-left: 160px; width: 120px; height: 40px; text-align: center;"
           onclick="filterPosts(null, 'Offer')"></input>
 
+        <!-- Price -->
         <h5 style="position: relative; top: -40px; left: 110px;"> Price </h5>
 
         <div style="margin-left:60px; margin-top:-40px;">
@@ -261,6 +260,8 @@
           </p>
         </div>
 
+        <!-- Date Posted -->
+
         <h5 style="position: relative; left: 75px;"> Date Posted </h5>
 
         <div style="margin-left:60px;">
@@ -278,6 +279,7 @@
             <input type="date" class="form-control" id="dateUpper">
           </div>
 
+          <!-- Category -->
           <h5 style="position: relative; left: 75px;"> Category </h5>
 
           <div class="dropdown" style="padding-bottom:20px;">
@@ -293,15 +295,17 @@
             </ul>
           </div>
 
+          <!-- Filter -->
           <input type="button" value="Filter" id="btnFilter" class="btn btn-outline-primary" style="position: relative; margin-left: 160px; width: 120px; height: 40px; text-align: center;"
             onclick="filterWRange()"></input>
         </div>
       </div>
     </div>
-    <!-- END MENU BAR -->
   </div>
+  <!-- END MENU BAR -->
+
+  <!-- Create New Post -->
   <div class="row">
-    <!-- Create New Post -->
     <div class="jumbotron" style="position: absolute; margin-left: 1372px; margin-top: 15px; width: 18%; height: 15%;">
       <h4 style="position: relative; top: -40px; "> CREATE NEW POST </h4>
       <div class="btn btn-outline-dark" id="btnNewPost" data-toggle="modal" data-target="#myModalNewPost" style="position: relative; border-color:#483D8B; top: -30px; margin-left: 55px;">New Post</div>
@@ -309,6 +313,7 @@
     <!-- END PAGE CONTENT -->
   </div>
 </body>
+<!-- End New Post -->
 
 <style>
   #options_btn {

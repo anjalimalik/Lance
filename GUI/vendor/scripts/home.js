@@ -1171,8 +1171,8 @@ function getNotifications() {
                     for (i = 0; i < length; i++) {
                         var ul = document.createElement("a");
                         ul.setAttribute('class', 'notifClass dropdown-item');
-                        ul.innerHTML = (json[i].Notification).toString();
-                        ul.style = "border-bottom: 1px solid #ccc; margin-left:-40px;font-color:black;";
+                        ul.innerHTML = (json[i].Notification);
+                        ul.style = "border-bottom: 1px solid #ccc; margin-left:-40px;font-color:#333399;";
                         document.getElementById("notif").appendChild(ul);
                         numNotifs++;
                     }
