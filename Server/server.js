@@ -496,6 +496,7 @@ app.post('/changePassword', (req, res) => {
     var email = req.body.email;
     var currPassword = req.body.oldPass;
     var newPassword = req.body.newPass;
+    console.log(newPassword);
 
     let sql = "SELECT Password FROM Users WHERE Email = ?";
 
@@ -514,7 +515,6 @@ app.post('/changePassword', (req, res) => {
             var matchCurrPass = decipherPass(email, response[0].Password);
             if (currPassword === matchCurrPass) {
                 console.log("Current password matches");
-
                 newPassword = createPass(email, newPassword);
                 let query = "UPDATE Users SET Password = ? WHERE Email = ?";
                 let params = [newPassword, email];
@@ -887,10 +887,11 @@ function newNotification(str, postid, senderEmail) {
 
                     var date = new Date();
                     date = date.toString();
-                    console.log(sender);
-                    console.log(headline);
+                    date = date.split("GMT");
+                    date = date[0];
                     notification = notification.concat(" @ ");
                     notification = notification.concat(date);
+                    var msec = (new Date(date)).getTime();
 
                     let query3 = "INSERT INTO Notifications SET ?";
 
@@ -898,7 +899,8 @@ function newNotification(str, postid, senderEmail) {
                         idUsers: userid,
                         idPosts: postid,
                         Notification: notification,
-                        SenderName: sender
+                        SenderName: sender,
+                        msec: msec
                     };
 
                     // INSERT INTO Notifications TABLE
@@ -949,7 +951,7 @@ app.post('/getNotifications', function (req, res) {
 
         else {
             // get data from Notifications using the user id recieved fro previous query
-            let query2 = "SELECT Notification FROM Notifications WHERE idUsers = ?";
+            let query2 = "SELECT Notification FROM Notifications WHERE idUsers = ? ORDER BY msec DESC";
 
             var string = JSON.stringify(response);
             var json = JSON.parse(string);
@@ -1139,3 +1141,27 @@ app.post('/getFilteredPosts', (req, res) => {
     });
 });
 
+// May not be needed earlier. However, other options are buggy currently
+// Get category and attributes of a post
+app.post('/getCatAttributes', (req, res) => {
+    var id = req.body.postID;
+    query = "SELECT Category, Attributes FROM Posts WHERE idPosts = ?";
+    db.query(query, id, (error, response) => {
+        if (error) {
+            res.send(JSON.stringify({
+                "status": 500,
+                "error": error,
+                "message": "Internal server error",
+                "response": null
+            }));
+        }
+        else {
+            res.send(JSON.stringify({
+                "status": 200,
+                "error": null,
+                "response": response,
+                "message": "Success! Category and Attributes retrieved."
+            }));
+        }
+    });
+});

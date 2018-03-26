@@ -22,7 +22,7 @@
 
 
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-    <a class="navbar-brand" href="./index.html">Lance</a>
+    <a class="navbar-brand" href="#" onclick="goToHome()">Lance</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01"
       aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
@@ -31,20 +31,32 @@
     <div class="collapse navbar-collapse" id="navbarColor01">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item active">
-          <a class="nav-link" href="./home.html">Home <span class="sr-only">(current)</span></a>
+          <a class="nav-link" href="#" onclick="goToHome()">Home <span class="sr-only">(current)</span></a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="./about.html">About</a>
         </li>
 
+        <!-- Notifications -->
+
+        <li class="nav-item dropdown show">
+          <a href="#" id="notifications_btn" onclick="displayNotifications()" class="nav-link dropdown-toggle" data-toggle="dropdown"
+            role="button" aria-haspopup="true" aria-expanded="false" style="margin-left: 150px;">Notifications <span class="caret"></span></a>
+          <div id="notificationsToggle" class="dropdown-menu show" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 38px, 0px); top: 0px; left: 255px; will-change: transform;">
+            <ul id="notif">
+
+            </ul>
+            <!-- <a class="dropdown-item" href="#">View all Notifications</a>-->
+          </div>
+        </li>
+
+
         <!-- Options -->
 
         <li class="nav-item dropdown show">
           <a href="#" id="options_btn" onclick="displayOptions()" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button"
-            aria-haspopup="true" aria-expanded="false" style="margin-left: 525px;">Options <span class="caret"></span></a>
-          <div id="optionsToggle" class="dropdown-menu show" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 38px, 0px); top: 0px; left: 925px; will-change: transform;">
-            <a class="dropdown-item btn btn-success btn-sm" style="margin-left: 0px; font-size: 12px;" href="./profile.html">View Profile</a>
-            <div class="dropdown-divider"></div>
+            aria-haspopup="true" aria-expanded="false" style="margin-left: 305px;">Options <span class="caret"></span></a>
+          <div id="optionsToggle" class="dropdown-menu show" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 38px, 0px); top: 0px; left: 705px; will-change: transform;">
             <!--<a class="dropdown-item" href="#">Log Out</a>-->
             <a href="#" class="dropdown-item btn btn-success btn-sm" style="margin-left: 0px; font-size: 12px;" onclick="btn_logout()">Logout</a>
 
@@ -53,20 +65,6 @@
               data-target="#setModal">Settings</button>
           </div>
         </li>
-
-        <!-- Notifications -->
-
-        <li class="nav-item dropdown show">
-          <a href="#" id="notifications_btn" onclick="displayNotifications()" class="nav-link dropdown-toggle" data-toggle="dropdown"
-            role="button" aria-haspopup="true" aria-expanded="false" style="margin-left: 565px;">Notifications <span class="caret"></span></a>
-          <div id="notificationsToggle" class="dropdown-menu show" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 38px, 0px); top: 0px; left: 965px; will-change: transform;">
-            <ul id="notif">
-
-            </ul>
-            <!-- <a class="dropdown-item" href="#">View all Notifications</a>-->
-          </div>
-        </li>
-
         <!-- End -->
 
       </ul>
@@ -246,7 +244,7 @@
 
                       <div class="form-group">
                         <label for="in_profile_newPass">New Password</label>
-                        <input type="password" class="form-control" id="in_profile_newPass" placeholder="Password">
+                        <input type="password" class="form-control" id="in_profile_newPass" onchange="passMatch()" placeholder="Password">
                       </div>
 
                       <div class="form-group">

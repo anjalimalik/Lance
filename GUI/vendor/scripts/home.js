@@ -8,7 +8,20 @@ var urlSortPosts = "http://localhost:5500/getSortedPosts"
 var urlFilterPosts = "http://localhost:5500/getFilteredPosts"
 var urlCreatePost = "http://localhost:5500/CreatePost"
 
+var emailAdd;
+
 function onLoad() {
+    var url = window.location.href;
+    var str = url.split("?email=");
+    emailAdd = str[1];
+    console.log(emailAdd);
+
+    if (emailAdd == null) {
+        //alert("You have to be logged in first!");
+        //window.location.href = "index.html";
+    } else if (emailAdd.includes("#")) {
+        emailAdd = emailAdd.replace("#", "");
+    }
     getAllPosts();
 }
 
@@ -21,7 +34,7 @@ function getAllPosts() {
                 var json = data.response;
 
                 for (i = 0; i < numPost; i++) {
-                    createCard(json[i].UserName, json[i].Content, json[i].Headline, json[i].PostingType, json[i].money, json[i].idPosts, json[i].DatePosted, json[i].numLikes, json[i].Category);
+                    createCard(json[i].UserName, json[i].Content, json[i].Headline, json[i].PostingType, json[i].money, json[i].idPosts, json[i].DatePosted, json[i].numLikes, json[i].Category, json[i].Attributes);
                 }
             });
 
@@ -33,7 +46,7 @@ function getAllPosts() {
 }
 
 // CREATE A NEW CARD FOR EVERY POST FROM SERVER (/getPosts)
-function createCard(user, content, headline, postingType, price, postID, date, likes, category) {
+function createCard(user, content, headline, postingType, price, postID, date, likes, category, attributes) {
 
     var ul = document.getElementById('news_card_list');
 
@@ -57,7 +70,7 @@ function createCard(user, content, headline, postingType, price, postID, date, l
     /* Price */
     var divTextPrice = document.createElement("kbd");
     divTextPrice.innerHTML = "$".concat(price);
-    divTextPrice.style = "background-color:lightgrey;color:black;float:right;margin-top:-5px;margin-right:-7px;font-size: 16px;";
+    divTextPrice.style = "background-color:lightgrey;color:black;float:right;margin-top:-3px;margin-right:-7px;font-size: 15px;";
     divHeader.appendChild(divTextPrice);
 
     if (category) {
@@ -69,16 +82,21 @@ function createCard(user, content, headline, postingType, price, postID, date, l
             category = "For Sale";
         }
         /* Category */
-        var divCat = document.createElement("kbd");
-        divCat.innerHTML = category;
-        divCat.style = "background-color:#483D8B;color:white;float:right;margin-top:-5px;margin-right:7px;font-size: 14px; height:30px;";
-        divHeader.appendChild(divCat);
+        var btnCat = document.createElement("BUTTON");
+        btnCat.setAttribute("class", "btn btn-outline-dark btn-sm");
+        btnCat.setAttribute('onclick', 'categoryModal('.concat(postID, ")"));
+        btnCat.setAttribute("id", "btnCat");
+        btnCat.setAttribute("data-toggle", "modal");
+        btnCat.setAttribute("data-target", "#categoryModal");
+        btnCat.innerHTML = category;
+        btnCat.style = "text-align:center;border-color:#333399;float:right;margin-top:-7px;margin-right:7px;font-size:12px;height:35px;";
+        divHeader.appendChild(btnCat);
     }
 
     /* Offer/Request */
     var ReqOff = document.createElement("p");
-    var str = postingType.concat(" from ", "<b style=\"", "color:#333399; font-weight:bold\">", user, "</b>");
-    ReqOff.style = "color:#666699;float:left;";
+    var str = postingType.concat(" by ", "<b style=\"", "color:#333399; font-weight:bold\">", user, "</b>");
+    ReqOff.style = "font-family:monaco;font-size:14px;color:#666699;float:left;";
     ReqOff.innerHTML = str;
     divHeader.appendChild(ReqOff);
 
@@ -178,7 +196,7 @@ function createCard(user, content, headline, postingType, price, postID, date, l
     var divComments = document.createElement("BUTTON");
     divComments.setAttribute('class', 'btn btn-outline-primary btn-md');
     divComments.setAttribute("data-toggle", "modal");
-    divComments.setAttribute("data-target", "#myPostModal");
+    divComments.setAttribute("data-target", "#myCommentsModal");
     divComments.style = "float:right;margin-bottom:7px;margin-right:195px;margin-top:-10px; height:40px;";
     divComments.setAttribute('onclick', "expandPost(".concat(postID, ")"));
     divComments.innerHTML = "Comments";
@@ -225,6 +243,7 @@ function reportPost() {
 }
 
 function clickInterested(postID) {
+    $('.notifClass.dropdown-item').remove();
     postID = parseInt(postID);
     fetch(urlLike, {
         method: "POST",
@@ -233,7 +252,7 @@ function clickInterested(postID) {
             'content-type': 'application/json'
         },
         body: JSON.stringify({
-            "email": "test5@purdue.edu",
+            "email": emailAdd,
             "postId": postID
         })
 
@@ -283,9 +302,8 @@ function closePost(postID) {
 
         }).then(function (res) {
             if (res.ok) {
-                var id1 = "div".concat(postID.toString());
-                var id2 = "head".concat(postID.toString());
-                (document.getElementById(id1)).removeChild((document.getElementById(id2)));
+                $('.card_list_el').remove();
+                getAllPosts();
                 alert("Your post was closed and removed!");
                 res.json().then(function (data) {
                     console.log("Inside res.ok. Post was closed");
@@ -340,7 +358,7 @@ function getAllComments(postID) {
 
 // expand post to get all comments
 function expandPost(postID) {
-    var lm = document.getElementById("learnMoreFG");
+    var lm = document.getElementById("commentsFG");
     // comments
     var ulComments = document.createElement("ul");
     ulComments.setAttribute('id', 'ulcomments'.concat(postID));
@@ -354,8 +372,8 @@ function expandPost(postID) {
 function expandComments(postID, num, json) {
 
     // for later removal
-    document.getElementById("xBtn_post").setAttribute('onclick', "removeElements(".concat(postID, ", ", num, ")"));
-    document.getElementById("closeBtn_post").setAttribute('onclick', "removeElements(".concat(postID, ", ", num, ")"));
+    document.getElementById("xBtn_post").setAttribute('onclick', "$('.comment').remove();");
+    document.getElementById("closeBtn_post").setAttribute('onclick', "$('.comment').remove();");
 
     var ul = document.getElementById('ulcomments'.concat(postID));
 
@@ -380,6 +398,7 @@ function expandComments(postID, num, json) {
         //title (content of comment)
         var title = document.createElement("p");
         title.setAttribute('class', 'card-title');
+        title.style = "font-family: monaco;font-size: 13px;";
         title.innerHTML = "No comments yet.";
         body.appendChild(title);
     }
@@ -403,13 +422,14 @@ function expandComments(postID, num, json) {
 
         //sender name (content of comment)
         var sender = document.createElement("kbd");
-        sender.style = "float:left; background-color:lightblue; height:32px; font-size:15px; margin-left:-15px; margin-top:-10px; color:black;";
+        sender.style = "font-family: monaco;float:left; background-color:lightgrey; height:32px; font-size:12px; margin-left:-15px; margin-top:-2px; color:black;border-right:1px solid #000;height:30px";
         sender.innerHTML = json[i].SenderName;
         body.appendChild(sender);
 
         //title (content of comment)
         var title = document.createElement("p");
         title.setAttribute('class', 'card-title');
+        title.style = "font-family: monaco;font-size: 13px;";
         title.innerHTML = json[i].Comment;
         body.appendChild(title);
     }
@@ -437,7 +457,7 @@ function expandComments(postID, num, json) {
     inputW.setAttribute('class', 'form-control mr-sm-2');
     inputW.setAttribute('type', 'text');
     inputW.setAttribute('placeholder', 'Add comment here');
-    inputW.style = "margin-top: -21px;width: 400px; height: 55px; margin-left:-20px;";
+    inputW.style = "font-family: monaco;margin-top: -21px;width: 400px; height: 55px; margin-left:-20px;";
     inputW.setAttribute('id', 'txtComment');
     bodyW.appendChild(inputW);
 
@@ -454,6 +474,7 @@ function expandComments(postID, num, json) {
 }
 
 function addComment(postID, email, num) {
+    $('.notifClass.dropdown-item').remove();
     var comment = document.getElementById("txtComment").value;
     postID = parseInt(postID);
     fetch(urlWriteComment, {
@@ -465,7 +486,7 @@ function addComment(postID, email, num) {
         body: JSON.stringify({
             "postId": postID,
             "comment": comment,
-            "email": "anjali@purdue.edu" // replace with email
+            "email": emailAdd
         })
 
     }).then(function (res) {
@@ -485,20 +506,8 @@ function addComment(postID, email, num) {
         console.log(err.message + ": No Internet Connection");
     });
 
-    removeElements(postID, num);
-    $('#myPostModal').modal('hide');
-}
-
-// Remove elements in Learn More Post modal
-function removeElements(postID, num) {
-    if (num === 0) {
-        (document.getElementById('ulcomments'.concat(postID))).removeChild((document.getElementById('pComments'.concat(postID))));
-    }
-    for (i = 0; i < num; i++) {
-        // remove comments
-        (document.getElementById('ulcomments'.concat(postID))).removeChild((document.getElementById('pComments'.concat(postID, i.toString()))));
-    }
-    (document.getElementById('ulcomments'.concat(postID))).removeChild((document.getElementById('pWComments'.concat(postID))));
+    $('.comment').remove();
+    $('#myCommentsModal').modal('hide');
 }
 
 function sortPosts(basedOn, order, upper, lower) {
@@ -539,7 +548,7 @@ function getSortedPosts(json) {
     if (json) {
         var num = Object.keys(json).length;
         for (i = 0; i < num; i++) {
-            createCard(json[i].UserName, json[i].Content, json[i].Headline, json[i].PostingType, json[i].money, json[i].idPosts, json[i].DatePosted, json[i].numLikes, json[i].Category);
+            createCard(json[i].UserName, json[i].Content, json[i].Headline, json[i].PostingType, json[i].money, json[i].idPosts, json[i].DatePosted, json[i].numLikes, json[i].Category, json[i].Attributes);
         }
     }
 }
@@ -623,14 +632,14 @@ function createPost() {
         type_value = type[1].value;
     }
     else {
-        alert ("Not enough information provided");
+        alert("Not enough information provided");
         document.getElementById("postClose").click();
         return;
     }
 
     // Only category is optional
-    if(!price || !title || !desc) {
-        alert ("Not enough information provided");
+    if (!price || !title || !desc) {
+        alert("Not enough information provided");
         document.getElementById("postClose").click();
         return;
     }
@@ -680,7 +689,7 @@ function createPost() {
             'content-type': 'application/json'
         },
         body: JSON.stringify({
-            "email": "test@purdue.edu",
+            "email": emailAdd,
             "Headline": title,
             "Content": desc,
             "PostingType": type_value,
@@ -692,11 +701,11 @@ function createPost() {
     }).then(function (res) {
         if (res.ok) {
             res.json().then(function (data) {
+                $('.card_list_el').remove();
+                getAllPosts();
                 console.log("Inside res.ok. New post added");
                 alert("New Post created!");
             }.bind(this));
-            $('.card_list_el').remove();
-            getAllPosts();
         }
         else {
             alert("Error: creating post unsuccessful!");
@@ -1085,6 +1094,7 @@ function expandCreatePModal(category) {
         var usedR = document.createElement("input");
         usedR.setAttribute('type', 'radio');
         usedR.setAttribute('name', 'sale_condition');
+        usedR.setAttribute('value', 'Used');
         usedLbl.appendChild(usedR);
 
         var newLbl = document.createElement("LABEL");
@@ -1095,6 +1105,7 @@ function expandCreatePModal(category) {
         var newR = document.createElement("input");
         newR.setAttribute('type', 'radio');
         newR.setAttribute('name', 'sale_condition');
+        newR.setAttribute('value', 'New');
         newLbl.appendChild(newR);
     }
 }
@@ -1110,3 +1121,156 @@ function closeNewPostModal() {
     type[1].checked = false;
     document.getElementById("pickedCategory").value = null;
 }
+
+function showNotifications() {
+
+    document.getElementById("optionsToggle").style.display = "none";
+    var x = document.getElementById("notificationsToggle");
+
+    if (x.style.display === "none") {
+        x.style.display = "block";
+    } else {
+        x.style.display = "none";
+    }
+
+    // function to get notifications
+    getNotifications();
+}
+
+// get notifications in dropdown list 
+function getNotifications() {
+
+    console.log(emailAdd);
+    fetch(urlNotifications, {
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+            "email": emailAdd
+        })
+
+    }).then(function (res) {
+        console.log("Inside res function");
+        if (res.ok) {
+            res.json().then(function (data) {
+                console.log(data.message);
+                console.log(data.response);
+                console.log("Inside res.ok, Get Notifications successful!");
+                var length = Object.keys(data.response).length;
+                if (length != 0 && numNotifs < length) {
+                    numNotifs = 0;
+                    var json = data.response;
+                    for (i = 0; i < length; i++) {
+                        var ul = document.createElement("a");
+                        ul.setAttribute('class', 'notifClass dropdown-item');
+                        ul.innerHTML = (json[i].Notification).toString();
+                        ul.style = "border-bottom: 1px solid #ccc; margin-left:-40px;font-color:black;";
+                        document.getElementById("notif").appendChild(ul);
+                        numNotifs++;
+                    }
+                }
+                else if (numNotifs == 0) {
+                    numNotifs--;
+                    var ul = document.createElement("a");
+                    ul.setAttribute('class', 'notifClass dropdown-item half-rule');
+                    ul.innerHTML = "No notifications available for you at this time.";
+                    ul.style = "border-bottom: 1px solid #ccc;";
+                    document.getElementById("notif").appendChild(ul);
+                }
+
+
+            }.bind(this));
+        }
+        else {
+            alert("Error: Get notifications unsuccessful!");
+            res.json().then(function (data) {
+                console.log(data.message);
+            }.bind(this));
+        }
+    }).catch(function (err) {
+        alert("Error: No internet connection!");
+        console.log(err.message + ": No Internet Connection");
+    });
+
+}
+
+// redirect to profile
+function goToProfile() {
+    var u = 'profile.html?email='.concat(emailAdd);
+    window.location.href = u;
+}
+
+// show attributes in UI of post card
+function categoryModal(postID) {
+    $('.catClass').remove();
+    fetch("http://localhost:5500/getCatAttributes", {
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+            "postID": postID
+        })
+    }).then(function (res) {
+        if (res.ok) {
+            res.json().then(function (data) {
+                console.log(data.message);
+                console.log("Inside res.ok, category and attributes successfully recieved!");
+                var category = data.response[0].Category;
+                if (category === "Sitter") {
+                    category = "Baby/Pet Sitter";
+                } else if (category === "Ride") {
+                    category = "Ride Share";
+                } else if (category === "Sale") {
+                    category = "For Sale";
+                }
+                document.getElementById("catModalTitle").innerHTML = "Category:&emsp;<b style=\"color:#333399;\">".concat(category, "</b>");
+
+                if (data.response[0].Attributes === null) {
+                    var lm = document.getElementById("learnMoreFG");
+                    var divAttr = document.createElement("div");
+                    divAttr.innerHTML = "No attributes available!";
+                    divAttr.setAttribute('class', 'catClass');
+                    lm.appendChild(divAttr);
+                }
+                else {
+                    var attrs = data.response[0].Attributes.split("|");
+                    for (i = 0; i < attrs.length; i++) {
+                        var lm = document.getElementById("learnMoreFG");
+                        var divAttr = document.createElement("div");
+
+                        var catClass = document.createElement("div");
+                        catClass.setAttribute('class', 'catClass');
+                        lm.appendChild(catClass);
+
+                        var Att = attrs[i].split(":");
+                        divAttr.innerHTML = Att[0].concat(":&emsp;");
+                        divAttr.style = "color:#333399; display:inline-block; font-weight:bold; font-size:16px;";
+                        catClass.appendChild(divAttr);
+
+                        var divStr = document.createElement("div");
+                        divStr.innerHTML = Att[1];
+                        divStr.style = "display:inline-block";
+                        catClass.appendChild(divStr);
+
+                        var br = document.createElement("br");
+                        catClass.appendChild(br);
+                    }
+                }
+            }.bind(this));
+        }
+        else {
+            alert("Error: get Category and Attributes unsuccessful!");
+            res.json().then(function (data) {
+                console.log(data.message);
+            }.bind(this));
+        }
+    }).catch(function (err) {
+        alert("Error: No internet connection!");
+        console.log(err.message + ": No Internet Connection");
+    });
+}
+

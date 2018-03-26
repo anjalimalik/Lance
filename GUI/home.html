@@ -35,7 +35,7 @@
   <!-- Navigation -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
 
-    <a class="navbar-brand" href="./index.html">LANCE</a>
+    <a class="navbar-brand" href="#">LANCE</a>
 
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01"
       aria-expanded="false" aria-label="Toggle navigation">
@@ -46,42 +46,44 @@
       <ul class="navbar-nav mr-auto">
 
         <li class="nav-item active">
-          <a class="nav-link" href="home.html">Home</a>
+          <a class="nav-link" href="#">Home</a>
         </li>
 
         <li class="nav-item">
-          <a class="nav-link" href="profile.html">Profile</a>
+          <a class="nav-link" href="#" onclick="goToProfile()">Profile</a>
         </li>
 
         <li class="nav-item">
           <a class="nav-link" href="about.html">About</a>
         </li>
 
-        <!-- Options -->
-
-        <li class="nav-item dropdown show">
-          <a href="#" id="options_btn" onclick="displayOptions()" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button"
-            aria-haspopup="true" aria-expanded="false" style="margin-left:405px;">Options <span class="caret"></span></a>
-          <div id="optionsToggle" class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 38px, 0px); top: 0px; left: 805px; will-change: transform;">
-            <a class="dropdown-item btn btn-success btn-sm" style="margin-left: 0px; font-size: 12px;" href="./profile.html">View Profile</a>
-            <div class="dropdown-divider"></div>
-            <!--<a class="dropdown-item" href="#">Log Out</a>-->
-            <a href="#" class="dropdown-item btn btn-success btn-sm" style="margin-left: 0px; font-size: 12px;" onclick="btn_logout()">Logout</a>
-          </div>
-        </li>
-
         <!-- Notifications -->
 
         <li class="nav-item dropdown show">
-          <a href="#" id="notifications_btn" onclick="displayNotifications()" class="nav-link dropdown-toggle" data-toggle="dropdown"
-            role="button" aria-haspopup="true" aria-expanded="false" style="margin-left:455px;">Notifications <span class="caret"></span></a>
-          <div id="notificationsToggle" class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 38px, 0px); left: 855px; top: 0px; will-change: transform;">
+          <a href="#" id="notifications_btn" onclick="showNotifications()" class="nav-link dropdown-toggle" data-toggle="dropdown"
+            role="button" aria-haspopup="true" aria-expanded="false" style="margin-left:150px;">Notifications <span class="caret"></span></a>
+          <div id="notificationsToggle" class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 38px, 0px); left: 355px; top: 0px; will-change: transform;">
             <ul id="notif">
 
             </ul>
             <!-- <a class="dropdown-item" href="#">View all Notifications</a>-->
           </div>
         </li>
+
+        <!-- Options -->
+
+        <li class="nav-item dropdown show">
+          <a href="#" id="options_btn" onclick="displayOptions()" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button"
+            aria-haspopup="true" aria-expanded="false" style="margin-left:305px;">Options <span class="caret"></span></a>
+          <div id="optionsToggle" class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 38px, 0px); top: 0px; left: 705px; will-change: transform;">
+            <a class="dropdown-item btn btn-success btn-sm" style="margin-left: 0px; font-size: 12px;" href="#" onclick="goToProfile()">View Profile</a>
+            <div class="dropdown-divider"></div>
+            <!--<a class="dropdown-item" href="#">Log Out</a>-->
+            <a href="#" class="dropdown-item btn btn-success btn-sm" style="margin-left: 0px; font-size: 12px;" onclick="btn_logout()">Logout</a>
+          </div>
+        </li>
+
+
 
         <!-- End -->
 
@@ -118,12 +120,12 @@
     </div>
   </div>
 
-  <!-- Expand Post MODAL -->
-  <div class="modal" id="myPostModal" aria-hidden="true">
+  <!-- Expand Comments MODAL -->
+  <div class="modal" id="myCommentsModal" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Post</h5>
+          <h5 class="modal-title">Comments</h5>
           <button id="xBtn_post" type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -131,12 +133,35 @@
         <div class="modal-body">
           <form>
             <fieldset>
-              <div id="learnMoreFG" class="form-group">
+              <div id="commentsFG" class="form-group">
 
               </div>
         </div>
         <div class="modal-footer" style="padding-top:0px;">
           <button id="closeBtn_post" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Expand Category MODAL -->
+  <div class="modal" id="categoryModal" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 id="catModalTitle" class="modal-title">Category</h5>
+          <button id="xBtn_category" type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <fieldset>
+              <div id="learnMoreFG" class="form-group">
+              </div>
+        </div>
+        <div class="modal-footer" style="padding-top:0px;">
+          <button id="closeBtn_category" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
         </div>
       </div>
     </div>
@@ -172,7 +197,7 @@
                 <label style="margin-right:20px; margin-top: 20px;" class="radio-inline"><input type="radio" name="postType" value="Offer">   Offer    </label>
                 <label class="radio-inline"><input type="radio" name="postType" value="Request">    Request   </label>
               </div>
-            </br>
+              </br>
               <div class="form-group">
                 <label>Category: </label></br>
                 <div class="dropdown" style="padding-bottom:20px;">
@@ -211,16 +236,16 @@
       <div class="jumbotron" style="position: absolute; left: 5%; top: 15px; width: 63%; height: auto;">
         <h4 style="position: relative; top: -40px; left: 110px;"> MENU </h4>
 
-        <button id="btnRequest" class="btn btn-outline-primary" style="position: relative; top: -30px;margin-left: 10px; width: 120px; height: 40px; text-align: center;"
-          onclick="filterPosts(null, 'Request')">Request</button>
-        <button id="btnOffer" class="btn btn-outline-primary" style="position: relative; top: -70px;margin-left: 160px; width: 120px; height: 40px; text-align: center;"
-          onclick="filterPosts(null, 'Offer')">Offer</button>
+        <input type="button" value="Request" id="btnRequest" class="btn btn-outline-primary" style="position: relative; top: -30px;margin-left: 10px; width: 120px; height: 40px; text-align: center;"
+          onclick="filterPosts(null, 'Request')"></input>
+        <input type="button" value="Offer" id="btnOffer" class="btn btn-outline-primary" style="position: relative; top: -70px;margin-left: 160px; width: 120px; height: 40px; text-align: center;"
+          onclick="filterPosts(null, 'Offer')"></input>
 
         <h5 style="position: relative; top: -40px; left: 110px;"> Price </h5>
 
         <div style="margin-left:60px; margin-top:-40px;">
-          <button id="btnASCPrice" class="btn btn-outline-secondary" onclick="sortPosts('cost', 'ASC', null, null)">&uarr;</button>
-          <button id="btnDESCPrice" class="btn btn-outline-secondary" onclick="sortPosts('cost', 'DESC')">&darr;</button>
+          <input type="button" value="&uarr;" id="btnASCPrice" class="btn btn-outline-secondary" onclick="sortPosts('cost', 'ASC', null, null)"></input>
+          <input type="button" value="&darr;" id="btnDESCPrice" class="btn btn-outline-secondary" onclick="sortPosts('cost', 'DESC')"></input>
         </div>
         <div>
 
@@ -237,8 +262,8 @@
         <h5 style="position: relative; left: 75px;"> Date Posted </h5>
 
         <div style="margin-left:60px;">
-          <button id="btnASCDate" class="btn btn-outline-secondary" onclick="sortPosts('date', 'ASC', null, null)">&uarr;</button>
-          <button id="btnDESCDate" class="btn btn-outline-secondary" onclick="sortPosts('date', 'DESC', null, null)">&darr;</button>
+          <input type="button" value="&uarr;" id="btnASCDate" class="btn btn-outline-secondary" onclick="sortPosts('date', 'ASC', null, null)"></input>
+          <input type="button" value="&darr;" id="btnDESCDate" class="btn btn-outline-secondary" onclick="sortPosts('date', 'DESC', null, null)"></input>
         </div>
         <div>
 
@@ -254,8 +279,8 @@
           <h5 style="position: relative; left: 75px;"> Category </h5>
 
           <div class="dropdown" style="padding-bottom:20px;">
-            <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Choose Category
-              <span class="caret"></span></button>
+            <input type="button" value="Choose Category" class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+            <span class="caret"></span></input>
             <ul class="dropdown-menu" style="padding-left:10px;font-size:15px;">
               <li><a href="#" onclick="filterPosts('Ride', null)">Ride Share</a></li>
               <li><a href="#" onclick="filterPosts('Food', null)">Food Pickup</a></li>
@@ -266,8 +291,8 @@
             </ul>
           </div>
 
-          <button id="btnFilter" class="btn btn-outline-primary" style="position: relative; margin-left: 160px; width: 120px; height: 40px; text-align: center;"
-            onclick="filterWRange()">Filter</button>
+          <input type="button" value="Filter" id="btnFilter" class="btn btn-outline-primary" style="position: relative; margin-left: 160px; width: 120px; height: 40px; text-align: center;"
+            onclick="filterWRange()"></input>
         </div>
       </div>
     </div>

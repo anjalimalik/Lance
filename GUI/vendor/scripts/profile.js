@@ -1,27 +1,72 @@
-
 var email, pass, name, edu, skills, desc, contact, links, pic, docs;
 var urlChangePass = "http://localhost:5500/changePassword"
 var urlNotifications = "http://localhost:5500/getNotifications"
+var urlGetProfile = "http://localhost:5500/getProfile"
 var numNotifs = 0;
 
 function body_onload() {
-    name = localStorage.getItem('name');
-    email = localStorage.getItem('email');
-    edu = localStorage.getItem('edu');
-    links = localStorage.getItem('links');
-    contact = localStorage.getItem('contact');
-    desc = localStorage.getItem('desc');
-    skills = localStorage.getItem('skills');
-
-    var img = new Image();
-    img.src = "./Pictures/spinner.jpg";
-    document.getElementById("img_profile").src = "./Pictures/spinner.jpg";
 
     optionsToggle.style.display = "none";
     notificationsToggle.style.display = "none";
 
+    var url = window.location.href;
+    var str = url.split("?email=");
+    email = str[1];
+    email = email.replace("#", "");
+    if (email === null || email === "" || email === "undefined") {
+        alert("You have to be logged in first!");
+        window.location.href = "index.html";
+    }
 
-    populate_profile();
+    fetch(urlGetProfile, {
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+            "email": email
+        })
+
+    }).then(function (res) {
+        console.log("Inside res function");
+        if (res.ok) {
+            res.json().then(function (data) {
+
+                console.log(data.response);
+                console.log("Inside res.ok");
+                var json = data.response;
+                name = json[0].FullName;
+                edu = json[0].Education;
+                links = json[0].Links;
+                contact = json[0].ContactInfo;
+                desc = json[0].Description;
+                skills = json[0].SkillsSet;
+                populate_profile();
+
+            }.bind(this));
+        }
+        else {
+            alert("Error: get profile unsuccessful!");
+            res.json().then(function (data) {
+                console.log(data.message);
+            }.bind(this));
+            return;
+        }
+    }).catch(function (err) {
+        alert("Error: No internet connection!");
+        console.log(err.message + ": No Internet Connection");
+        return;
+    });
+
+    var img = new Image();
+    img.src = "./Pictures/spinner.jpg";
+    document.getElementById("img_profile").src = "./Pictures/user_icon.jpg";
+}
+
+function goToHome() {
+    var u = 'home.html?email='.concat(email);
+    window.location.href = u;
 }
 
 function displayOptions() {
@@ -94,17 +139,29 @@ function btn_finish_edit() {
     skills = edit_skills.value;
 
     populate_profile();
-
 }
 
-function passMatch(){
+// "Passwords Match"
+function passMatch() {
     $('.text.text-success').remove();
+    $('.text.text-danger').remove();
+    var currentPass = in_profile_currentPass.value;
     var newPass = in_profile_newPass.value;
     var confirmPass = in_profile_confirmPass.value;
-    if (newPass != confirmPass) {
-        return;
-    } 
-    else {
+
+    if (currentPass === confirmPass) {
+        var same = document.createElement("div");
+        same.setAttribute('class', 'text text-danger');
+        same.innerHTML = "New password cannot be the same";
+        document.getElementById("fieldset_passChange").appendChild(same);
+    }
+    else if (newPass != confirmPass) {
+        var match = document.createElement("div");
+        match.setAttribute('class', 'text text-danger');
+        match.innerHTML = "Passwords do not match!";
+        document.getElementById("fieldset_passChange").appendChild(match);
+    }
+    else if (newPass == confirmPass) {
         var match = document.createElement("div");
         match.setAttribute('class', 'text text-success');
         match.innerHTML = "Passwords match!";
@@ -112,21 +169,42 @@ function passMatch(){
     }
 }
 
-function clearSetModal(){
+// clear settings modal 
+function clearSetModal() {
     in_profile_currentPass.value = ""
     in_profile_newPass.value = "";
     in_profile_confirmPass.value = "";
     $('.text.text-success').remove();
+    $('.text.text-danger').remove();
 }
 
+// Password change function 
 function btn_passChange() {
     var currentPass = in_profile_currentPass.value;
     var newPass = in_profile_newPass.value;
     var confirmPass = in_profile_confirmPass.value;
 
     if (newPass != confirmPass) {
+        alert("New password verification failed!");
+        clearSetModal();
         return;
     }
+    if (currentPass === null || currentPass === "") {
+        alert("Current Password needs to be provided");
+        clearSetModal();
+        return;
+    }
+    else if (currentPass === newPass) {
+        alert("New Password cannot be the same");
+        clearSetModal();
+        return;
+    }
+    if (newPass === null || newPass === "" || confirmPass === null || confirmPass === "") {
+        alert("New password cannot be empty");
+        clearSetModal();
+        return;
+    }
+
     fetch(urlChangePass, {
         method: "POST",
         headers: {
@@ -136,7 +214,7 @@ function btn_passChange() {
         body: JSON.stringify({
             "email": email,
             "oldPass": currentPass,
-            "newPass": verifyPass
+            "newPass": newPass
         })
 
     }).then(function (res) {
@@ -163,6 +241,7 @@ function btn_passChange() {
 
 function btn_getNotifications() {
 
+    console.log(email);
     fetch(urlNotifications, {
         method: "POST",
         headers: {
@@ -186,9 +265,9 @@ function btn_getNotifications() {
                     var json = data.response;
                     for (i = 0; i < length; i++) {
                         var ul = document.createElement("a");
-                        ul.setAttribute('class', 'dropdown-item');
+                        ul.setAttribute('class', 'notifClass dropdown-item');
                         ul.innerHTML = (json[i].Notification).toString();
-                        ul.style = "font-color:black;";
+                        ul.style = "border-bottom: 1px solid #ccc; margin-left:-40px;font-color:black;";
                         document.getElementById("notif").appendChild(ul);
                         numNotifs++;
                     }
@@ -196,12 +275,11 @@ function btn_getNotifications() {
                 else if (numNotifs == 0) {
                     numNotifs--;
                     var ul = document.createElement("a");
-                    ul.setAttribute('class', 'dropdown-item');
+                    ul.setAttribute('class', 'notifClass dropdown-item');
                     ul.innerHTML = "No notifications available for you at this time.";
+                    ul.style = "border-bottom: 1px solid #ccc;";
                     document.getElementById("notif").appendChild(ul);
                 }
-
-
             }.bind(this));
         }
         else {

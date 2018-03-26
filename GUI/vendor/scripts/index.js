@@ -9,12 +9,12 @@ var verifyFlag;
 //LOGIN
 function on_load() {
     document.getElementById("in_login_pass")
-        .addEventListener("keyup", function(event) {
-        event.preventDefault();
-        if (event.keyCode == 13) {
-            document.getElementById("btn_modal_login").click();
-        }
-    });
+        .addEventListener("keyup", function (event) {
+            event.preventDefault();
+            if (event.keyCode == 13) {
+                document.getElementById("btn_modal_login").click();
+            }
+        });
 }
 
 function btn_login() {
@@ -22,39 +22,44 @@ function btn_login() {
     var _pass = in_login_pass.value;
 
     console.log("Inside btn_login()");
-        fetch(urlLogin, {
-					method: "POST",
-                    headers: {
-        				'Accept': 'application/json',
-        	   			'content-type': 'application/json'
-        	  		},
-                    body: JSON.stringify({
-        				"email":_email,
-        			 	"pass":_pass
-        			})
+    fetch(urlLogin, {
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+            "email": _email,
+            "pass": _pass
+        })
 
-				}).then(function(res) {
-                    console.log("Inside res function");
-			        if (res.ok) {
-			            res.json().then(function(data) {
-                            alert("Login successful!");
-                            this.authToken = data.authToken
-                            this.email = _email;
-                            console.log("Inside res.ok");
-                            alert("You are successfully logged in!");
-			            }.bind(this));
-			        }
-			        else {
-                        alert("Error: Login unsuccessful!");
-			            res.json().then(function(data) {
-                        console.log(data.message);
-			            }.bind(this));
-			        }
-			    }).catch(function(err) {
-                    alert("Error: No internet connection!");
-			    	console.log(err.message + ": No Internet Connection");
-		    });
-            window.location.href = 'profile.html';
+    }).then(function (res) {
+        console.log("Inside res function");
+        if (res.ok) {
+            res.json().then(function (data) {
+                if(confirm("Login successful!")) {
+                    var u = 'profile.html?email='.concat(_email);
+                    window.location.href = u;
+                }
+                else {
+                    var u = 'profile.html?email='.concat(_email);
+                    window.location.href = u;
+                }
+                this.authToken = data.authToken
+                this.email = _email;
+                console.log("Inside res.ok");
+            }.bind(this));
+        }
+        else {
+            alert("Error: Login unsuccessful!");
+            res.json().then(function (data) {
+                console.log(data.message);
+            }.bind(this));
+        }
+    }).catch(function (err) {
+        alert("Error: No internet connection!");
+        console.log(err.message + ": No Internet Connection");
+    });
 }
 
 
@@ -88,90 +93,90 @@ function btn_register_continue() {
                 'content-type': 'application/json'
             },
             body: JSON.stringify({
-                "email":email,
-                "pass":pass,
-                "name":name
+                "email": email,
+                "pass": pass,
+                "name": name
             })
 
-            }).then(function(res) {
+        }).then(function (res) {
 
-                if (res.ok) {
-                    res.json().then(function(data) {
-                        sessionStorage.setItem("signedIn", "true");
-                    }.bind(this));
-                }
-                else {
-                    res.json().then(function(data) {
+            if (res.ok) {
+                res.json().then(function (data) {
+                    sessionStorage.setItem("signedIn", "true");
+                }.bind(this));
+            }
+            else {
+                res.json().then(function (data) {
 
-                        console.log(data.message);
-                        console.log(data.authToken);
-                    }.bind(this));
-                }
-            }).catch(function(err) {
+                    console.log(data.message);
+                    console.log(data.authToken);
+                }.bind(this));
+            }
+        }).catch(function (err) {
 
-                console.log(err.message + ": No Internet Connection");
-            }.bind(this));
+            console.log(err.message + ": No Internet Connection");
+        }.bind(this));
     }
     return;
 }
 function btn_register_finish() {
 
-        edu = in_register_edu.value;
-        links = in_register_links.value;
-        contact = in_register_contact.value;
-        desc = in_register_desc.value;
-        skills = in_register_skills.value;
-        pic = null;
-        docs = null;
+    edu = in_register_edu.value;
+    links = in_register_links.value;
+    contact = in_register_contact.value;
+    desc = in_register_desc.value;
+    skills = in_register_skills.value;
+    pic = null;
+    docs = null;
 
-        localStorage.setItem('email', email);
-        localStorage.setItem('name', name);
-        localStorage.setItem('edu', edu);
-        localStorage.setItem('links', links);
-        localStorage.setItem('contact', contact);
-        localStorage.setItem('desc', desc);
-        localStorage.setItem('skills', skills);
+    localStorage.setItem('email', email);
+    localStorage.setItem('name', name);
+    localStorage.setItem('edu', edu);
+    localStorage.setItem('links', links);
+    localStorage.setItem('contact', contact);
+    localStorage.setItem('desc', desc);
+    localStorage.setItem('skills', skills);
 
-        window.location.href = "profile.html";
+    window.location.href = "profile.html";
 
-        fetch(urlCreateProfile, {
-			method: "POST",
-			headers: {
-				'Accept': 'application/json',
-	   			'content-type': 'application/json'
-	  		},
-			body: JSON.stringify({
-				"email":email,
-			 	"name":name,
-                "desc":desc,
-                "contact":contact,
-                "links":links,
-                "edu":edu,
-                "skills":skills,
-                "pic":null,
-                "docs":null
-			})
+    fetch(urlCreateProfile, {
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+            "email": email,
+            "name": name,
+            "desc": desc,
+            "contact": contact,
+            "links": links,
+            "edu": edu,
+            "skills": skills,
+            "pic": null,
+            "docs": null
+        })
 
-			}).then(function(res) {
+    }).then(function (res) {
 
-		        if (res.ok) {
-		            res.json().then(function(data) {
+        if (res.ok) {
+            res.json().then(function (data) {
 
-		            	sessionStorage.setItem("signedIn", "true");
-						location.reload(true);
-		            }.bind(this));
-		        }
-		        else {
-		            res.json().then(function(data) {
+                sessionStorage.setItem("signedIn", "true");
+                location.reload(true);
+            }.bind(this));
+        }
+        else {
+            res.json().then(function (data) {
 
-		            	console.log(data.message);
-                        console.log(data.authToken);
-		            }.bind(this));
-		        }
-		    }).catch(function(err) {
+                console.log(data.message);
+                console.log(data.authToken);
+            }.bind(this));
+        }
+    }).catch(function (err) {
 
-		    	console.log(err.message + ": No Internet Connection");
-		    }.bind(this));
+        console.log(err.message + ": No Internet Connection");
+    }.bind(this));
 
 
 }
@@ -179,7 +184,7 @@ function btn_register_finish() {
 function verifyEmail(_email) {
 
     var idx = _email.indexOf("@purdue.edu");
-    if (idx == -1 || idx != _email.length-11 || idx == 0){
+    if (idx == -1 || idx != _email.length - 11 || idx == 0) {
         document.getElementById("emailError").style.display = 'flex';
         verifyFlag = false;
         return false;
@@ -217,34 +222,39 @@ function verifyLName(_lName) {
 
 function btn_logout() {
     fetch(urlLogout, {
-                method: "POST",
-                headers: {
-                    'Accept': 'application/json',
-                    'content-type': 'application/json'
-                },
-                body: JSON.stringify({
-                    "email":email,
-                    "signOut":true
-                })
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+            "email": email,
+            "signOut": true
+        })
 
-            }).then(function(res) {
-                console.log("Inside res function");
-                if (res.ok) {
-                    res.json().then(function(data) {
-                        alert("Logout successful!");
-                        //alert(this.authToken);
-                    }.bind(this));
+    }).then(function (res) {
+        console.log("Inside res function");
+        if (res.ok) {
+            res.json().then(function (data) {
+                if(confirm("You are loggout out")){
+                    window.location.href = "./index.html";
                 }
                 else {
-                    alert("Error: Logout unsuccessful!");
-                    res.json().then(function(data) {
-                    console.log(data.message);
-                    }.bind(this));
+                    window.location.href = "./index.html";
                 }
-            }).catch(function(err) {
-                alert("Error: No connection to server!");
-                console.log(err.message + ": No Internet Connection");
-        });
+                //alert(this.authToken);
+            }.bind(this));
+        }
+        else {
+            alert("Error: Logout unsuccessful!");
+            res.json().then(function (data) {
+                console.log(data.message);
+            }.bind(this));
+        }
+    }).catch(function (err) {
+        alert("Error: No connection to server!");
+        console.log(err.message + ": No Internet Connection");
+    });
 }
 
 
