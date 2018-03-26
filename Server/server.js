@@ -1189,7 +1189,7 @@ app.post('/EditPost', function (req, res) {
     }
 
     let query = "UPDATE Posts SET Headline = ?, Content = ?, PostingType = ?, money = ?, DatePosted = ?, DateMSEC = ?, Category = ?, Attributes = ? WHERE idPosts = ?";
-    var params = [Headline, Content, PostingType, money, posted, time, cat, att, id];
+    var params = [req.body.Headline, req.body.Content, req.body.PostingType, req.body.money, posted, time, cat, att, id];
 
     // Update post
     db.query(query, params, function (error, response) {
@@ -1214,6 +1214,7 @@ app.post('/EditPost', function (req, res) {
 });
 
 
+// Could be used for populating edit post modal
 // get details of one particular post 
 app.post('/getSelectedPost', function (req, res) {
     var id = req.body.PostId;

@@ -680,7 +680,7 @@ function createPost(postID) {
         var title = document.getElementById("in_title_editpost").value;
         var desc = document.getElementById("in_content_editpost").value;
         var price = document.getElementById("in_price_editpost").value;
-        var type = document.getElementsByName("postEditType");
+        var type = document.getElementsByName("editType");
         var type_value = null;
         if (type[0].checked) {
             type_value = type[0].value;
@@ -689,14 +689,14 @@ function createPost(postID) {
             type_value = type[1].value;
         }
         else {
-            alert("Not enough information provided");
+            alert("Not enough information provided for editing");
             document.getElementById("postEditClose").click();
             return;
         }
 
         // Only category is optional
         if (!price || !title || !desc) {
-            alert("Not enough information provided");
+            alert("HERE2 Not enough information provided for editing");
             document.getElementById("postEditClose").click();
             return;
         }
@@ -1365,14 +1365,15 @@ function categoryModal(postID) {
 // EDIT POST method
 function getSelectedPost(postID) {
     $(document).ready(function () {
-        $('#postEditPublish').on('click', function (postID) {
-            createPost(postID);
+        $('#postEditPublish').on('click', function (e) {
+            createPost(parseInt(postID));
         });
     });
 }
 
 // EDIT POST method
-function editPost(title, desc, type_value, price, category, attributes, postID) {
+function editPost(title, desc, price, type_value, category, attributes, postID) {
+
     // send to server
     fetch(urlEditPost, {
         method: "POST",
@@ -1396,7 +1397,7 @@ function editPost(title, desc, type_value, price, category, attributes, postID) 
                 $('.card_list_el').remove();
                 getAllPosts();
                 console.log("Inside res.ok. Post edited");
-                alert("Editing Post successful!");
+                console.log("Editing Post successful!");
             }.bind(this));
         }
         else {
