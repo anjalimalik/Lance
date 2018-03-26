@@ -496,6 +496,7 @@ app.post('/changePassword', (req, res) => {
     var email = req.body.email;
     var currPassword = req.body.oldPass;
     var newPassword = req.body.newPass;
+    console.log(newPassword);
 
     let sql = "SELECT Password FROM Users WHERE Email = ?";
 
@@ -514,7 +515,6 @@ app.post('/changePassword', (req, res) => {
             var matchCurrPass = decipherPass(email, response[0].Password);
             if (currPassword === matchCurrPass) {
                 console.log("Current password matches");
-
                 newPassword = createPass(email, newPassword);
                 let query = "UPDATE Users SET Password = ? WHERE Email = ?";
                 let params = [newPassword, email];
@@ -887,8 +887,8 @@ function newNotification(str, postid, senderEmail) {
 
                     var date = new Date();
                     date = date.toString();
-                    console.log(sender);
-                    console.log(headline);
+                    date = date.split("GMT");
+                    date = date[0];
                     notification = notification.concat(" @ ");
                     notification = notification.concat(date);
                     var msec = (new Date(date)).getTime();

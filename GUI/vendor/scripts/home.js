@@ -14,6 +14,11 @@ function onLoad() {
     var url = window.location.href;
     var str = url.split("?email=");
     emailAdd = str[1];
+    emailAdd = emailAdd.replace("#", "");
+    if (emailAdd === null || emailAdd === "" || emailAdd === "undefined") {
+        alert("You have to be logged in first!");
+        window.location.href = "index.html";
+    }
     getAllPosts();
 }
 
@@ -289,9 +294,8 @@ function closePost(postID) {
 
         }).then(function (res) {
             if (res.ok) {
-                var id1 = "div".concat(postID.toString());
-                var id2 = "head".concat(postID.toString());
-                (document.getElementById(id1)).removeChild((document.getElementById(id2)));
+                $('.card_list_el').remove();
+                getAllPosts();
                 alert("Your post was closed and removed!");
                 res.json().then(function (data) {
                     console.log("Inside res.ok. Post was closed");
@@ -360,8 +364,8 @@ function expandPost(postID) {
 function expandComments(postID, num, json) {
 
     // for later removal
-    document.getElementById("xBtn_post").setAttribute('onclick', "removeElements(".concat(postID, ", ", num, ")"));
-    document.getElementById("closeBtn_post").setAttribute('onclick', "removeElements(".concat(postID, ", ", num, ")"));
+    document.getElementById("xBtn_post").setAttribute('onclick', "$('.comment').remove();");
+    document.getElementById("closeBtn_post").setAttribute('onclick', "$('.comment').remove();");
 
     var ul = document.getElementById('ulcomments'.concat(postID));
 
@@ -494,18 +498,6 @@ function addComment(postID, email, num) {
 
     removeElements(postID, num);
     $('#myPostModal').modal('hide');
-}
-
-// Remove elements in Learn More Post modal
-function removeElements(postID, num) {
-    if (num === 0) {
-        (document.getElementById('ulcomments'.concat(postID))).removeChild((document.getElementById('pComments'.concat(postID))));
-    }
-    for (i = 0; i < num; i++) {
-        // remove comments
-        (document.getElementById('ulcomments'.concat(postID))).removeChild((document.getElementById('pComments'.concat(postID, i.toString()))));
-    }
-    (document.getElementById('ulcomments'.concat(postID))).removeChild((document.getElementById('pWComments'.concat(postID))));
 }
 
 function sortPosts(basedOn, order, upper, lower) {
@@ -699,11 +691,11 @@ function createPost() {
     }).then(function (res) {
         if (res.ok) {
             res.json().then(function (data) {
+                $('.card_list_el').remove();
+                getAllPosts();
                 console.log("Inside res.ok. New post added");
                 alert("New Post created!");
             }.bind(this));
-            $('.card_list_el').remove();
-            getAllPosts();
         }
         else {
             alert("Error: creating post unsuccessful!");
@@ -1121,7 +1113,7 @@ function closeNewPostModal() {
 }
 
 function showNotifications() {
-   
+
     document.getElementById("optionsToggle").style.display = "none";
     var x = document.getElementById("notificationsToggle");
 
@@ -1192,4 +1184,9 @@ function getNotifications() {
         console.log(err.message + ": No Internet Connection");
     });
 
+}
+
+function goToProfile() {
+    var u = 'profile.html?email='.concat(emailAdd);
+    window.location.href = u;
 }

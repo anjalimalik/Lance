@@ -12,6 +12,11 @@ function body_onload() {
     var url = window.location.href;
     var str = url.split("?email=");
     email = str[1];
+    email = email.replace("#", "");
+    if (email === null || email === "" || email === "undefined") {
+        alert("You have to be logged in first!");
+        window.location.href = "index.html";
+    }
 
     fetch(urlGetProfile, {
         method: "POST",
@@ -137,18 +142,26 @@ function btn_finish_edit() {
 }
 
 // "Passwords Match"
-function passMatch(){
+function passMatch() {
     $('.text.text-success').remove();
     $('.text.text-danger').remove();
+    var currentPass = in_profile_currentPass.value;
     var newPass = in_profile_newPass.value;
     var confirmPass = in_profile_confirmPass.value;
-    if (newPass != confirmPass) {
+
+    if (currentPass === confirmPass) {
+        var same = document.createElement("div");
+        same.setAttribute('class', 'text text-danger');
+        same.innerHTML = "New password cannot be the same";
+        document.getElementById("fieldset_passChange").appendChild(same);
+    }
+    else if (newPass != confirmPass) {
         var match = document.createElement("div");
         match.setAttribute('class', 'text text-danger');
         match.innerHTML = "Passwords do not match!";
         document.getElementById("fieldset_passChange").appendChild(match);
-    } 
-    else {
+    }
+    else if (newPass == confirmPass) {
         var match = document.createElement("div");
         match.setAttribute('class', 'text text-success');
         match.innerHTML = "Passwords match!";
@@ -157,11 +170,12 @@ function passMatch(){
 }
 
 // clear settings modal 
-function clearSetModal(){
+function clearSetModal() {
     in_profile_currentPass.value = ""
     in_profile_newPass.value = "";
     in_profile_confirmPass.value = "";
     $('.text.text-success').remove();
+    $('.text.text-danger').remove();
 }
 
 // Password change function 
@@ -171,8 +185,26 @@ function btn_passChange() {
     var confirmPass = in_profile_confirmPass.value;
 
     if (newPass != confirmPass) {
+        alert("New password verification failed!");
+        clearSetModal();
         return;
     }
+    if (currentPass === null || currentPass === "") {
+        alert("Current Password needs to be provided");
+        clearSetModal();
+        return;
+    }
+    else if (currentPass === newPass) {
+        alert("New Password cannot be the same");
+        clearSetModal();
+        return;
+    }
+    if (newPass === null || newPass === "" || confirmPass === null || confirmPass === "") {
+        alert("New password cannot be empty");
+        clearSetModal();
+        return;
+    }
+
     fetch(urlChangePass, {
         method: "POST",
         headers: {
@@ -182,7 +214,7 @@ function btn_passChange() {
         body: JSON.stringify({
             "email": email,
             "oldPass": currentPass,
-            "newPass": verifyPass
+            "newPass": newPass
         })
 
     }).then(function (res) {
