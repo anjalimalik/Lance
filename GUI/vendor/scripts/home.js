@@ -14,10 +14,13 @@ function onLoad() {
     var url = window.location.href;
     var str = url.split("?email=");
     emailAdd = str[1];
-    emailAdd = emailAdd.replace("#", "");
-    if (emailAdd === null || emailAdd === "" || emailAdd === "undefined") {
-        alert("You have to be logged in first!");
-        window.location.href = "index.html";
+    console.log(emailAdd);
+
+    if (emailAdd == null) {
+        //alert("You have to be logged in first!");
+        //window.location.href = "index.html";
+    } else if (emailAdd.includes("#")) {
+        emailAdd = emailAdd.replace("#", "");
     }
     getAllPosts();
 }
@@ -81,16 +84,13 @@ function createCard(user, content, headline, postingType, price, postID, date, l
         /* Category */
         var btnCat = document.createElement("BUTTON");
         btnCat.setAttribute("class", "btn btn-outline-dark btn-sm");
-        //btnCat.setAttribute('onclick', "btnCat_click(".concat(postID, ")"));
+        btnCat.setAttribute('onclick', 'categoryModal('.concat(postID, ")"));
         btnCat.setAttribute("id", "btnCat");
         btnCat.setAttribute("data-toggle", "modal");
         btnCat.setAttribute("data-target", "#categoryModal");
         btnCat.innerHTML = category;
         btnCat.style = "text-align:center;border-color:#333399;float:right;margin-top:-7px;margin-right:7px;font-size:12px;height:35px;";
         divHeader.appendChild(btnCat);
-
-        // call to populate category modal
-        categoryModal(category, attributes);
     }
 
     /* Offer/Request */
@@ -1202,17 +1202,75 @@ function goToProfile() {
     window.location.href = u;
 }
 
-// show attributes 
-function categoryModal(category, attributes) {
+// show attributes in UI of post card
+function categoryModal(postID) {
+    $('.catClass').remove();
+    fetch("http://localhost:5500/getCatAttributes", {
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+            "postID": postID
+        })
+    }).then(function (res) {
+        if (res.ok) {
+            res.json().then(function (data) {
+                console.log(data.message);
+                console.log("Inside res.ok, category and attributes successfully recieved!");
+                var category = data.response[0].Category;
+                if (category === "Sitter") {
+                    category = "Baby/Pet Sitter";
+                } else if (category === "Ride") {
+                    category = "Ride Share";
+                } else if (category === "Sale") {
+                    category = "For Sale";
+                }
+                document.getElementById("catModalTitle").innerHTML = "Category:&emsp;<b style=\"color:#333399;\">".concat(category, "</b>");
 
-    // for later removal
-    document.getElementById("xBtn_category").setAttribute('onclick', "$('.catClass').remove();");
-    document.getElementById("closeBtn_category").setAttribute('onclick', "$('.catClass').remove();");
+                if (data.response[0].Attributes === null) {
+                    var lm = document.getElementById("learnMoreFG");
+                    var divAttr = document.createElement("div");
+                    divAttr.innerHTML = "No attributes available!";
+                    divAttr.setAttribute('class', 'catClass');
+                    lm.appendChild(divAttr);
+                }
+                else {
+                    var attrs = data.response[0].Attributes.split("|");
+                    for (i = 0; i < attrs.length; i++) {
+                        var lm = document.getElementById("learnMoreFG");
+                        var divAttr = document.createElement("div");
 
-    var lm = document.getElementById("learnMoreFG");
-    var ulAttr = document.createElement("ul");
-    ulAttr.setAttribute('id', 'attr');
-    ulAttr.setAttribute('class', 'catClass');
-    lm.appendChild(ulAttr);
+                        var catClass = document.createElement("div");
+                        catClass.setAttribute('class', 'catClass');
+                        lm.appendChild(catClass);
+
+                        var Att = attrs[i].split(":");
+                        divAttr.innerHTML = Att[0].concat(":&emsp;");
+                        divAttr.style = "color:#333399; display:inline-block; font-weight:bold; font-size:16px;";
+                        catClass.appendChild(divAttr);
+
+                        var divStr = document.createElement("div");
+                        divStr.innerHTML = Att[1];
+                        divStr.style = "display:inline-block";
+                        catClass.appendChild(divStr);
+
+                        var br = document.createElement("br");
+                        catClass.appendChild(br);
+                    }
+                }
+            }.bind(this));
+        }
+        else {
+            alert("Error: get Category and Attributes unsuccessful!");
+            res.json().then(function (data) {
+                console.log(data.message);
+            }.bind(this));
+        }
+    }).catch(function (err) {
+        alert("Error: No internet connection!");
+        console.log(err.message + ": No Internet Connection");
+    });
 }
 

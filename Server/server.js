@@ -1141,3 +1141,27 @@ app.post('/getFilteredPosts', (req, res) => {
     });
 });
 
+// May not be needed earlier. However, other options are buggy currently
+// Get category and attributes of a post
+app.post('/getCatAttributes', (req, res) => {
+    var id = req.body.postID;
+    query = "SELECT Category, Attributes FROM Posts WHERE idPosts = ?";
+    db.query(query, id, (error, response) => {
+        if (error) {
+            res.send(JSON.stringify({
+                "status": 500,
+                "error": error,
+                "message": "Internal server error",
+                "response": null
+            }));
+        }
+        else {
+            res.send(JSON.stringify({
+                "status": 200,
+                "error": null,
+                "response": response,
+                "message": "Success! Category and Attributes retrieved."
+            }));
+        }
+    });
+});
