@@ -204,19 +204,19 @@
                   <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown">(optional)
                                     <span class="caret"></span></button>
                   <ul class="dropdown-menu" style="padding-left:10px;font-size:15px;">
-                    <li><a href="#" onclick="expandCreatePModal('Ride', 'new')">Ride Share</a></li>
-                    <li><a href="#" onclick="expandCreatePModal('Food', 'new')">Food Pickup</a></li>
-                    <li><a href="#" onclick="expandCreatePModal('Tutor', 'new')">Tutor</a></li>
-                    <li><a href="#" onclick="expandCreatePModal('Sitter', 'new')">Baby/Pet Sitter</a></li>
-                    <li><a href="#" onclick="expandCreatePModal('Housing', 'new')">Housing</a></li>
-                    <li><a href="#" onclick="expandCreatePModal('Sale', 'new')">For Sale</a></li>
+                    <li><a href="#" onclick="expandCreatePModal('Ride', null)">Ride Share</a></li>
+                    <li><a href="#" onclick="expandCreatePModal('Food', null)">Food Pickup</a></li>
+                    <li><a href="#" onclick="expandCreatePModal('Tutor', null)">Tutor</a></li>
+                    <li><a href="#" onclick="expandCreatePModal('Sitter', null)">Baby/Pet Sitter</a></li>
+                    <li><a href="#" onclick="expandCreatePModal('Housing', null)">Housing</a></li>
+                    <li><a href="#" onclick="expandCreatePModal('Sale', null)">For Sale</a></li>
                   </ul>
                 </div>
               </div>
               <div id="pickedCategory" visible="false"></div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="createPost()">Publish</button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="createPost(null)">Publish</button>
           <button id="postClose" type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeNewPostModal()">Close</button>
         </div>
       </div>
@@ -231,7 +231,7 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">Edit Post</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="closeEditPostModal()">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
@@ -262,20 +262,20 @@
                   <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown">(optional)
                                       <span class="caret"></span></button>
                   <ul class="dropdown-menu" style="padding-left:10px;font-size:15px;">
-                    <li><a href="#" onclick="expandCreatePModal('Ride', 'edit')">Ride Share</a></li>
-                    <li><a href="#" onclick="expandCreatePModal('Food', 'edit')">Food Pickup</a></li>
-                    <li><a href="#" onclick="expandCreatePModal('Tutor', 'edit')">Tutor</a></li>
-                    <li><a href="#" onclick="expandCreatePModal('Sitter', 'edit')">Baby/Pet Sitter</a></li>
-                    <li><a href="#" onclick="expandCreatePModal('Housing', 'edit')">Housing</a></li>
-                    <li><a href="#" onclick="expandCreatePModal('Sale', 'edit')">For Sale</a></li>
+                    <li><a href="#" onclick="expandCreatePModal('Ride', true)">Ride Share</a></li>
+                    <li><a href="#" onclick="expandCreatePModal('Food', true)">Food Pickup</a></li>
+                    <li><a href="#" onclick="expandCreatePModal('Tutor', true)">Tutor</a></li>
+                    <li><a href="#" onclick="expandCreatePModal('Sitter', true)">Baby/Pet Sitter</a></li>
+                    <li><a href="#" onclick="expandCreatePModal('Housing', true)">Housing</a></li>
+                    <li><a href="#" onclick="expandCreatePModal('Sale', true)">For Sale</a></li>
                   </ul>
                 </div>
               </div>
               <div id="pickedEditCategory" visible="false"></div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="editPost()">Publish</button>
-          <button id="postEditClose" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button id="postEditPublish" type="button" class="btn btn-danger" data-dismiss="modal">Publish</button>
+          <button id="postEditClose" type="button" class="btn btn-secondary" data-dismiss="modal" onclick="closeEditPostModal()">Close</button>
         </div>
       </div>
     </div>

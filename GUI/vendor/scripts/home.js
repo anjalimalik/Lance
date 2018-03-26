@@ -7,6 +7,8 @@ var urlWriteComment = "http://localhost:5500/WriteComment"
 var urlSortPosts = "http://localhost:5500/getSortedPosts"
 var urlFilterPosts = "http://localhost:5500/getFilteredPosts"
 var urlCreatePost = "http://localhost:5500/CreatePost"
+var urlCatAttributes = "http://localhost:5500/getCatAttributes";
+var urlEditPost = "http://localhost:5500/EditPost";
 
 var emailAdd;
 
@@ -147,7 +149,6 @@ function createCard(user, content, headline, postingType, price, postID, date, l
     var btn_report = document.createElement("BUTTON");
     btn_report.setAttribute("id", "btnReport");
     btn_report.setAttribute("class", "btn btn-default btn-sm");
-    //btn_report.setAttribute("onclick", "getPostID(".concat(postID, ")"));
     btn_report.setAttribute("data-toggle", "modal");
     btn_report.setAttribute("data-target", "#myModalReport");
     btn_report.style = "float:left;margin-bottom:3px;margin-right:-20px;";
@@ -166,6 +167,7 @@ function createCard(user, content, headline, postingType, price, postID, date, l
     btn_editPost.setAttribute("class", "btn btn-default btn-sm");
     btn_editPost.setAttribute("data-toggle", "modal");
     btn_editPost.setAttribute("data-target", "#myModalEditPost");
+    btn_editPost.setAttribute("onclick", "getSelectedPost(".concat(postID, ")"));
     btn_editPost.style = "float:right;margin-bottom:3px;margin-right:1px;margin-top:3px;";
     divButtons.appendChild(btn_editPost);
 
@@ -646,33 +648,61 @@ function slider_onChange(str) {
     }
 }
 
-function createPost() {
-    var title = document.getElementById("in_title_newpost").value;
-    var desc = document.getElementById("in_content_newpost").value;
-    var price = document.getElementById("in_price_newpost").value;
-    var type = document.getElementsByName("postType");
-    var type_value = null;
-    if (type[0].checked) {
-        type_value = type[0].value;
-    }
-    else if (type[1].checked) {
-        type_value = type[1].value;
+function createPost(postID) {
+    if (!postID) {
+        var title = document.getElementById("in_title_newpost").value;
+        var desc = document.getElementById("in_content_newpost").value;
+        var price = document.getElementById("in_price_newpost").value;
+        var type = document.getElementsByName("postType");
+        var type_value = null;
+        if (type[0].checked) {
+            type_value = type[0].value;
+        }
+        else if (type[1].checked) {
+            type_value = type[1].value;
+        }
+        else {
+            alert("Not enough information provided");
+            document.getElementById("postClose").click();
+            return;
+        }
+
+        // Only category is optional
+        if (!price || !title || !desc) {
+            alert("Not enough information provided");
+            document.getElementById("postClose").click();
+            return;
+        }
+        var attributes = null;
+        var category = document.getElementById("pickedCategory").value;
     }
     else {
-        alert("Not enough information provided");
-        document.getElementById("postClose").click();
-        return;
-    }
+        var title = document.getElementById("in_title_editpost").value;
+        var desc = document.getElementById("in_content_editpost").value;
+        var price = document.getElementById("in_price_editpost").value;
+        var type = document.getElementsByName("postEditType");
+        var type_value = null;
+        if (type[0].checked) {
+            type_value = type[0].value;
+        }
+        else if (type[1].checked) {
+            type_value = type[1].value;
+        }
+        else {
+            alert("Not enough information provided");
+            document.getElementById("postEditClose").click();
+            return;
+        }
 
-    // Only category is optional
-    if (!price || !title || !desc) {
-        alert("Not enough information provided");
-        document.getElementById("postClose").click();
-        return;
+        // Only category is optional
+        if (!price || !title || !desc) {
+            alert("Not enough information provided");
+            document.getElementById("postEditClose").click();
+            return;
+        }
+        var attributes = null;
+        var category = document.getElementById("pickedEditCategory").value;
     }
-    var attributes = null;
-    var category = document.getElementById("pickedCategory").value;
-
     // make string for attributes according to the category
     if (category === "Ride") {
         attributes = "";
@@ -706,6 +736,15 @@ function createPost() {
     }
     if (category) {
         attributes = attributes.concat("Contact Info: ", document.getElementById("info").value);
+    }
+
+    if (!postID) {
+
+    }
+    else {
+        editPost(title, desc, price, type_value, category, attributes, postID);
+        closeEditPostModal();
+        return;
     }
 
     // send to server
@@ -751,392 +790,399 @@ function createPost() {
 // expand create new post modal to show attributes related to a category
 // UI for all attributes
 function expandCreatePModal(category, edit) {
-
-    if (edit == "new") {
-        // remove elements if clicked on a category again
-        $('.catDiv').remove();
-
-        if (category === 'Ride') {
-            document.getElementById("pickedCategory").value = "Ride";
-
-            var rideDiv = document.createElement("div");
-            rideDiv.setAttribute('class', 'catDiv');
-            document.getElementById("fieldset_createNP").appendChild(rideDiv);
-
-            // From (location) & To
-            var fromFG = document.createElement("div");
-            fromFG.setAttribute('class', 'form-group');
-            rideDiv.appendChild(fromFG);
-
-            var fromLbl = document.createElement("LABEL");
-            fromLbl.innerHTML = "From: ";
-            fromFG.appendChild(fromLbl);
-
-            var toLbl = document.createElement("LABEL");
-            toLbl.innerHTML = "To:";
-            toLbl.style = "margin-left:190px;";
-            fromFG.appendChild(toLbl);
-
-            var pLoc = document.createElement("p");
-            fromFG.appendChild(pLoc);
-
-            var fromTxt = document.createElement("textarea");
-            fromTxt.setAttribute('rows', '1');
-            fromTxt.setAttribute('class', 'form-control');
-            fromTxt.setAttribute('id', 'ride_from');
-            fromTxt.setAttribute('placeholder', 'Location');
-            fromTxt.style = "width:210px;display:inline-block;padding:10px;text-align:left;overflow:auto;";
-            pLoc.appendChild(fromTxt);
-
-            var toTxt = document.createElement("textarea");
-            toTxt.setAttribute('rows', '1');
-            toTxt.setAttribute('class', 'form-control');
-            toTxt.setAttribute('id', 'ride_to');
-            toTxt.setAttribute('placeholder', 'Location');
-            toTxt.style = "width:210px;margin-left:20px;display:inline-block;padding:10px;text-align:left;overflow:auto;";
-            pLoc.appendChild(toTxt);
-
-            // Number of passengers and Contact info.
-            var numFG = document.createElement("div");
-            numFG.setAttribute('class', 'form-group');
-            rideDiv.appendChild(numFG);
-
-            var numLbl = document.createElement("LABEL");
-            numLbl.innerHTML = "# of Passengers: ";
-            numFG.appendChild(numLbl);
-
-            var infoLbl = document.createElement("LABEL");
-            infoLbl.innerHTML = "Contact Info: ";
-            infoLbl.style = "margin-left:55px;";
-            numFG.appendChild(infoLbl);
-
-            var pNum = document.createElement("p");
-            numFG.appendChild(pNum);
-
-            var numTxt = document.createElement("input");
-            numTxt.setAttribute('type', 'number');
-            numTxt.setAttribute('rows', '1');
-            numTxt.setAttribute('class', 'form-control');
-            numTxt.setAttribute('id', 'ride_num');
-            numTxt.setAttribute('placeholder', '#');
-            numTxt.style = "width:50px; display:inline-block;padding:10px;text-align:left;overflow:auto;";
-            pNum.appendChild(numTxt);
-
-            var infoTxt = document.createElement("input");
-            infoTxt.setAttribute('type', 'text');
-            infoTxt.setAttribute('rows', '1');
-            infoTxt.setAttribute('class', 'form-control');
-            infoTxt.setAttribute('id', 'info');
-            infoTxt.setAttribute('placeholder', 'Phone no. or email (optional)');
-            infoTxt.style = "width:200px; display: inline-block; margin-left:125px; padding:10px;text-align:left;overflow:auto;";
-            pNum.appendChild(infoTxt);
-        }
-        else if (category === 'Food') {
-            document.getElementById("pickedCategory").value = "Food";
-
-            var foodDiv = document.createElement("div");
-            foodDiv.setAttribute('class', 'catDiv');
-            document.getElementById("fieldset_createNP").appendChild(foodDiv);
-
-            // Restaurant & Contact Info
-            var resFG = document.createElement("div");
-            resFG.setAttribute('class', 'form-group');
-            foodDiv.appendChild(resFG);
-
-            var resLbl = document.createElement("LABEL");
-            resLbl.innerHTML = "Restaurant: ";
-            resFG.appendChild(resLbl);
-
-            var infoLbl = document.createElement("LABEL");
-            infoLbl.innerHTML = "Contact Info: ";
-            infoLbl.style = "margin-left:150px;";
-            resFG.appendChild(infoLbl);
-
-            var pRes = document.createElement("p");
-            resFG.appendChild(pRes);
-
-            var resTxt = document.createElement("textarea");
-            resTxt.setAttribute('rows', '1');
-            resTxt.setAttribute('class', 'form-control');
-            resTxt.setAttribute('id', 'food_res');
-            resTxt.style = "width:210px;display:inline-block;padding:10px;text-align:left;overflow:auto;";
-            pRes.appendChild(resTxt);
-
-            var infoTxt = document.createElement("textarea");
-            infoTxt.setAttribute('type', 'text');
-            infoTxt.setAttribute('rows', '1');
-            infoTxt.setAttribute('class', 'form-control');
-            infoTxt.setAttribute('id', 'info');
-            infoTxt.setAttribute('placeholder', 'Phone no. or email (optional)');
-            infoTxt.style = "width:210px; display: inline-block; margin-left:20px; padding:10px;text-align:left;overflow:auto;";
-            pRes.appendChild(infoTxt);
-
-            // Items
-            var itemsFG = document.createElement("div");
-            itemsFG.setAttribute('class', 'form-group');
-            foodDiv.appendChild(itemsFG);
-
-            var itemsLbl = document.createElement("LABEL");
-            itemsLbl.innerHTML = "Items: ";
-            itemsFG.appendChild(itemsLbl);
-
-            var itemsTxt = document.createElement("textarea");
-            itemsTxt.setAttribute('cols', '1');
-            itemsTxt.setAttribute('rows', '2');
-            itemsTxt.setAttribute('class', 'form-control');
-            itemsTxt.setAttribute('id', 'food_items');
-            itemsTxt.setAttribute('placeholder', '');
-            itemsTxt.style = "padding:10px;text-align:left;overflow:auto;";
-            itemsFG.appendChild(itemsTxt);
-
-        }
-        else if (category === 'Tutor') {
-            document.getElementById("pickedCategory").value = "Tutor";
-
-            var tutorDiv = document.createElement("div");
-            tutorDiv.setAttribute('class', 'catDiv');
-            document.getElementById("fieldset_createNP").appendChild(tutorDiv);
-
-            // Class Name
-            var classFG = document.createElement("div");
-            classFG.setAttribute('class', 'form-group');
-            tutorDiv.appendChild(classFG);
-
-            var classLbl = document.createElement("LABEL");
-            classLbl.innerHTML = "Course(s): ";
-            classFG.appendChild(classLbl);
-
-            var classTxt = document.createElement("textarea");
-            classTxt.setAttribute('cols', '1');
-            classTxt.setAttribute('rows', '1');
-            classTxt.setAttribute('class', 'form-control');
-            classTxt.setAttribute('id', 'tutor_class');
-            classTxt.setAttribute('placeholder', 'name or course no. at Purdue');
-            classTxt.style = "padding:10px;text-align:left;overflow:auto;";
-            classFG.appendChild(classTxt);
-
-            // Qualifications
-            var qualFG = document.createElement("div");
-            qualFG.setAttribute('class', 'form-group');
-            tutorDiv.appendChild(qualFG);
-
-            var qualLbl = document.createElement("LABEL");
-            qualLbl.innerHTML = "Qualifications: ";
-            qualFG.appendChild(qualLbl);
-
-            var qualTxt = document.createElement("textarea");
-            qualTxt.setAttribute('cols', '1');
-            qualTxt.setAttribute('rows', '2');
-            qualTxt.setAttribute('class', 'form-control');
-            qualTxt.setAttribute('id', 'tutor_qual');
-            qualTxt.setAttribute('placeholder', '');
-            qualTxt.style = "padding:10px;text-align:left;overflow:auto;";
-            qualFG.appendChild(qualTxt);
-
-            // Contact Info
-            var infoFG = document.createElement("div");
-            infoFG.setAttribute('class', 'form-group');
-            tutorDiv.appendChild(infoFG);
-
-            var infoLbl = document.createElement("LABEL");
-            infoLbl.innerHTML = "Contact Info: ";
-            infoFG.appendChild(infoLbl);
-
-            var infoTxt = document.createElement("textarea");
-            infoTxt.setAttribute('type', 'text');
-            infoTxt.setAttribute('rows', '1');
-            infoTxt.setAttribute('class', 'form-control');
-            infoTxt.setAttribute('id', 'info');
-            infoTxt.setAttribute('placeholder', 'Phone no. or email (optional)');
-            infoTxt.style = "width:210px; padding:10px;text-align:left;overflow:auto;";
-            infoFG.appendChild(infoTxt);
-        }
-        else if (category === 'Sitter') {
-            document.getElementById("pickedCategory").value = "Sitter";
-
-            var sitDiv = document.createElement("div");
-            sitDiv.setAttribute('class', 'catDiv');
-            document.getElementById("fieldset_createNP").appendChild(sitDiv);
-
-            // date
-            var dateFG = document.createElement("div");
-            dateFG.setAttribute('class', 'form-group');
-            sitDiv.appendChild(dateFG);
-
-            var numLbl = document.createElement("LABEL");
-            numLbl.innerHTML = "Date: ";
-            dateFG.appendChild(numLbl);
-
-            var numTxt = document.createElement("input");
-            numTxt.setAttribute('type', 'date');
-            numTxt.setAttribute('class', 'form-control');
-            numTxt.setAttribute('id', 'sitter_date');
-            numTxt.style = "width:200px;padding:10px;text-align:left;overflow:auto;";
-            dateFG.appendChild(numTxt);
-
-            // Contact Info
-            var infoFG = document.createElement("div");
-            infoFG.setAttribute('class', 'form-group');
-            sitDiv.appendChild(infoFG);
-
-            var infoLbl = document.createElement("LABEL");
-            infoLbl.innerHTML = "Contact Info: ";
-            infoFG.appendChild(infoLbl);
-
-            var infoTxt = document.createElement("input");
-            infoTxt.setAttribute('type', 'text');
-            infoTxt.setAttribute('rows', '1');
-            infoTxt.setAttribute('class', 'form-control');
-            infoTxt.setAttribute('id', 'info');
-            infoTxt.setAttribute('placeholder', 'Phone no. or email (optional)');
-            infoTxt.style = "width:200px;padding:10px;text-align:left;overflow:auto;";
-            infoFG.appendChild(infoTxt);
-        }
-        else if (category === 'Housing') {
-            document.getElementById("pickedCategory").value = "Housing";
-
-            var housingDiv = document.createElement("div");
-            housingDiv.setAttribute('class', 'catDiv');
-            document.getElementById("fieldset_createNP").appendChild(housingDiv);
-
-            // Location
-            var locFG = document.createElement("div");
-            locFG.setAttribute('class', 'form-group');
-            housingDiv.appendChild(locFG);
-
-            var locLbl = document.createElement("LABEL");
-            locLbl.innerHTML = "Location: ";
-            locFG.appendChild(locLbl);
-
-            var locTxt = document.createElement("textarea");
-            locTxt.setAttribute('rows', '1');
-            locTxt.setAttribute('class', 'form-control');
-            locTxt.setAttribute('id', 'housing_loc');
-            locTxt.style = "width:210px;padding:10px;text-align:left;overflow:auto;";
-            locFG.appendChild(locTxt);
-
-            // Duration
-            var durFG = document.createElement("div");
-            durFG.setAttribute('class', 'form-group');
-            housingDiv.appendChild(durFG);
-
-            var durLbl = document.createElement("LABEL");
-            durLbl.innerHTML = "Duration: ";
-            durFG.appendChild(durLbl);
-
-            var durTxt = document.createElement("textarea");
-            durTxt.setAttribute('rows', '1');
-            durTxt.setAttribute('cols', '1');
-            durTxt.setAttribute('class', 'form-control');
-            durTxt.setAttribute('id', 'housing_dur');
-            durTxt.style = "padding:10px;text-align:left;overflow:auto;";
-            durFG.appendChild(durTxt);
-
-            // Number of Rooms and Contact info.
-            var numFG = document.createElement("div");
-            numFG.setAttribute('class', 'form-group');
-            housingDiv.appendChild(numFG);
-
-            var numLbl = document.createElement("LABEL");
-            numLbl.innerHTML = "# of Rooms: ";
-            numFG.appendChild(numLbl);
-
-            var infoLbl = document.createElement("LABEL");
-            infoLbl.innerHTML = "Contact Info: ";
-            infoLbl.style = "margin-left:50px;";
-            numFG.appendChild(infoLbl);
-
-            var pNum = document.createElement("p");
-            numFG.appendChild(pNum);
-
-            var numTxt = document.createElement("input");
-            numTxt.setAttribute('type', 'number');
-            numTxt.setAttribute('rows', '1');
-            numTxt.setAttribute('class', 'form-control');
-            numTxt.setAttribute('id', 'housing_num');
-            numTxt.setAttribute('placeholder', '#');
-            numTxt.style = "width:50px; display:inline-block;padding:10px;text-align:left;overflow:auto;";
-            pNum.appendChild(numTxt);
-
-            var infoTxt = document.createElement("input");
-            infoTxt.setAttribute('type', 'text');
-            infoTxt.setAttribute('rows', '1');
-            infoTxt.setAttribute('class', 'form-control');
-            infoTxt.setAttribute('id', 'info');
-            infoTxt.setAttribute('placeholder', 'Phone no. or email (optional)');
-            infoTxt.style = "width:200px; display: inline-block; margin-left:90px; padding:10px;text-align:left;overflow:auto;";
-            pNum.appendChild(infoTxt);
-        }
-        else if (category === 'Sale') {
-            document.getElementById("pickedCategory").value = "Sale";
-
-            var saleDiv = document.createElement("div");
-            saleDiv.setAttribute('class', 'catDiv');
-            document.getElementById("fieldset_createNP").appendChild(saleDiv);
-
-            // Item name and Contact info.
-            var itemFG = document.createElement("div");
-            itemFG.setAttribute('class', 'form-group');
-            saleDiv.appendChild(itemFG);
-
-            var itemLbl = document.createElement("LABEL");
-            itemLbl.innerHTML = "Item: ";
-            itemFG.appendChild(itemLbl);
-
-            var infoLbl = document.createElement("LABEL");
-            infoLbl.innerHTML = "Contact Info: ";
-            infoLbl.style = "margin-left:205px;";
-            itemFG.appendChild(infoLbl);
-
-            var pItem = document.createElement("p");
-            itemFG.appendChild(pItem);
-
-            var itemTxt = document.createElement("textarea");
-            itemTxt.setAttribute('type', 'text');
-            itemTxt.setAttribute('rows', '1');
-            itemTxt.setAttribute('class', 'form-control');
-            itemTxt.setAttribute('id', 'sale_item');
-            itemTxt.style = "width:220px; display:inline-block;padding:10px;text-align:left;overflow:auto;";
-            pItem.appendChild(itemTxt);
-
-            var infoTxt = document.createElement("textarea");
-            infoTxt.setAttribute('type', 'text');
-            infoTxt.setAttribute('rows', '1');
-            infoTxt.setAttribute('class', 'form-control');
-            infoTxt.setAttribute('id', 'info');
-            infoTxt.setAttribute('placeholder', 'Phone no. or email (optional)');
-            infoTxt.style = "width:220px; display: inline-block; margin-left:20px; padding:10px;text-align:left;overflow:auto;";
-            pItem.appendChild(infoTxt);
-
-            // Condition radios
-            var condFG = document.createElement("div");
-            condFG.setAttribute('class', 'form-group');
-            saleDiv.appendChild(condFG);
-
-            var usedLbl = document.createElement("LABEL");
-            usedLbl.innerHTML = " Used ";
-            usedLbl.setAttribute('class', 'radio-inline');
-            usedLbl.style = "margin-right:20px; margin-top: 20px;";
-            condFG.appendChild(usedLbl);
-
-            var usedR = document.createElement("input");
-            usedR.setAttribute('type', 'radio');
-            usedR.setAttribute('name', 'sale_condition');
-            usedR.setAttribute('value', 'Used');
-            usedLbl.appendChild(usedR);
-
-            var newLbl = document.createElement("LABEL");
-            newLbl.innerHTML = " New ";
-            newLbl.setAttribute('class', 'radio-inline');
-            condFG.appendChild(newLbl);
-
-            var newR = document.createElement("input");
-            newR.setAttribute('type', 'radio');
-            newR.setAttribute('name', 'sale_condition');
-            newR.setAttribute('value', 'New');
-            newLbl.appendChild(newR);
-        }
+    // remove elements if clicked on a category again
+    $('.catDiv').remove();
+
+    if (edit) {
+        var pickedCategory = "pickedEditCategory";
+        var fieldset = "fieldset_Edit";
     }
+    else {
+        var pickedCategory = "pickedCategory";
+        var fieldset = "fieldset_createNP";
+    }
+
+    if (category === 'Ride') {
+        document.getElementById(pickedCategory).value = "Ride";
+
+        var rideDiv = document.createElement("div");
+        rideDiv.setAttribute('class', 'catDiv');
+        document.getElementById(fieldset).appendChild(rideDiv);
+
+        // From (location) & To
+        var fromFG = document.createElement("div");
+        fromFG.setAttribute('class', 'form-group');
+        rideDiv.appendChild(fromFG);
+
+        var fromLbl = document.createElement("LABEL");
+        fromLbl.innerHTML = "From: ";
+        fromFG.appendChild(fromLbl);
+
+        var toLbl = document.createElement("LABEL");
+        toLbl.innerHTML = "To:";
+        toLbl.style = "margin-left:190px;";
+        fromFG.appendChild(toLbl);
+
+        var pLoc = document.createElement("p");
+        fromFG.appendChild(pLoc);
+
+        var fromTxt = document.createElement("textarea");
+        fromTxt.setAttribute('rows', '1');
+        fromTxt.setAttribute('class', 'form-control');
+        fromTxt.setAttribute('id', 'ride_from');
+        fromTxt.setAttribute('placeholder', 'Location');
+        fromTxt.style = "width:210px;display:inline-block;padding:10px;text-align:left;overflow:auto;";
+        pLoc.appendChild(fromTxt);
+
+        var toTxt = document.createElement("textarea");
+        toTxt.setAttribute('rows', '1');
+        toTxt.setAttribute('class', 'form-control');
+        toTxt.setAttribute('id', 'ride_to');
+        toTxt.setAttribute('placeholder', 'Location');
+        toTxt.style = "width:210px;margin-left:20px;display:inline-block;padding:10px;text-align:left;overflow:auto;";
+        pLoc.appendChild(toTxt);
+
+        // Number of passengers and Contact info.
+        var numFG = document.createElement("div");
+        numFG.setAttribute('class', 'form-group');
+        rideDiv.appendChild(numFG);
+
+        var numLbl = document.createElement("LABEL");
+        numLbl.innerHTML = "# of Passengers: ";
+        numFG.appendChild(numLbl);
+
+        var infoLbl = document.createElement("LABEL");
+        infoLbl.innerHTML = "Contact Info: ";
+        infoLbl.style = "margin-left:55px;";
+        numFG.appendChild(infoLbl);
+
+        var pNum = document.createElement("p");
+        numFG.appendChild(pNum);
+
+        var numTxt = document.createElement("input");
+        numTxt.setAttribute('type', 'number');
+        numTxt.setAttribute('rows', '1');
+        numTxt.setAttribute('class', 'form-control');
+        numTxt.setAttribute('id', 'ride_num');
+        numTxt.setAttribute('placeholder', '#');
+        numTxt.style = "width:50px; display:inline-block;padding:10px;text-align:left;overflow:auto;";
+        pNum.appendChild(numTxt);
+
+        var infoTxt = document.createElement("input");
+        infoTxt.setAttribute('type', 'text');
+        infoTxt.setAttribute('rows', '1');
+        infoTxt.setAttribute('class', 'form-control');
+        infoTxt.setAttribute('id', 'info');
+        infoTxt.setAttribute('placeholder', 'Phone no. or email (optional)');
+        infoTxt.style = "width:200px; display: inline-block; margin-left:125px; padding:10px;text-align:left;overflow:auto;";
+        pNum.appendChild(infoTxt);
+    }
+    else if (category === 'Food') {
+        document.getElementById("pickedCategory").value = "Food";
+
+        var foodDiv = document.createElement("div");
+        foodDiv.setAttribute('class', 'catDiv');
+        document.getElementById(fieldset).appendChild(foodDiv);
+
+        // Restaurant & Contact Info
+        var resFG = document.createElement("div");
+        resFG.setAttribute('class', 'form-group');
+        foodDiv.appendChild(resFG);
+
+        var resLbl = document.createElement("LABEL");
+        resLbl.innerHTML = "Restaurant: ";
+        resFG.appendChild(resLbl);
+
+        var infoLbl = document.createElement("LABEL");
+        infoLbl.innerHTML = "Contact Info: ";
+        infoLbl.style = "margin-left:150px;";
+        resFG.appendChild(infoLbl);
+
+        var pRes = document.createElement("p");
+        resFG.appendChild(pRes);
+
+        var resTxt = document.createElement("textarea");
+        resTxt.setAttribute('rows', '1');
+        resTxt.setAttribute('class', 'form-control');
+        resTxt.setAttribute('id', 'food_res');
+        resTxt.style = "width:210px;display:inline-block;padding:10px;text-align:left;overflow:auto;";
+        pRes.appendChild(resTxt);
+
+        var infoTxt = document.createElement("textarea");
+        infoTxt.setAttribute('type', 'text');
+        infoTxt.setAttribute('rows', '1');
+        infoTxt.setAttribute('class', 'form-control');
+        infoTxt.setAttribute('id', 'info');
+        infoTxt.setAttribute('placeholder', 'Phone no. or email (optional)');
+        infoTxt.style = "width:210px; display: inline-block; margin-left:20px; padding:10px;text-align:left;overflow:auto;";
+        pRes.appendChild(infoTxt);
+
+        // Items
+        var itemsFG = document.createElement("div");
+        itemsFG.setAttribute('class', 'form-group');
+        foodDiv.appendChild(itemsFG);
+
+        var itemsLbl = document.createElement("LABEL");
+        itemsLbl.innerHTML = "Items: ";
+        itemsFG.appendChild(itemsLbl);
+
+        var itemsTxt = document.createElement("textarea");
+        itemsTxt.setAttribute('cols', '1');
+        itemsTxt.setAttribute('rows', '2');
+        itemsTxt.setAttribute('class', 'form-control');
+        itemsTxt.setAttribute('id', 'food_items');
+        itemsTxt.setAttribute('placeholder', '');
+        itemsTxt.style = "padding:10px;text-align:left;overflow:auto;";
+        itemsFG.appendChild(itemsTxt);
+
+    }
+    else if (category === 'Tutor') {
+        document.getElementById("pickedCategory").value = "Tutor";
+
+        var tutorDiv = document.createElement("div");
+        tutorDiv.setAttribute('class', 'catDiv');
+        document.getElementById(fieldset).appendChild(tutorDiv);
+
+        // Class Name
+        var classFG = document.createElement("div");
+        classFG.setAttribute('class', 'form-group');
+        tutorDiv.appendChild(classFG);
+
+        var classLbl = document.createElement("LABEL");
+        classLbl.innerHTML = "Course(s): ";
+        classFG.appendChild(classLbl);
+
+        var classTxt = document.createElement("textarea");
+        classTxt.setAttribute('cols', '1');
+        classTxt.setAttribute('rows', '1');
+        classTxt.setAttribute('class', 'form-control');
+        classTxt.setAttribute('id', 'tutor_class');
+        classTxt.setAttribute('placeholder', 'name or course no. at Purdue');
+        classTxt.style = "padding:10px;text-align:left;overflow:auto;";
+        classFG.appendChild(classTxt);
+
+        // Qualifications
+        var qualFG = document.createElement("div");
+        qualFG.setAttribute('class', 'form-group');
+        tutorDiv.appendChild(qualFG);
+
+        var qualLbl = document.createElement("LABEL");
+        qualLbl.innerHTML = "Qualifications: ";
+        qualFG.appendChild(qualLbl);
+
+        var qualTxt = document.createElement("textarea");
+        qualTxt.setAttribute('cols', '1');
+        qualTxt.setAttribute('rows', '2');
+        qualTxt.setAttribute('class', 'form-control');
+        qualTxt.setAttribute('id', 'tutor_qual');
+        qualTxt.setAttribute('placeholder', '');
+        qualTxt.style = "padding:10px;text-align:left;overflow:auto;";
+        qualFG.appendChild(qualTxt);
+
+        // Contact Info
+        var infoFG = document.createElement("div");
+        infoFG.setAttribute('class', 'form-group');
+        tutorDiv.appendChild(infoFG);
+
+        var infoLbl = document.createElement("LABEL");
+        infoLbl.innerHTML = "Contact Info: ";
+        infoFG.appendChild(infoLbl);
+
+        var infoTxt = document.createElement("textarea");
+        infoTxt.setAttribute('type', 'text');
+        infoTxt.setAttribute('rows', '1');
+        infoTxt.setAttribute('class', 'form-control');
+        infoTxt.setAttribute('id', 'info');
+        infoTxt.setAttribute('placeholder', 'Phone no. or email (optional)');
+        infoTxt.style = "width:210px; padding:10px;text-align:left;overflow:auto;";
+        infoFG.appendChild(infoTxt);
+    }
+    else if (category === 'Sitter') {
+        document.getElementById("pickedCategory").value = "Sitter";
+
+        var sitDiv = document.createElement("div");
+        sitDiv.setAttribute('class', 'catDiv');
+        document.getElementById(fieldset).appendChild(sitDiv);
+
+        // date
+        var dateFG = document.createElement("div");
+        dateFG.setAttribute('class', 'form-group');
+        sitDiv.appendChild(dateFG);
+
+        var numLbl = document.createElement("LABEL");
+        numLbl.innerHTML = "Date: ";
+        dateFG.appendChild(numLbl);
+
+        var numTxt = document.createElement("input");
+        numTxt.setAttribute('type', 'date');
+        numTxt.setAttribute('class', 'form-control');
+        numTxt.setAttribute('id', 'sitter_date');
+        numTxt.style = "width:200px;padding:10px;text-align:left;overflow:auto;";
+        dateFG.appendChild(numTxt);
+
+        // Contact Info
+        var infoFG = document.createElement("div");
+        infoFG.setAttribute('class', 'form-group');
+        sitDiv.appendChild(infoFG);
+
+        var infoLbl = document.createElement("LABEL");
+        infoLbl.innerHTML = "Contact Info: ";
+        infoFG.appendChild(infoLbl);
+
+        var infoTxt = document.createElement("input");
+        infoTxt.setAttribute('type', 'text');
+        infoTxt.setAttribute('rows', '1');
+        infoTxt.setAttribute('class', 'form-control');
+        infoTxt.setAttribute('id', 'info');
+        infoTxt.setAttribute('placeholder', 'Phone no. or email (optional)');
+        infoTxt.style = "width:200px;padding:10px;text-align:left;overflow:auto;";
+        infoFG.appendChild(infoTxt);
+    }
+    else if (category === 'Housing') {
+        document.getElementById("pickedCategory").value = "Housing";
+
+        var housingDiv = document.createElement("div");
+        housingDiv.setAttribute('class', 'catDiv');
+        document.getElementById(fieldset).appendChild(housingDiv);
+
+        // Location
+        var locFG = document.createElement("div");
+        locFG.setAttribute('class', 'form-group');
+        housingDiv.appendChild(locFG);
+
+        var locLbl = document.createElement("LABEL");
+        locLbl.innerHTML = "Location: ";
+        locFG.appendChild(locLbl);
+
+        var locTxt = document.createElement("textarea");
+        locTxt.setAttribute('rows', '1');
+        locTxt.setAttribute('class', 'form-control');
+        locTxt.setAttribute('id', 'housing_loc');
+        locTxt.style = "width:210px;padding:10px;text-align:left;overflow:auto;";
+        locFG.appendChild(locTxt);
+
+        // Duration
+        var durFG = document.createElement("div");
+        durFG.setAttribute('class', 'form-group');
+        housingDiv.appendChild(durFG);
+
+        var durLbl = document.createElement("LABEL");
+        durLbl.innerHTML = "Duration: ";
+        durFG.appendChild(durLbl);
+
+        var durTxt = document.createElement("textarea");
+        durTxt.setAttribute('rows', '1');
+        durTxt.setAttribute('cols', '1');
+        durTxt.setAttribute('class', 'form-control');
+        durTxt.setAttribute('id', 'housing_dur');
+        durTxt.style = "padding:10px;text-align:left;overflow:auto;";
+        durFG.appendChild(durTxt);
+
+        // Number of Rooms and Contact info.
+        var numFG = document.createElement("div");
+        numFG.setAttribute('class', 'form-group');
+        housingDiv.appendChild(numFG);
+
+        var numLbl = document.createElement("LABEL");
+        numLbl.innerHTML = "# of Rooms: ";
+        numFG.appendChild(numLbl);
+
+        var infoLbl = document.createElement("LABEL");
+        infoLbl.innerHTML = "Contact Info: ";
+        infoLbl.style = "margin-left:50px;";
+        numFG.appendChild(infoLbl);
+
+        var pNum = document.createElement("p");
+        numFG.appendChild(pNum);
+
+        var numTxt = document.createElement("input");
+        numTxt.setAttribute('type', 'number');
+        numTxt.setAttribute('rows', '1');
+        numTxt.setAttribute('class', 'form-control');
+        numTxt.setAttribute('id', 'housing_num');
+        numTxt.setAttribute('placeholder', '#');
+        numTxt.style = "width:50px; display:inline-block;padding:10px;text-align:left;overflow:auto;";
+        pNum.appendChild(numTxt);
+
+        var infoTxt = document.createElement("input");
+        infoTxt.setAttribute('type', 'text');
+        infoTxt.setAttribute('rows', '1');
+        infoTxt.setAttribute('class', 'form-control');
+        infoTxt.setAttribute('id', 'info');
+        infoTxt.setAttribute('placeholder', 'Phone no. or email (optional)');
+        infoTxt.style = "width:200px; display: inline-block; margin-left:90px; padding:10px;text-align:left;overflow:auto;";
+        pNum.appendChild(infoTxt);
+    }
+    else if (category === 'Sale') {
+        document.getElementById("pickedCategory").value = "Sale";
+
+        var saleDiv = document.createElement("div");
+        saleDiv.setAttribute('class', 'catDiv');
+        document.getElementById(fieldset).appendChild(saleDiv);
+
+        // Item name and Contact info.
+        var itemFG = document.createElement("div");
+        itemFG.setAttribute('class', 'form-group');
+        saleDiv.appendChild(itemFG);
+
+        var itemLbl = document.createElement("LABEL");
+        itemLbl.innerHTML = "Item: ";
+        itemFG.appendChild(itemLbl);
+
+        var infoLbl = document.createElement("LABEL");
+        infoLbl.innerHTML = "Contact Info: ";
+        infoLbl.style = "margin-left:205px;";
+        itemFG.appendChild(infoLbl);
+
+        var pItem = document.createElement("p");
+        itemFG.appendChild(pItem);
+
+        var itemTxt = document.createElement("textarea");
+        itemTxt.setAttribute('type', 'text');
+        itemTxt.setAttribute('rows', '1');
+        itemTxt.setAttribute('class', 'form-control');
+        itemTxt.setAttribute('id', 'sale_item');
+        itemTxt.style = "width:220px; display:inline-block;padding:10px;text-align:left;overflow:auto;";
+        pItem.appendChild(itemTxt);
+
+        var infoTxt = document.createElement("textarea");
+        infoTxt.setAttribute('type', 'text');
+        infoTxt.setAttribute('rows', '1');
+        infoTxt.setAttribute('class', 'form-control');
+        infoTxt.setAttribute('id', 'info');
+        infoTxt.setAttribute('placeholder', 'Phone no. or email (optional)');
+        infoTxt.style = "width:220px; display: inline-block; margin-left:20px; padding:10px;text-align:left;overflow:auto;";
+        pItem.appendChild(infoTxt);
+
+        // Condition radios
+        var condFG = document.createElement("div");
+        condFG.setAttribute('class', 'form-group');
+        saleDiv.appendChild(condFG);
+
+        var usedLbl = document.createElement("LABEL");
+        usedLbl.innerHTML = " Used ";
+        usedLbl.setAttribute('class', 'radio-inline');
+        usedLbl.style = "margin-right:20px; margin-top: 20px;";
+        condFG.appendChild(usedLbl);
+
+        var usedR = document.createElement("input");
+        usedR.setAttribute('type', 'radio');
+        usedR.setAttribute('name', 'sale_condition');
+        usedR.setAttribute('value', 'Used');
+        usedLbl.appendChild(usedR);
+
+        var newLbl = document.createElement("LABEL");
+        newLbl.innerHTML = " New ";
+        newLbl.setAttribute('class', 'radio-inline');
+        condFG.appendChild(newLbl);
+
+        var newR = document.createElement("input");
+        newR.setAttribute('type', 'radio');
+        newR.setAttribute('name', 'sale_condition');
+        newR.setAttribute('value', 'New');
+        newLbl.appendChild(newR);
+    }
+
 }
 
 // close new post modal and remove previous enteries
@@ -1152,14 +1198,15 @@ function closeNewPostModal() {
 }
 
 // close edit post modal and remove previous enteries
-function openEditPostModal() {
-    document.getElementById("in_title_newpost").value = null;
-    document.getElementById("in_content_newpost").value = null;
-    document.getElementById("in_price_newpost").value = null;
-    var type = document.getElementsByName("postType");
+function closeEditPostModal() {
+    $('.catDiv').remove();
+    document.getElementById("in_title_editpost").value = null;
+    document.getElementById("in_content_editpost").value = null;
+    document.getElementById("in_price_editpost").value = null;
+    var type = document.getElementsByName("postEditType");
     type[0].checked = false;
     type[1].checked = false;
-    document.getElementById("pickedCategory").value = null;
+    document.getElementById("pickedEditCategory").value = null;
 }
 
 function showNotifications() {
@@ -1245,7 +1292,7 @@ function goToProfile() {
 // show attributes in UI of post card
 function categoryModal(postID) {
     $('.catClass').remove();
-    fetch("http://localhost:5500/getCatAttributes", {
+    fetch(urlCatAttributes, {
         method: "POST",
         headers: {
             'Accept': 'application/json',
@@ -1314,7 +1361,53 @@ function categoryModal(postID) {
     });
 }
 
-function editPost() {
-    
+
+// EDIT POST method
+function getSelectedPost(postID) {
+    $(document).ready(function () {
+        $('#postEditPublish').on('click', function (postID) {
+            createPost(postID);
+        });
+    });
+}
+
+// EDIT POST method
+function editPost(title, desc, type_value, price, category, attributes, postID) {
+    // send to server
+    fetch(urlEditPost, {
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+            "PostId": postID,
+            "Headline": title,
+            "Content": desc,
+            "PostingType": type_value,
+            "money": price,
+            "Category": category,
+            "Attributes": attributes
+        })
+
+    }).then(function (res) {
+        if (res.ok) {
+            res.json().then(function (data) {
+                $('.card_list_el').remove();
+                getAllPosts();
+                console.log("Inside res.ok. Post edited");
+                alert("Editing Post successful!");
+            }.bind(this));
+        }
+        else {
+            alert("Error: editing post unsuccessful!");
+            res.json().then(function (data) {
+                console.log(data.message);
+            }.bind(this));
+        }
+    }).catch(function (err) {
+        alert("Error: No internet connection!");
+        console.log(err.message + ": No Internet Connection");
+    });
 
 }
