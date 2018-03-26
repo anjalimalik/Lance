@@ -1006,7 +1006,7 @@ app.post('/getSortedPosts', (req, res) => {
         else if (!order) {
             var d1 = Date.parse(lowerBound);
             var d2 = Date.parse(upperBound);
-            query = 'SELECT * FROM Posts WHERE DateMSEC BETWEEN ? AND ?;';
+            query = 'SELECT * FROM Posts WHERE DateMSEC BETWEEN ? AND ? ORDER BY DatePosted DESC;';
             params = [d1, d2];
         }
         else if (!upperBound && !lowerBound) {
@@ -1045,7 +1045,7 @@ app.post('/getSortedPosts', (req, res) => {
         else if (order == null) {
             upperBound = parseFloat(upperBound);
             lowerBound = parseFloat(lowerBound);
-            query = 'SELECT * FROM Posts WHERE money BETWEEN ? AND ?;';
+            query = 'SELECT * FROM Posts WHERE money BETWEEN ? AND ? ORDER BY DatePosted DESC;';
             params = [lowerBound, upperBound];
         }
         else {

@@ -159,6 +159,22 @@ function createCard(user, content, headline, postingType, price, postID, date, l
     imgFlag.style = "float:left;width:20px; height:20px;";
     btn_report.appendChild(imgFlag);
 
+    /* EDIT post */
+    var btn_editPost = document.createElement("BUTTON");
+    //btn_editPost.setAttribute('type', 'button');
+    btn_editPost.setAttribute("id", "btnEditPost");
+    btn_editPost.setAttribute("class", "btn btn-default btn-sm");
+    btn_editPost.setAttribute("data-toggle", "modal");
+    btn_editPost.setAttribute("data-target", "#myModalEditPost");
+    btn_editPost.style = "float:right;margin-bottom:3px;margin-right:1px;margin-top:3px;";
+    divButtons.appendChild(btn_editPost);
+
+    var imgEdit = document.createElement('img');
+    imgEdit.setAttribute('src', 'Edit.png');
+    imgEdit.setAttribute('alt', 'Edit Post');
+    imgEdit.style = "float:left;width:17px; height:17px;";
+    btn_editPost.appendChild(imgEdit);
+
 
     var divFooter = document.createElement('div');
     divFooter.setAttribute('class', 'card-footer');
@@ -169,7 +185,7 @@ function createCard(user, content, headline, postingType, price, postID, date, l
     var aHeart = document.createElement('BUTTON');
     aHeart.setAttribute('class', 'btn btn-default btn-sm');
     aHeart.setAttribute('onclick', "clickInterested(".concat(postID, ")"));
-    aHeart.style = "float:center; outline:none; border: 0; background: transparent; margin-left:310px; margin-top:-17px;";
+    aHeart.style = "float:center; outline:none; border: 0; background: transparent; margin-left:310px; margin-top:-13px;";
     divFooter.appendChild(aHeart);
 
     var imgHeart = document.createElement('img');
@@ -180,8 +196,13 @@ function createCard(user, content, headline, postingType, price, postID, date, l
 
     var txtlikes = document.createElement("text");
     txtlikes.setAttribute("id", "txtLikes".concat(postID));
-    txtlikes.innerHTML = likes.toString().concat(" likes");
-    txtlikes.style = "float:center;margin-left:-16px;font-size:14px;color:grey;";
+    if (likes == "1") {
+        txtlikes.innerHTML = likes.toString().concat(" like");
+    }
+    else {
+        txtlikes.innerHTML = likes.toString().concat(" likes");
+    }
+    txtlikes.style = "float:center;margin-left:-12px;font-size:14px;color:grey;";
     divFooter.appendChild(txtlikes);
 
     /* Date Posted */
@@ -262,7 +283,7 @@ function clickInterested(postID) {
             res.json().then(function (data) {
                 var likesid = "txtLikes".concat(postID);
                 var num = parseInt(document.getElementById(likesid).textContent);
-                if (num == 0) {
+                if (num === 0) {
                     document.getElementById(likesid).innerHTML = (num + 1).toString().concat(" like");
                 }
                 else {
@@ -1119,6 +1140,17 @@ function expandCreatePModal(category) {
 // close new post modal and remove previous enteries
 function closeNewPostModal() {
     $('.catDiv').remove();
+    document.getElementById("in_title_newpost").value = null;
+    document.getElementById("in_content_newpost").value = null;
+    document.getElementById("in_price_newpost").value = null;
+    var type = document.getElementsByName("postType");
+    type[0].checked = false;
+    type[1].checked = false;
+    document.getElementById("pickedCategory").value = null;
+}
+
+// close edit post modal and remove previous enteries
+function openEditPostModal() {
     document.getElementById("in_title_newpost").value = null;
     document.getElementById("in_content_newpost").value = null;
     document.getElementById("in_price_newpost").value = null;

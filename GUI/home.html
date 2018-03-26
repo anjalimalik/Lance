@@ -204,12 +204,12 @@
                   <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown">(optional)
                                     <span class="caret"></span></button>
                   <ul class="dropdown-menu" style="padding-left:10px;font-size:15px;">
-                    <li><a href="#" onclick="expandCreatePModal('Ride')">Ride Share</a></li>
-                    <li><a href="#" onclick="expandCreatePModal('Food')">Food Pickup</a></li>
-                    <li><a href="#" onclick="expandCreatePModal('Tutor')">Tutor</a></li>
-                    <li><a href="#" onclick="expandCreatePModal('Sitter')">Baby/Pet Sitter</a></li>
-                    <li><a href="#" onclick="expandCreatePModal('Housing')">Housing</a></li>
-                    <li><a href="#" onclick="expandCreatePModal('Sale')">For Sale</a></li>
+                    <li><a href="#" onclick="expandCreatePModal('Ride', 'new')">Ride Share</a></li>
+                    <li><a href="#" onclick="expandCreatePModal('Food', 'new')">Food Pickup</a></li>
+                    <li><a href="#" onclick="expandCreatePModal('Tutor', 'new')">Tutor</a></li>
+                    <li><a href="#" onclick="expandCreatePModal('Sitter', 'new')">Baby/Pet Sitter</a></li>
+                    <li><a href="#" onclick="expandCreatePModal('Housing', 'new')">Housing</a></li>
+                    <li><a href="#" onclick="expandCreatePModal('Sale', 'new')">For Sale</a></li>
                   </ul>
                 </div>
               </div>
@@ -223,6 +223,64 @@
     </div>
   </div>
   <!-- End New Post -->
+
+
+  <!-- Create Edit Post MODAL -->
+  <div class="modal" style="margin-top:100px;" id="myModalEditPost" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Edit Post</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <fieldset id="fieldset_Edit">
+              <div class="form-group">
+                <label>Title: </label>
+                <textarea cols="1" rows="1" style="padding:10px;text-align:left;overflow:auto;" class="form-control" id="in_title_editpost"
+                  placeholder=""></textarea>
+              </div>
+              <div class="form-group">
+                <label>Content: </label>
+                <textarea cols="10" rows="5" style="padding:10px;float:left;margin-bottom:20px;text-align:left;overflow:auto;" class="form-control"
+                  id="in_content_editpost" placeholder="Description"></textarea>
+              </div>
+              <div class="form-group">
+                <label>Price: </label></br>
+                <input type="number" size="5" style="padding:10px;width:100px;float:left;margin-right:200px;text-align:left;overflow:auto;"
+                  class="form-control" id="in_price_editpost" placeholder="$$$"></textarea>
+                <label style="margin-right:20px; margin-top: 20px;" class="radio-inline"><input type="radio" name="postEditType" value="Offer">   Offer    </label>
+                <label class="radio-inline"><input type="radio" name="postEditType" value="Request">    Request   </label>
+              </div>
+              </br>
+              <div class="form-group">
+                <label>Category: </label></br>
+                <div class="dropdown" style="padding-bottom:20px;">
+                  <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown">(optional)
+                                      <span class="caret"></span></button>
+                  <ul class="dropdown-menu" style="padding-left:10px;font-size:15px;">
+                    <li><a href="#" onclick="expandCreatePModal('Ride', 'edit')">Ride Share</a></li>
+                    <li><a href="#" onclick="expandCreatePModal('Food', 'edit')">Food Pickup</a></li>
+                    <li><a href="#" onclick="expandCreatePModal('Tutor', 'edit')">Tutor</a></li>
+                    <li><a href="#" onclick="expandCreatePModal('Sitter', 'edit')">Baby/Pet Sitter</a></li>
+                    <li><a href="#" onclick="expandCreatePModal('Housing', 'edit')">Housing</a></li>
+                    <li><a href="#" onclick="expandCreatePModal('Sale', 'edit')">For Sale</a></li>
+                  </ul>
+                </div>
+              </div>
+              <div id="pickedEditCategory" visible="false"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="editPost()">Publish</button>
+          <button id="postEditClose" type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- End Edit Post -->
 
   <!-- START OF CARD LIST -->
   <ul id="news_card_list" class="card_list">
