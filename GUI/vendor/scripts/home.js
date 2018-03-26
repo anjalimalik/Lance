@@ -31,7 +31,7 @@ function getAllPosts() {
                 var json = data.response;
 
                 for (i = 0; i < numPost; i++) {
-                    createCard(json[i].UserName, json[i].Content, json[i].Headline, json[i].PostingType, json[i].money, json[i].idPosts, json[i].DatePosted, json[i].numLikes, json[i].Category);
+                    createCard(json[i].UserName, json[i].Content, json[i].Headline, json[i].PostingType, json[i].money, json[i].idPosts, json[i].DatePosted, json[i].numLikes, json[i].Category, json[i].Attributes);
                 }
             });
 
@@ -43,7 +43,7 @@ function getAllPosts() {
 }
 
 // CREATE A NEW CARD FOR EVERY POST FROM SERVER (/getPosts)
-function createCard(user, content, headline, postingType, price, postID, date, likes, category) {
+function createCard(user, content, headline, postingType, price, postID, date, likes, category, attributes) {
 
     var ul = document.getElementById('news_card_list');
 
@@ -81,16 +81,21 @@ function createCard(user, content, headline, postingType, price, postID, date, l
         /* Category */
         var btnCat = document.createElement("BUTTON");
         btnCat.setAttribute("class", "btn btn-outline-dark btn-sm");
-        btnCat.setAttribute('onclick', "btnCat_click(".concat(postID, ")"));
+        //btnCat.setAttribute('onclick', "btnCat_click(".concat(postID, ")"));
         btnCat.setAttribute("id", "btnCat");
+        btnCat.setAttribute("data-toggle", "modal");
+        btnCat.setAttribute("data-target", "#categoryModal");
         btnCat.innerHTML = category;
         btnCat.style = "text-align:center;border-color:#333399;float:right;margin-top:-7px;margin-right:7px;font-size:12px;height:35px;";
         divHeader.appendChild(btnCat);
+
+        // call to populate category modal
+        categoryModal(category, attributes);
     }
 
     /* Offer/Request */
     var ReqOff = document.createElement("p");
-    var str = postingType.concat(" from ", "<b style=\"", "color:#333399; font-weight:bold\">", user, "</b>");
+    var str = postingType.concat(" by ", "<b style=\"", "color:#333399; font-weight:bold\">", user, "</b>");
     ReqOff.style = "font-family:monaco;font-size:14px;color:#666699;float:left;";
     ReqOff.innerHTML = str;
     divHeader.appendChild(ReqOff);
@@ -353,7 +358,7 @@ function getAllComments(postID) {
 
 // expand post to get all comments
 function expandPost(postID) {
-    var lm = document.getElementById("learnMoreFG");
+    var lm = document.getElementById("commentsFG");
     // comments
     var ulComments = document.createElement("ul");
     ulComments.setAttribute('id', 'ulcomments'.concat(postID));
@@ -501,7 +506,7 @@ function addComment(postID, email, num) {
         console.log(err.message + ": No Internet Connection");
     });
 
-    removeElements(postID, num);
+    $('.comment').remove();
     $('#myCommentsModal').modal('hide');
 }
 
@@ -543,7 +548,7 @@ function getSortedPosts(json) {
     if (json) {
         var num = Object.keys(json).length;
         for (i = 0; i < num; i++) {
-            createCard(json[i].UserName, json[i].Content, json[i].Headline, json[i].PostingType, json[i].money, json[i].idPosts, json[i].DatePosted, json[i].numLikes, json[i].Category);
+            createCard(json[i].UserName, json[i].Content, json[i].Headline, json[i].PostingType, json[i].money, json[i].idPosts, json[i].DatePosted, json[i].numLikes, json[i].Category, json[i].Attributes);
         }
     }
 }
@@ -1198,7 +1203,16 @@ function goToProfile() {
 }
 
 // show attributes 
-function btnCat_click() {
+function categoryModal(category, attributes) {
 
+    // for later removal
+    document.getElementById("xBtn_category").setAttribute('onclick', "$('.catClass').remove();");
+    document.getElementById("closeBtn_category").setAttribute('onclick', "$('.catClass').remove();");
+
+    var lm = document.getElementById("learnMoreFG");
+    var ulAttr = document.createElement("ul");
+    ulAttr.setAttribute('id', 'attr');
+    ulAttr.setAttribute('class', 'catClass');
+    lm.appendChild(ulAttr);
 }
 
