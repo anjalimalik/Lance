@@ -1213,3 +1213,32 @@ app.post('/EditPost', function (req, res) {
     });
 });
 
+
+// get details of one particular post 
+app.post('/getSelectedPost', function (req, res) {
+    var id = req.body.PostId;
+    
+    let query = "SELECT * FROM Posts WHERE idPosts = ?";
+
+    // get that post
+    db.query(query, id, function (error, response) {
+        console.log(response);
+        if (error) {
+            res.send(JSON.stringify({
+                "status": 500,
+                "error": error,
+                "response": null,
+                "message": "Internal server error"
+            }));
+        }
+        else {
+            res.send(JSON.stringify({
+                "status": 200,
+                "error": null,
+                "response": response,
+                "message": "Success! Selected post retrieved!"
+            }));
+        }
+    });
+});
+
