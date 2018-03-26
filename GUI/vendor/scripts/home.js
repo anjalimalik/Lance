@@ -67,7 +67,7 @@ function createCard(user, content, headline, postingType, price, postID, date, l
     /* Price */
     var divTextPrice = document.createElement("kbd");
     divTextPrice.innerHTML = "$".concat(price);
-    divTextPrice.style = "background-color:lightgrey;color:black;float:right;margin-top:-5px;margin-right:-7px;font-size: 16px;";
+    divTextPrice.style = "background-color:lightgrey;color:black;float:right;margin-top:-3px;margin-right:-7px;font-size: 15px;";
     divHeader.appendChild(divTextPrice);
 
     if (category) {
@@ -79,16 +79,19 @@ function createCard(user, content, headline, postingType, price, postID, date, l
             category = "For Sale";
         }
         /* Category */
-        var divCat = document.createElement("kbd");
-        divCat.innerHTML = category;
-        divCat.style = "background-color:#483D8B;color:white;float:right;margin-top:-5px;margin-right:7px;font-size: 14px; height:30px;";
-        divHeader.appendChild(divCat);
+        var btnCat = document.createElement("BUTTON");
+        btnCat.setAttribute("class", "btn btn-outline-dark btn-sm");
+        btnCat.setAttribute('onclick', "btnCat_click(".concat(postID, ")"));
+        btnCat.setAttribute("id", "btnCat");
+        btnCat.innerHTML = category;
+        btnCat.style = "text-align:center;border-color:#333399;float:right;margin-top:-7px;margin-right:7px;font-size:12px;height:35px;";
+        divHeader.appendChild(btnCat);
     }
 
     /* Offer/Request */
     var ReqOff = document.createElement("p");
     var str = postingType.concat(" from ", "<b style=\"", "color:#333399; font-weight:bold\">", user, "</b>");
-    ReqOff.style = "color:#666699;float:left;";
+    ReqOff.style = "font-family:monaco;font-size:14px;color:#666699;float:left;";
     ReqOff.innerHTML = str;
     divHeader.appendChild(ReqOff);
 
@@ -188,7 +191,7 @@ function createCard(user, content, headline, postingType, price, postID, date, l
     var divComments = document.createElement("BUTTON");
     divComments.setAttribute('class', 'btn btn-outline-primary btn-md');
     divComments.setAttribute("data-toggle", "modal");
-    divComments.setAttribute("data-target", "#myPostModal");
+    divComments.setAttribute("data-target", "#myCommentsModal");
     divComments.style = "float:right;margin-bottom:7px;margin-right:195px;margin-top:-10px; height:40px;";
     divComments.setAttribute('onclick', "expandPost(".concat(postID, ")"));
     divComments.innerHTML = "Comments";
@@ -390,6 +393,7 @@ function expandComments(postID, num, json) {
         //title (content of comment)
         var title = document.createElement("p");
         title.setAttribute('class', 'card-title');
+        title.style = "font-family: monaco;font-size: 13px;";
         title.innerHTML = "No comments yet.";
         body.appendChild(title);
     }
@@ -413,13 +417,14 @@ function expandComments(postID, num, json) {
 
         //sender name (content of comment)
         var sender = document.createElement("kbd");
-        sender.style = "float:left; background-color:lightblue; height:32px; font-size:15px; margin-left:-15px; margin-top:-10px; color:black;";
+        sender.style = "font-family: monaco;float:left; background-color:lightgrey; height:32px; font-size:12px; margin-left:-15px; margin-top:-2px; color:black;border-right:1px solid #000;height:30px";
         sender.innerHTML = json[i].SenderName;
         body.appendChild(sender);
 
         //title (content of comment)
         var title = document.createElement("p");
         title.setAttribute('class', 'card-title');
+        title.style = "font-family: monaco;font-size: 13px;";
         title.innerHTML = json[i].Comment;
         body.appendChild(title);
     }
@@ -447,7 +452,7 @@ function expandComments(postID, num, json) {
     inputW.setAttribute('class', 'form-control mr-sm-2');
     inputW.setAttribute('type', 'text');
     inputW.setAttribute('placeholder', 'Add comment here');
-    inputW.style = "margin-top: -21px;width: 400px; height: 55px; margin-left:-20px;";
+    inputW.style = "font-family: monaco;margin-top: -21px;width: 400px; height: 55px; margin-left:-20px;";
     inputW.setAttribute('id', 'txtComment');
     bodyW.appendChild(inputW);
 
@@ -497,7 +502,7 @@ function addComment(postID, email, num) {
     });
 
     removeElements(postID, num);
-    $('#myPostModal').modal('hide');
+    $('#myCommentsModal').modal('hide');
 }
 
 function sortPosts(basedOn, order, upper, lower) {
@@ -1186,7 +1191,14 @@ function getNotifications() {
 
 }
 
+// redirect to profile
 function goToProfile() {
     var u = 'profile.html?email='.concat(emailAdd);
     window.location.href = u;
 }
+
+// show attributes 
+function btnCat_click() {
+
+}
+
