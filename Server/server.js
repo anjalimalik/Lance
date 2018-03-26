@@ -23,8 +23,6 @@ Content: req.body.Content,
 PostingType: req.body.PostingType,
 money: req.body.money,
 numLikes: numLikes,
-Tags: req.body.Tags,
-PostingStatus: Status, - set to 1 initiialy to indicate open
 DatePosted: posted, - get date from system
 UserID: null - get user id from database
 */
@@ -231,10 +229,6 @@ app.post('/CreatePost', function (req, res) {
         return res.status(400).json({ message: "Missing Money value" });
     }
 
-
-    // initially posting status should be open
-    var Status = 1; // 1 is open, 0 is closed
-
     // initially  numLikes should be 0
     var numLikes = 0;
 
@@ -285,8 +279,6 @@ app.post('/CreatePost', function (req, res) {
                 PostingType: req.body.PostingType,
                 money: req.body.money,
                 numLikes: numLikes,
-                Tags: req.body.Tags,
-                PostingStatus: Status,
                 DatePosted: posted,
                 UserID: resp[0].idUsers,
                 DateMSEC: time,
@@ -1104,18 +1096,18 @@ app.post('/getFilteredPosts', (req, res) => {
 
     let query = "";
     let params = [];
-    
+
     // cannot be null
     if (!category && !type) {
         return res.status(400).json({ message: "Not enough information provided for filtering of posts" });
     }
     else if (type) {
-        query = "SELECT * FROM Posts WHERE PostingType = ?"; 
-        params = [type];      
+        query = "SELECT * FROM Posts WHERE PostingType = ?";
+        params = [type];
     }
     else {
-        query = "SELECT * FROM Posts WHERE Category = ?"; 
-        params = [category]; 
+        query = "SELECT * FROM Posts WHERE Category = ?";
+        params = [category];
     }
 
     db.query(query, params, (error, response) => {
@@ -1165,3 +1157,59 @@ app.post('/getCatAttributes', (req, res) => {
         }
     });
 });
+
+
+//Edit post details
+app.post('/EditPost', function (req, res) {
+
+    var id = req.body.PostId;
+
+    // Headline, Content, PostingType, and Money are required entires that must be provided by users
+    if (!req.body.Headline) {
+        return res.status(400).json({ message: "Missing Headline" });
+    }
+    if (!req.body.Content) {
+        return res.status(400).json({ message: "Missing Content" });
+    }
+    if (!req.body.PostingType) {
+        return res.status(400).json({ message: "Missing Posting Type" });
+    }
+    if (!req.body.money) {
+        return res.status(400).json({ message: "Missing Money value" });
+    }
+
+    // set date posted
+    var posted = new Date();
+
+    var time = posted.getTime();
+
+    if (req.body.Category) {
+        var cat = req.body.Category;
+        var att = req.body.Attributes;
+    }
+
+    let query = "UPDATE Posts SET Headline = ?, Content = ?, PostingType = ?, money = ?, DatePosted = ?, DateMSEC = ?, Category = ?, Attributes = ? WHERE idPosts = ?";
+    var params = [Headline, Content, PostingType, money, posted, time, cat, att, id];
+
+    // Update post
+    db.query(query, params, function (error, response) {
+        console.log(response);
+        if (error) {
+            res.send(JSON.stringify({
+                "status": 500,
+                "error": error,
+                "response": null,
+                "message": "Internal server error"
+            }));
+        }
+        else {
+            res.send(JSON.stringify({
+                "status": 200,
+                "error": null,
+                "response": response,
+                "message": "Success! Post updated!"
+            }));
+        }
+    });
+});
+
