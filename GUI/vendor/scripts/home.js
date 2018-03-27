@@ -26,6 +26,7 @@ function onLoad_home() {
     } else if (emailAdd.includes("#")) {
         emailAdd = emailAdd.replace("#", "");
     }
+<<<<<<< HEAD
 
     fetch(urlUserID, {
         method: "POST",
@@ -55,37 +56,11 @@ function onLoad_home() {
         alert("Error: No internet connection!");
         console.log(err.message + ": No Internet Connection");
     });
+=======
+    getAllPosts();
+>>>>>>> parent of c195e20... continued fix
 }
-function setupCreatePost () {
-    var ul = document.getElementById('news_card_list');
-/*
-    var li = docment.createElement('li');
-    li.setAttribute('class', 'card_list_el');
-    li.style = "width:70%; margin-left: 100px;";
-    ul.appendChild(li);
-*/
 
-    var divCreatePost = document.createElement('div');
-    divCreatePost.setAttribute('class', 'news_card_list');
-    divCreatePost.style = "float:center; width: 66%; height: 15%; margin-left:11%;";
-    ul.appendChild(divCreatePost);
-
-    var divCreatePostText = document.createElement('h4');
-    divCreatePostText.innerHTML = "CREATE NEW POST";
-    divCreatePostText.style = "position:relative; top:-40px;";
-    divCreatePost.appendChild(divCreatePostText);
-
-    var btn_createPost = document.createElement("BUTTON");
-    btn_createPost.setAttribute('class', 'btn btn-outline-dark');
-    btn_createPost.setAttribute('id', 'btnNewPost');
-    btn_createPost.setAttribute('data-toggle', 'modal');
-    btn_createPost.setAttribute('data-target', '#myModalNewPost');
-    btn_createPost.innerHTML = "New Post";
-    btn_createPost.style = "position: relative; border-color:#483D8B; top: -30px; margin-left: 55px;";
-    divCreatePost.appendChild(btn_createPost);
-
-
-}
 function getAllPosts() {
     fetch(urlGetPosts)
         .then(function (res) {

@@ -43,9 +43,8 @@ function btn_login() {
                     //window.location.href = 'home.html';
                 }
                 else {
-                    //var u = 'profile.html?email='.concat(_email);
-                    //window.location.href = u;
-                    window.location.href = 'home.html';
+                    var u = 'profile.html?email='.concat(_email);
+                    window.location.href = u;
                 }
                 this.authToken = data.authToken
                 this.email = _email;
