@@ -4,7 +4,7 @@ var urlNotifications = "http://localhost:5500/getNotifications"
 var urlGetProfile = "http://localhost:5500/getProfile"
 var numNotifs = 0;
 
-function onLoad_profile() {
+function body_onload() {
 
     optionsToggle.style.display = "none";
     notificationsToggle.style.display = "none";
