@@ -21,13 +21,11 @@ function onLoad_home() {
     console.log(emailAdd);
 
     if (emailAdd == null) {
-        //alert("You have to be logged in first!");
-        //window.location.href = "index.html";
+        alert("You have to be logged in first!");
+        window.location.href = "index.html";
     } else if (emailAdd.includes("#")) {
         emailAdd = emailAdd.replace("#", "");
     }
-<<<<<<< HEAD
-
     fetch(urlUserID, {
         method: "POST",
         headers: {
@@ -56,9 +54,7 @@ function onLoad_home() {
         alert("Error: No internet connection!");
         console.log(err.message + ": No Internet Connection");
     });
-=======
     getAllPosts();
->>>>>>> parent of c195e20... continued fix
 }
 
 function getAllPosts() {
@@ -175,7 +171,7 @@ function createCard(user, content, headline, postingType, price, postID, date, l
         divButtons.appendChild(btn_close);
 
         var imgClose = document.createElement('img');
-        imgClose.setAttribute('src', 'close.png');
+        imgClose.setAttribute('src', './css/Assets/close.png');
         imgClose.setAttribute('alt', 'Close');
         imgClose.style = "float:center;width:20px; height:20px;";
         btn_close.appendChild(imgClose);
@@ -192,7 +188,7 @@ function createCard(user, content, headline, postingType, price, postID, date, l
     divButtons.appendChild(btn_report);
 
     var imgFlag = document.createElement('img');
-    imgFlag.setAttribute('src', 'flag.png');
+    imgFlag.setAttribute('src', './css/Assets/flag.png');
     imgFlag.setAttribute('alt', 'Report');
     imgFlag.style = "float:left;width:20px; height:20px;";
     btn_report.appendChild(imgFlag);
@@ -229,7 +225,7 @@ function createCard(user, content, headline, postingType, price, postID, date, l
     divFooter.appendChild(aHeart);
 
     var imgHeart = document.createElement('img');
-    imgHeart.setAttribute('src', 'heart.png');
+    imgHeart.setAttribute('src', './css/Assets/heart.png');
     imgHeart.setAttribute('alt', 'Like');
     imgHeart.style = "float:center;width:30px; height:30px;";
     aHeart.appendChild(imgHeart);
