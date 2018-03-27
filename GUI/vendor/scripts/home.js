@@ -206,7 +206,7 @@ function createCard(user, content, headline, postingType, price, postID, date, l
         divButtons.appendChild(btn_editPost);
 
         var imgEdit = document.createElement('img');
-        imgEdit.setAttribute('src', 'Edit.png');
+        imgEdit.setAttribute('src', './css/Assets/Edit.png');
         imgEdit.setAttribute('alt', 'Edit Post');
         imgEdit.style = "float:left;width:17px; height:17px;";
         btn_editPost.appendChild(imgEdit);
