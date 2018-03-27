@@ -1,0 +1,64 @@
+/*!
+ * Start Bootstrap - Full (https://startbootstrap.com/template-overviews/full)
+ * Copyright 2013-2017 Start Bootstrap
+ * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap-full/blob/master/LICENSE) http://placehold.it/1920x1080
+ */
+
+body {
+  background: url('Assets/train.jpg') no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  background-size: cover;
+  -o-background-size: cover;
+  max-width: 100%; 
+  overflow-x: hidden;
+}
+
+.pb-modalreglog-container {
+    margin-top: 100px;
+  }
+
+  .pb-modalreglog-legend {
+    text-align: center;
+  }
+
+  .pb-modalreglog-input-group {
+    margin: auto;
+  }
+
+  .pb-modalreglog-submit {
+    margin-left: 5px;
+  }
+
+  .pb-modalreglog-form-reg {
+    text-align: center;
+  }
+
+  .pb-modalreglog-footer p {
+    text-align: center;
+    margin-top: 20px;
+  }
+
+  #emailError {
+    display: none;
+    color: red;
+  }
+
+  #passError {
+    display: none;
+    color: red;
+  }
+
+  #fNameError {
+    display: none;
+    color: red;
+  }
+
+  #lNameError {
+    display: none;
+    color: red;
+  }
+
+  #pb-modalreglog-progressbar {
+    border-radius: 2px;
+  }
