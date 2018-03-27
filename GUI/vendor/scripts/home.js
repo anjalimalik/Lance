@@ -7,10 +7,14 @@ var urlWriteComment = "http://localhost:5500/WriteComment"
 var urlSortPosts = "http://localhost:5500/getSortedPosts"
 var urlFilterPosts = "http://localhost:5500/getFilteredPosts"
 var urlCreatePost = "http://localhost:5500/CreatePost"
+var urlCatAttributes = "http://localhost:5500/getCatAttributes";
+var urlEditPost = "http://localhost:5500/EditPost";
+var urlUserID = "http://localhost:5500/getUserID";
 
 var emailAdd;
+var uID = "";
 
-function onLoad() {
+function onLoad_home() {
     var url = window.location.href;
     var str = url.split("?email=");
     emailAdd = str[1];
@@ -22,8 +26,35 @@ function onLoad() {
     } else if (emailAdd.includes("#")) {
         emailAdd = emailAdd.replace("#", "");
     }
-    setupCreatePost();
-    getAllPosts();
+
+    fetch(urlUserID, {
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+            "email": emailAdd
+        })
+
+    }).then(function (res) {
+        if (res.ok) {
+            res.json().then(function (data) {
+                console.log("Inside res.ok. User ID retrieved");
+                uID = data.response[0].idUsers;
+                getAllPosts();
+            }.bind(this));
+        }
+        else {
+            console.log("Error: Cannot get UserID");
+            res.json().then(function (data) {
+                console.log(data.message);
+            }.bind(this));
+        }
+    }).catch(function (err) {
+        alert("Error: No internet connection!");
+        console.log(err.message + ": No Internet Connection");
+    });
 }
 function setupCreatePost () {
     var ul = document.getElementById('news_card_list');
@@ -64,7 +95,7 @@ function getAllPosts() {
                 var json = data.response;
 
                 for (i = 0; i < numPost; i++) {
-                    createCard(json[i].UserName, json[i].Content, json[i].Headline, json[i].PostingType, json[i].money, json[i].idPosts, json[i].DatePosted, json[i].numLikes, json[i].Category, json[i].Attributes);
+                    createCard(json[i].UserName, json[i].Content, json[i].Headline, json[i].PostingType, json[i].money, json[i].idPosts, json[i].DatePosted, json[i].numLikes, json[i].Category, json[i].Attributes, json[i].UserID);
                 }
             });
 
@@ -76,7 +107,7 @@ function getAllPosts() {
 }
 
 // CREATE A NEW CARD FOR EVERY POST FROM SERVER (/getPosts)
-function createCard(user, content, headline, postingType, price, postID, date, likes, category, attributes) {
+function createCard(user, content, headline, postingType, price, postID, date, likes, category, attributes, userid) {
 
     /* Adding the cards from information from the database */
     var ul = document.getElementById('news_card_list');
@@ -159,27 +190,29 @@ function createCard(user, content, headline, postingType, price, postID, date, l
     divButtons.setAttribute('class', 'card-text');
     divCenter.appendChild(divButtons);
 
-    /* Close Post */
-    var btn_close = document.createElement("BUTTON");
-    btn_close.setAttribute("class", "btn btn-default btn-sm");
-    btn_close.setAttribute('onclick', "closePost(".concat(postID, ")"));
-    btn_close.setAttribute("id", "btnClose");
-    btn_close.style = "float:right;margin-bottom:3px;margin-right:0px;margin-top:0px;";
-    divButtons.appendChild(btn_close);
+    if (uID === userid) {
+        /* Close Post */
+        var btn_close = document.createElement("BUTTON");
+        btn_close.setAttribute("class", "btn btn-default btn-sm");
+        btn_close.setAttribute('onclick', "closePost(".concat(postID, ")"));
+        btn_close.setAttribute("id", "btnClose");
+        btn_close.style = "float:right;margin-bottom:3px;margin-right:0px;margin-top:0px;";
+        divButtons.appendChild(btn_close);
 
-    var imgClose = document.createElement('img');
-    imgClose.setAttribute('src', 'close.png');
-    imgClose.setAttribute('alt', 'Close');
-    imgClose.style = "float:center;width:20px; height:20px;";
-    btn_close.appendChild(imgClose);
+        var imgClose = document.createElement('img');
+        imgClose.setAttribute('src', 'close.png');
+        imgClose.setAttribute('alt', 'Close');
+        imgClose.style = "float:center;width:20px; height:20px;";
+        btn_close.appendChild(imgClose);
+    }
 
     /* Report */
     var btn_report = document.createElement("BUTTON");
     btn_report.setAttribute("id", "btnReport");
     btn_report.setAttribute("class", "btn btn-default btn-sm");
-    //btn_report.setAttribute("onclick", "getPostID(".concat(postID, ")"));
     btn_report.setAttribute("data-toggle", "modal");
     btn_report.setAttribute("data-target", "#myModalReport");
+    btn_report.setAttribute("onclick", "getIDReport(".concat(postID, ")"));
     btn_report.style = "float:left;margin-bottom:3px;margin-right:-20px;";
     divButtons.appendChild(btn_report);
 
@@ -189,18 +222,36 @@ function createCard(user, content, headline, postingType, price, postID, date, l
     imgFlag.style = "float:left;width:20px; height:20px;";
     btn_report.appendChild(imgFlag);
 
+    if (uID === userid) {
+        /* EDIT post */
+        var btn_editPost = document.createElement("BUTTON");
+        //btn_editPost.setAttribute('type', 'button');
+        btn_editPost.setAttribute("id", "btnEditPost");
+        btn_editPost.setAttribute("class", "btn btn-default btn-sm");
+        btn_editPost.setAttribute("data-toggle", "modal");
+        btn_editPost.setAttribute("data-target", "#myModalEditPost");
+        btn_editPost.setAttribute("onclick", "getSelectedPost(".concat(postID, ")"));
+        btn_editPost.style = "float:right;margin-bottom:3px;margin-right:1px;margin-top:3px;";
+        divButtons.appendChild(btn_editPost);
+
+        var imgEdit = document.createElement('img');
+        imgEdit.setAttribute('src', 'Edit.png');
+        imgEdit.setAttribute('alt', 'Edit Post');
+        imgEdit.style = "float:left;width:17px; height:17px;";
+        btn_editPost.appendChild(imgEdit);
+    }
 
     var divFooter = document.createElement('div');
     divFooter.setAttribute('class', 'card-footer');
-    divFooter.style = "height:60px;";
+    divFooter.style = "height:45px;";
     divCenter.appendChild(divFooter);
 
     /* LIKE/INTERESTED */
     var aHeart = document.createElement('BUTTON');
     aHeart.setAttribute('class', 'btn btn-default btn-sm');
     aHeart.setAttribute('onclick', "clickInterested(".concat(postID, ")"));
-    aHeart.style = "float:left; outline:none; border: 0; background: transparent; margin-left:0px; margin-top:-3px;";
-    divButtons.appendChild(aHeart);
+    aHeart.style = "float:center; outline:none; border: 0; background: transparent; margin-left:310px; margin-top:-13px;";
+    divFooter.appendChild(aHeart);
 
     var imgHeart = document.createElement('img');
     imgHeart.setAttribute('src', 'heart.png');
@@ -210,8 +261,13 @@ function createCard(user, content, headline, postingType, price, postID, date, l
 
     var txtlikes = document.createElement("text");
     txtlikes.setAttribute("id", "txtLikes".concat(postID));
-    txtlikes.innerHTML = likes.toString().concat(" likes");
-    txtlikes.style = "float:left;margin-left:15px;font-size:14px;color:grey;";
+    if (likes == "1") {
+        txtlikes.innerHTML = likes.toString().concat(" like");
+    }
+    else {
+        txtlikes.innerHTML = likes.toString().concat(" likes");
+    }
+    txtlikes.style = "float:center;margin-left:-12px;font-size:14px;color:grey;";
     divFooter.appendChild(txtlikes);
 
     /* Date Posted */
@@ -228,7 +284,7 @@ function createCard(user, content, headline, postingType, price, postID, date, l
     divComments.setAttribute('class', 'btn btn-outline-primary btn-md');
     divComments.setAttribute("data-toggle", "modal");
     divComments.setAttribute("data-target", "#myCommentsModal");
-    divComments.style = "float:center; margin-top:1px;margin-right:-20%;height:40px;";
+    divComments.style = "float:right;margin-bottom:7px;margin-right:195px;margin-top:-10px; height:40px;";
     divComments.setAttribute('onclick', "expandPost(".concat(postID, ")"));
     divComments.innerHTML = "Comments";
     divFooter.appendChild(divComments);
@@ -241,7 +297,17 @@ function createCard(user, content, headline, postingType, price, postID, date, l
     divCenter.appendChild(post_id);
 }
 
-function reportPost() {
+
+// SEND REPORT
+function getIDReport(id) {
+    $(document).ready(function () {
+        $('#sendReport').on('click', function (e) {
+            reportPost(parseInt(id));
+        });
+    });
+}
+
+function reportPost(postID) {
     var reportMsg = document.getElementById("in_report").value;
     fetch(urlReport, {
         method: "POST",
@@ -251,7 +317,7 @@ function reportPost() {
         },
         body: JSON.stringify({
             "message": reportMsg,
-            "postId": parseInt(document.getElementById("postIDHidden").textContent)
+            "postId": postID
         })
 
     }).then(function (res) {
@@ -273,6 +339,7 @@ function reportPost() {
     });
 }
 
+// CLICK INTERESTED
 function clickInterested(postID) {
     $('.notifClass.dropdown-item').remove();
     postID = parseInt(postID);
@@ -292,7 +359,7 @@ function clickInterested(postID) {
             res.json().then(function (data) {
                 var likesid = "txtLikes".concat(postID);
                 var num = parseInt(document.getElementById(likesid).textContent);
-                if (num == 0) {
+                if (num === 0) {
                     document.getElementById(likesid).innerHTML = (num + 1).toString().concat(" like");
                 }
                 else {
@@ -312,17 +379,9 @@ function clickInterested(postID) {
         console.log(err.message + ": No Internet Connection");
     });
 }
-/*
-function getPostID(id) {
-    var ul = document.getElementById('postid');
-    var post_id = document.createElement("LABEL");
-    post_id.setAttribute("id", "postIDHidden");
-    post_id.style.display = "none";
-    post_id.innerHTML = id;
-    ul.appendChild(post_id);
-}
-*/
 
+
+// CLOSE/DELETE POST METHOD
 function closePost(postID) {
     if (window.confirm("Are you sure you want to delete this post?")) {
         postID = parseInt(postID);
@@ -358,6 +417,7 @@ function closePost(postID) {
     }
 }
 
+// GET ALL COMMENTS
 function getAllComments(postID) {
     postID = parseInt(postID);
     fetch(urlGetComment, {
@@ -392,7 +452,7 @@ function getAllComments(postID) {
     });
 }
 
-// expand post to get all comments
+// Expand post to get all comments
 function expandPost(postID) {
     var lm = document.getElementById("commentsFG");
     // comments
@@ -509,6 +569,7 @@ function expandComments(postID, num, json) {
     bodyW.appendChild(btnAddW);
 }
 
+// ADD COMMENT METHOD
 function addComment(postID, email, num) {
     $('.notifClass.dropdown-item').remove();
     var comment = document.getElementById("txtComment").value;
@@ -546,6 +607,7 @@ function addComment(postID, email, num) {
     $('#myCommentsModal').modal('hide');
 }
 
+// SORT POSTS based on either date or price
 function sortPosts(basedOn, order, upper, lower) {
     fetch(urlSortPosts, {
         method: "POST",
@@ -579,16 +641,18 @@ function sortPosts(basedOn, order, upper, lower) {
 
 }
 
+// GET SORTED POSTS
 function getSortedPosts(json) {
     $('.card_list_el').remove();
     if (json) {
         var num = Object.keys(json).length;
         for (i = 0; i < num; i++) {
-            createCard(json[i].UserName, json[i].Content, json[i].Headline, json[i].PostingType, json[i].money, json[i].idPosts, json[i].DatePosted, json[i].numLikes, json[i].Category, json[i].Attributes);
+            createCard(json[i].UserName, json[i].Content, json[i].Headline, json[i].PostingType, json[i].money, json[i].idPosts, json[i].DatePosted, json[i].numLikes, json[i].Category, json[i].Attributes, json[i].UserID);
         }
     }
 }
 
+// FILTER POSTS
 function filterPosts(category, type) {
     fetch(urlFilterPosts, {
         method: "POST",
@@ -655,33 +719,62 @@ function slider_onChange(str) {
     }
 }
 
-function createPost() {
-    var title = document.getElementById("in_title_newpost").value;
-    var desc = document.getElementById("in_content_newpost").value;
-    var price = document.getElementById("in_price_newpost").value;
-    var type = document.getElementsByName("postType");
-    var type_value = null;
-    if (type[0].checked) {
-        type_value = type[0].value;
-    }
-    else if (type[1].checked) {
-        type_value = type[1].value;
+// CREATE NEW POST
+function createPost(postID) {
+    if (!postID) {
+        var title = document.getElementById("in_title_newpost").value;
+        var desc = document.getElementById("in_content_newpost").value;
+        var price = document.getElementById("in_price_newpost").value;
+        var type = document.getElementsByName("postType");
+        var type_value = null;
+        if (type[0].checked) {
+            type_value = type[0].value;
+        }
+        else if (type[1].checked) {
+            type_value = type[1].value;
+        }
+        else {
+            alert("Not enough information provided");
+            document.getElementById("postClose").click();
+            return;
+        }
+
+        // Only category is optional
+        if (!price || !title || !desc) {
+            alert("Not enough information provided");
+            document.getElementById("postClose").click();
+            return;
+        }
+        var attributes = null;
+        var category = document.getElementById("pickedCategory").value;
     }
     else {
-        alert("Not enough information provided");
-        document.getElementById("postClose").click();
-        return;
-    }
+        var title = document.getElementById("in_title_editpost").value;
+        var desc = document.getElementById("in_content_editpost").value;
+        var price = document.getElementById("in_price_editpost").value;
+        var type = document.getElementsByName("editType");
+        var type_value = null;
+        if (type[0].checked) {
+            type_value = type[0].value;
+        }
+        else if (type[1].checked) {
+            type_value = type[1].value;
+        }
+        else {
+            alert("Not enough information provided for editing");
+            document.getElementById("postEditClose").click();
+            return;
+        }
 
-    // Only category is optional
-    if (!price || !title || !desc) {
-        alert("Not enough information provided");
-        document.getElementById("postClose").click();
-        return;
+        // Only category is optional
+        if (!price || !title || !desc) {
+            alert("HERE2 Not enough information provided for editing");
+            document.getElementById("postEditClose").click();
+            return;
+        }
+        var attributes = null;
+        var category = document.getElementById("pickedEditCategory").value;
     }
-    var attributes = null;
-    var category = document.getElementById("pickedCategory").value;
-
     // make string for attributes according to the category
     if (category === "Ride") {
         attributes = "";
@@ -715,6 +808,15 @@ function createPost() {
     }
     if (category) {
         attributes = attributes.concat("Contact Info: ", document.getElementById("info").value);
+    }
+
+    if (!postID) {
+
+    }
+    else {
+        editPost(title, desc, price, type_value, category, attributes, postID);
+        closeEditPostModal();
+        return;
     }
 
     // send to server
@@ -759,17 +861,25 @@ function createPost() {
 
 // expand create new post modal to show attributes related to a category
 // UI for all attributes
-function expandCreatePModal(category) {
-
+function expandCreatePModal(category, edit) {
     // remove elements if clicked on a category again
     $('.catDiv').remove();
 
+    if (edit) {
+        var pickedCategory = "pickedEditCategory";
+        var fieldset = "fieldset_Edit";
+    }
+    else {
+        var pickedCategory = "pickedCategory";
+        var fieldset = "fieldset_createNP";
+    }
+
     if (category === 'Ride') {
-        document.getElementById("pickedCategory").value = "Ride";
+        document.getElementById(pickedCategory).value = "Ride";
 
         var rideDiv = document.createElement("div");
         rideDiv.setAttribute('class', 'catDiv');
-        document.getElementById("fieldset_createNP").appendChild(rideDiv);
+        document.getElementById(fieldset).appendChild(rideDiv);
 
         // From (location) & To
         var fromFG = document.createElement("div");
@@ -844,7 +954,7 @@ function expandCreatePModal(category) {
 
         var foodDiv = document.createElement("div");
         foodDiv.setAttribute('class', 'catDiv');
-        document.getElementById("fieldset_createNP").appendChild(foodDiv);
+        document.getElementById(fieldset).appendChild(foodDiv);
 
         // Restaurant & Contact Info
         var resFG = document.createElement("div");
@@ -903,7 +1013,7 @@ function expandCreatePModal(category) {
 
         var tutorDiv = document.createElement("div");
         tutorDiv.setAttribute('class', 'catDiv');
-        document.getElementById("fieldset_createNP").appendChild(tutorDiv);
+        document.getElementById(fieldset).appendChild(tutorDiv);
 
         // Class Name
         var classFG = document.createElement("div");
@@ -964,7 +1074,7 @@ function expandCreatePModal(category) {
 
         var sitDiv = document.createElement("div");
         sitDiv.setAttribute('class', 'catDiv');
-        document.getElementById("fieldset_createNP").appendChild(sitDiv);
+        document.getElementById(fieldset).appendChild(sitDiv);
 
         // date
         var dateFG = document.createElement("div");
@@ -1005,7 +1115,7 @@ function expandCreatePModal(category) {
 
         var housingDiv = document.createElement("div");
         housingDiv.setAttribute('class', 'catDiv');
-        document.getElementById("fieldset_createNP").appendChild(housingDiv);
+        document.getElementById(fieldset).appendChild(housingDiv);
 
         // Location
         var locFG = document.createElement("div");
@@ -1080,7 +1190,7 @@ function expandCreatePModal(category) {
 
         var saleDiv = document.createElement("div");
         saleDiv.setAttribute('class', 'catDiv');
-        document.getElementById("fieldset_createNP").appendChild(saleDiv);
+        document.getElementById(fieldset).appendChild(saleDiv);
 
         // Item name and Contact info.
         var itemFG = document.createElement("div");
@@ -1144,6 +1254,7 @@ function expandCreatePModal(category) {
         newR.setAttribute('value', 'New');
         newLbl.appendChild(newR);
     }
+
 }
 
 // close new post modal and remove previous enteries
@@ -1156,6 +1267,18 @@ function closeNewPostModal() {
     type[0].checked = false;
     type[1].checked = false;
     document.getElementById("pickedCategory").value = null;
+}
+
+// close edit post modal and remove previous enteries
+function closeEditPostModal() {
+    $('.catDiv').remove();
+    document.getElementById("in_title_editpost").value = null;
+    document.getElementById("in_content_editpost").value = null;
+    document.getElementById("in_price_editpost").value = null;
+    var type = document.getElementsByName("postEditType");
+    type[0].checked = false;
+    type[1].checked = false;
+    document.getElementById("pickedEditCategory").value = null;
 }
 
 function showNotifications() {
@@ -1201,8 +1324,8 @@ function getNotifications() {
                     for (i = 0; i < length; i++) {
                         var ul = document.createElement("a");
                         ul.setAttribute('class', 'notifClass dropdown-item');
-                        ul.innerHTML = (json[i].Notification).toString();
-                        ul.style = "border-bottom: 1px solid #ccc; margin-left:-40px;font-color:black;";
+                        ul.innerHTML = (json[i].Notification);
+                        ul.style = "border-bottom: 1px solid #ccc; margin-left:-40px;color:#333399;";
                         document.getElementById("notif").appendChild(ul);
                         numNotifs++;
                     }
@@ -1241,7 +1364,7 @@ function goToProfile() {
 // show attributes in UI of post card
 function categoryModal(postID) {
     $('.catClass').remove();
-    fetch("http://localhost:5500/getCatAttributes", {
+    fetch(urlCatAttributes, {
         method: "POST",
         headers: {
             'Accept': 'application/json',
@@ -1308,4 +1431,56 @@ function categoryModal(postID) {
         alert("Error: No internet connection!");
         console.log(err.message + ": No Internet Connection");
     });
+}
+
+
+// EDIT POST method
+function getSelectedPost(postID) {
+    $(document).ready(function () {
+        $('#postEditPublish').on('click', function (e) {
+            createPost(parseInt(postID));
+        });
+    });
+}
+
+// EDIT POST method
+function editPost(title, desc, price, type_value, category, attributes, postID) {
+
+    // send to server
+    fetch(urlEditPost, {
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+            "PostId": postID,
+            "Headline": title,
+            "Content": desc,
+            "PostingType": type_value,
+            "money": price,
+            "Category": category,
+            "Attributes": attributes
+        })
+
+    }).then(function (res) {
+        if (res.ok) {
+            res.json().then(function (data) {
+                $('.card_list_el').remove();
+                getAllPosts();
+                console.log("Inside res.ok. Post edited");
+                console.log("Editing Post successful!");
+            }.bind(this));
+        }
+        else {
+            alert("Error: editing post unsuccessful!");
+            res.json().then(function (data) {
+                console.log(data.message);
+            }.bind(this));
+        }
+    }).catch(function (err) {
+        alert("Error: No internet connection!");
+        console.log(err.message + ": No Internet Connection");
+    });
+
 }
