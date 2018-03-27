@@ -54,7 +54,6 @@ function onLoad_home() {
         alert("Error: No internet connection!");
         console.log(err.message + ": No Internet Connection");
     });
-    getAllPosts();
 }
 
 function getAllPosts() {
