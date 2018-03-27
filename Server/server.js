@@ -1213,6 +1213,32 @@ app.post('/EditPost', function (req, res) {
     });
 });
 
+// Get user id from email
+app.post('/getUserID', function (req, res) {
+    var email = req.body.email;
+    let query = "SELECT idUsers FROM Users WHERE Email = ?";
+
+    // get user id connected to the email
+    db.query(query, email, function (error, response) {
+        console.log(response);
+        if (error) {
+            res.send(JSON.stringify({
+                "status": 500,
+                "error": error,
+                "response": null,
+                "message": "Internal server error"
+            }));
+        }
+        else {
+            res.send(JSON.stringify({
+                "status": 200,
+                "error": null,
+                "response": response,
+                "message": "Success! User ID retrieved!"
+            }));
+        }
+    });
+});
 
 // Could be used for populating edit post modal
 // get details of one particular post 

@@ -9,8 +9,10 @@ var urlFilterPosts = "http://localhost:5500/getFilteredPosts"
 var urlCreatePost = "http://localhost:5500/CreatePost"
 var urlCatAttributes = "http://localhost:5500/getCatAttributes";
 var urlEditPost = "http://localhost:5500/EditPost";
+var urlUserID = "http://localhost:5500/getUserID";
 
 var emailAdd;
+var uID = "";
 
 function onLoad_home() {
     var url = window.location.href;
@@ -24,7 +26,35 @@ function onLoad_home() {
     } else if (emailAdd.includes("#")) {
         emailAdd = emailAdd.replace("#", "");
     }
-    getAllPosts();
+
+    fetch(urlUserID, {
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+            "email": emailAdd
+        })
+
+    }).then(function (res) {
+        if (res.ok) {
+            res.json().then(function (data) {
+                console.log("Inside res.ok. User ID retrieved");
+                uID = data.response[0].idUsers;
+                getAllPosts();
+            }.bind(this));
+        }
+        else {
+            console.log("Error: Cannot get UserID");
+            res.json().then(function (data) {
+                console.log(data.message);
+            }.bind(this));
+        }
+    }).catch(function (err) {
+        alert("Error: No internet connection!");
+        console.log(err.message + ": No Internet Connection");
+    });
 }
 
 function getAllPosts() {
@@ -36,7 +66,7 @@ function getAllPosts() {
                 var json = data.response;
 
                 for (i = 0; i < numPost; i++) {
-                    createCard(json[i].UserName, json[i].Content, json[i].Headline, json[i].PostingType, json[i].money, json[i].idPosts, json[i].DatePosted, json[i].numLikes, json[i].Category, json[i].Attributes);
+                    createCard(json[i].UserName, json[i].Content, json[i].Headline, json[i].PostingType, json[i].money, json[i].idPosts, json[i].DatePosted, json[i].numLikes, json[i].Category, json[i].Attributes, json[i].UserID);
                 }
             });
 
@@ -48,7 +78,7 @@ function getAllPosts() {
 }
 
 // CREATE A NEW CARD FOR EVERY POST FROM SERVER (/getPosts)
-function createCard(user, content, headline, postingType, price, postID, date, likes, category, attributes) {
+function createCard(user, content, headline, postingType, price, postID, date, likes, category, attributes, userid) {
 
     /* Adding the cards from information from the database */
     var ul = document.getElementById('news_card_list');
@@ -131,19 +161,21 @@ function createCard(user, content, headline, postingType, price, postID, date, l
     divButtons.setAttribute('class', 'card-text');
     divCenter.appendChild(divButtons);
 
-    /* Close Post */
-    var btn_close = document.createElement("BUTTON");
-    btn_close.setAttribute("class", "btn btn-default btn-sm");
-    btn_close.setAttribute('onclick', "closePost(".concat(postID, ")"));
-    btn_close.setAttribute("id", "btnClose");
-    btn_close.style = "float:right;margin-bottom:3px;margin-right:0px;margin-top:0px;";
-    divButtons.appendChild(btn_close);
+    if (uID === userid) {
+        /* Close Post */
+        var btn_close = document.createElement("BUTTON");
+        btn_close.setAttribute("class", "btn btn-default btn-sm");
+        btn_close.setAttribute('onclick', "closePost(".concat(postID, ")"));
+        btn_close.setAttribute("id", "btnClose");
+        btn_close.style = "float:right;margin-bottom:3px;margin-right:0px;margin-top:0px;";
+        divButtons.appendChild(btn_close);
 
-    var imgClose = document.createElement('img');
-    imgClose.setAttribute('src', 'close.png');
-    imgClose.setAttribute('alt', 'Close');
-    imgClose.style = "float:center;width:20px; height:20px;";
-    btn_close.appendChild(imgClose);
+        var imgClose = document.createElement('img');
+        imgClose.setAttribute('src', 'close.png');
+        imgClose.setAttribute('alt', 'Close');
+        imgClose.style = "float:center;width:20px; height:20px;";
+        btn_close.appendChild(imgClose);
+    }
 
     /* Report */
     var btn_report = document.createElement("BUTTON");
@@ -151,6 +183,7 @@ function createCard(user, content, headline, postingType, price, postID, date, l
     btn_report.setAttribute("class", "btn btn-default btn-sm");
     btn_report.setAttribute("data-toggle", "modal");
     btn_report.setAttribute("data-target", "#myModalReport");
+    btn_report.setAttribute("onclick", "getIDReport(".concat(postID, ")"));
     btn_report.style = "float:left;margin-bottom:3px;margin-right:-20px;";
     divButtons.appendChild(btn_report);
 
@@ -160,23 +193,24 @@ function createCard(user, content, headline, postingType, price, postID, date, l
     imgFlag.style = "float:left;width:20px; height:20px;";
     btn_report.appendChild(imgFlag);
 
-    /* EDIT post */
-    var btn_editPost = document.createElement("BUTTON");
-    //btn_editPost.setAttribute('type', 'button');
-    btn_editPost.setAttribute("id", "btnEditPost");
-    btn_editPost.setAttribute("class", "btn btn-default btn-sm");
-    btn_editPost.setAttribute("data-toggle", "modal");
-    btn_editPost.setAttribute("data-target", "#myModalEditPost");
-    btn_editPost.setAttribute("onclick", "getSelectedPost(".concat(postID, ")"));
-    btn_editPost.style = "float:right;margin-bottom:3px;margin-right:1px;margin-top:3px;";
-    divButtons.appendChild(btn_editPost);
+    if (uID === userid) {
+        /* EDIT post */
+        var btn_editPost = document.createElement("BUTTON");
+        //btn_editPost.setAttribute('type', 'button');
+        btn_editPost.setAttribute("id", "btnEditPost");
+        btn_editPost.setAttribute("class", "btn btn-default btn-sm");
+        btn_editPost.setAttribute("data-toggle", "modal");
+        btn_editPost.setAttribute("data-target", "#myModalEditPost");
+        btn_editPost.setAttribute("onclick", "getSelectedPost(".concat(postID, ")"));
+        btn_editPost.style = "float:right;margin-bottom:3px;margin-right:1px;margin-top:3px;";
+        divButtons.appendChild(btn_editPost);
 
-    var imgEdit = document.createElement('img');
-    imgEdit.setAttribute('src', 'Edit.png');
-    imgEdit.setAttribute('alt', 'Edit Post');
-    imgEdit.style = "float:left;width:17px; height:17px;";
-    btn_editPost.appendChild(imgEdit);
-
+        var imgEdit = document.createElement('img');
+        imgEdit.setAttribute('src', 'Edit.png');
+        imgEdit.setAttribute('alt', 'Edit Post');
+        imgEdit.style = "float:left;width:17px; height:17px;";
+        btn_editPost.appendChild(imgEdit);
+    }
 
     var divFooter = document.createElement('div');
     divFooter.setAttribute('class', 'card-footer');
@@ -234,7 +268,17 @@ function createCard(user, content, headline, postingType, price, postID, date, l
     divCenter.appendChild(post_id);
 }
 
-function reportPost() {
+
+// SEND REPORT 
+function getIDReport(id) {
+    $(document).ready(function () {
+        $('#sendReport').on('click', function (e) {
+            reportPost(parseInt(id));
+        });
+    });
+}
+
+function reportPost(postID) {
     var reportMsg = document.getElementById("in_report").value;
     fetch(urlReport, {
         method: "POST",
@@ -244,7 +288,7 @@ function reportPost() {
         },
         body: JSON.stringify({
             "message": reportMsg,
-            "postId": parseInt(document.getElementById("postIDHidden").textContent)
+            "postId": postID
         })
 
     }).then(function (res) {
@@ -266,6 +310,7 @@ function reportPost() {
     });
 }
 
+// CLICK INTERESTED
 function clickInterested(postID) {
     $('.notifClass.dropdown-item').remove();
     postID = parseInt(postID);
@@ -305,17 +350,9 @@ function clickInterested(postID) {
         console.log(err.message + ": No Internet Connection");
     });
 }
-/*
-function getPostID(id) {
-    var ul = document.getElementById('postid');
-    var post_id = document.createElement("LABEL");
-    post_id.setAttribute("id", "postIDHidden");
-    post_id.style.display = "none";
-    post_id.innerHTML = id;
-    ul.appendChild(post_id);
-}
-*/
 
+
+// CLOSE/DELETE POST METHOD
 function closePost(postID) {
     if (window.confirm("Are you sure you want to delete this post?")) {
         postID = parseInt(postID);
@@ -351,6 +388,7 @@ function closePost(postID) {
     }
 }
 
+// GET ALL COMMENTS 
 function getAllComments(postID) {
     postID = parseInt(postID);
     fetch(urlGetComment, {
@@ -385,7 +423,7 @@ function getAllComments(postID) {
     });
 }
 
-// expand post to get all comments
+// Expand post to get all comments
 function expandPost(postID) {
     var lm = document.getElementById("commentsFG");
     // comments
@@ -502,6 +540,7 @@ function expandComments(postID, num, json) {
     bodyW.appendChild(btnAddW);
 }
 
+// ADD COMMENT METHOD
 function addComment(postID, email, num) {
     $('.notifClass.dropdown-item').remove();
     var comment = document.getElementById("txtComment").value;
@@ -539,6 +578,7 @@ function addComment(postID, email, num) {
     $('#myCommentsModal').modal('hide');
 }
 
+// SORT POSTS based on either date or price
 function sortPosts(basedOn, order, upper, lower) {
     fetch(urlSortPosts, {
         method: "POST",
@@ -572,16 +612,18 @@ function sortPosts(basedOn, order, upper, lower) {
 
 }
 
+// GET SORTED POSTS
 function getSortedPosts(json) {
     $('.card_list_el').remove();
     if (json) {
         var num = Object.keys(json).length;
         for (i = 0; i < num; i++) {
-            createCard(json[i].UserName, json[i].Content, json[i].Headline, json[i].PostingType, json[i].money, json[i].idPosts, json[i].DatePosted, json[i].numLikes, json[i].Category, json[i].Attributes);
+            createCard(json[i].UserName, json[i].Content, json[i].Headline, json[i].PostingType, json[i].money, json[i].idPosts, json[i].DatePosted, json[i].numLikes, json[i].Category, json[i].Attributes, json[i].UserID);
         }
     }
 }
 
+// FILTER POSTS
 function filterPosts(category, type) {
     fetch(urlFilterPosts, {
         method: "POST",
@@ -648,6 +690,7 @@ function slider_onChange(str) {
     }
 }
 
+// CREATE NEW POST
 function createPost(postID) {
     if (!postID) {
         var title = document.getElementById("in_title_newpost").value;
@@ -1253,7 +1296,7 @@ function getNotifications() {
                         var ul = document.createElement("a");
                         ul.setAttribute('class', 'notifClass dropdown-item');
                         ul.innerHTML = (json[i].Notification);
-                        ul.style = "border-bottom: 1px solid #ccc; margin-left:-40px;font-color:#333399;";
+                        ul.style = "border-bottom: 1px solid #ccc; margin-left:-40px;color:#333399;";
                         document.getElementById("notif").appendChild(ul);
                         numNotifs++;
                     }
