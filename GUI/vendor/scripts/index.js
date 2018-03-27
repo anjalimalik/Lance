@@ -118,8 +118,6 @@ function btn_register_continue() {
             console.log(err.message + ": No Internet Connection");
         }.bind(this));
     }
-    var u = 'profile.html?email='.concat(_email);
-    window.location.href = u;
 
     return;
 }
@@ -180,7 +178,7 @@ function btn_register_finish() {
         console.log(err.message + ": No Internet Connection");
     }.bind(this));
 
-    var u = 'profile.html?email='.concat(_email);
+    var u = 'profile.html?email='.concat(email);
     window.location.href = u;
 }
 
