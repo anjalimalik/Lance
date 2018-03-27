@@ -180,7 +180,8 @@ function btn_register_finish() {
         console.log(err.message + ": No Internet Connection");
     }.bind(this));
 
-
+    var u = 'profile.html?email='.concat(_email);
+    window.location.href = u;
 }
 
 function verifyEmail(_email) {
