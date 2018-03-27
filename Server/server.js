@@ -1304,7 +1304,7 @@ function uploadToS3(file) {
 
 app.post('/api/upload', function (req, res, next) {
 
-    const element1 = req.body.element1;
+    //const element1 = req.body.element1;
     var busboy = new Busboy({ headers: req.headers });
     // The file upload has completed
     busboy.on('finish', function () {

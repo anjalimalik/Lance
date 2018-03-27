@@ -2,6 +2,7 @@ var email, pass, name, edu, skills, desc, contact, links, pic, docs;
 var urlChangePass = "http://localhost:5500/changePassword"
 var urlNotifications = "http://localhost:5500/getNotifications"
 var urlGetProfile = "http://localhost:5500/getProfile"
+var urlUpload = "http://localhost:5500/api/upload";
 var numNotifs = 0;
 
 function onLoad_profile() {
@@ -293,4 +294,23 @@ function btn_getNotifications() {
         console.log(err.message + ": No Internet Connection");
     });
 
+}
+
+function uploadPicture() {
+
+    var input = document.querySelector('input[type="file"]')
+    var data = new FormData()
+    data.append('file', input.files[0])
+    //data.append('user', 'hubot')
+
+    fetch(urlUpload, {
+        method: 'POST',
+        body: ({'element2': data})
+    }).then(function (res) {
+        console.log("Inside res function");
+        alert("Image Uploaded");
+    }).catch(function (err) {
+        alert("Error: No internet connection!");
+        console.log(err.message + ": No Internet Connection");
+    });
 }
