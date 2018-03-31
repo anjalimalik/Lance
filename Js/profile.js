@@ -13,10 +13,12 @@ function onLoad_profile() {
     var url = window.location.href;
     var str = url.split("?email=");
     email = str[1];
-    email = email.replace("#", "");
-    if (email === null || email === "" || email === "undefined") {
+    if (email === null) {
         alert("You have to be logged in first!");
         window.location.href = "index.html";
+    }
+    else if (email.includes("#")) {
+        email = email.replace("#", "");
     }
 
     fetch(urlGetProfile, {
