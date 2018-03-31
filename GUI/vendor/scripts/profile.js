@@ -2,9 +2,10 @@ var email, pass, name, edu, skills, desc, contact, links, pic, docs;
 var urlChangePass = "http://localhost:5500/changePassword"
 var urlNotifications = "http://localhost:5500/getNotifications"
 var urlGetProfile = "http://localhost:5500/getProfile"
+var urlUpload = "http://localhost:5500/api/upload";
 var numNotifs = 0;
 
-function body_onload() {
+function onLoad_profile() {
 
     optionsToggle.style.display = "none";
     notificationsToggle.style.display = "none";
@@ -93,7 +94,7 @@ function displayNotifications() {
     // function to get notifications
     btn_getNotifications();
 }
-/*
+
 $(function () {
     $(":file").change(function () {
         if (this.files && this.files[0]) {
@@ -107,7 +108,7 @@ $(function () {
 function imageIsLoaded(e) {
     $('#img_profile').attr('src', e.target.result);
 }
-*/
+
 function populate_profile() {
     document.getElementById("profile_name").innerHTML = name;
     document.getElementById("profile_email").innerHTML = email;
@@ -169,7 +170,7 @@ function passMatch() {
     }
 }
 
-// clear settings modal 
+// clear settings modal
 function clearSetModal() {
     in_profile_currentPass.value = ""
     in_profile_newPass.value = "";
@@ -178,7 +179,7 @@ function clearSetModal() {
     $('.text.text-danger').remove();
 }
 
-// Password change function 
+// Password change function
 function btn_passChange() {
     var currentPass = in_profile_currentPass.value;
     var newPass = in_profile_newPass.value;
@@ -293,4 +294,23 @@ function btn_getNotifications() {
         console.log(err.message + ": No Internet Connection");
     });
 
+}
+
+function uploadPicture() {
+
+    var input = document.querySelector('input[type="file"]')
+    var data = new FormData()
+    data.append('file', input.files[0])
+    //data.append('user', 'hubot')
+
+    fetch(urlUpload, {
+        method: 'POST',
+        body: ({'element2': data})
+    }).then(function (res) {
+        console.log("Inside res function");
+        alert("Image Uploaded");
+    }).catch(function (err) {
+        alert("Error: No internet connection!");
+        console.log(err.message + ": No Internet Connection");
+    });
 }

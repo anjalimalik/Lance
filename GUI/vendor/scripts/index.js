@@ -7,7 +7,7 @@ var email, pass, fName, lName, edu, skills, desc, contact, links, pic, docs, nam
 var verifyFlag;
 
 //LOGIN
-function on_load() {
+function onLoad_index() {
     document.getElementById("in_login_pass")
         .addEventListener("keyup", function (event) {
             event.preventDefault();
@@ -40,6 +40,7 @@ function btn_login() {
                 if(confirm("Login successful!")) {
                     var u = 'profile.html?email='.concat(_email);
                     window.location.href = u;
+                    //window.location.href = 'home.html';
                 }
                 else {
                     var u = 'profile.html?email='.concat(_email);
@@ -117,6 +118,7 @@ function btn_register_continue() {
             console.log(err.message + ": No Internet Connection");
         }.bind(this));
     }
+
     return;
 }
 function btn_register_finish() {
@@ -136,8 +138,6 @@ function btn_register_finish() {
     localStorage.setItem('contact', contact);
     localStorage.setItem('desc', desc);
     localStorage.setItem('skills', skills);
-
-    window.location.href = "profile.html";
 
     fetch(urlCreateProfile, {
         method: "POST",
@@ -178,7 +178,8 @@ function btn_register_finish() {
         console.log(err.message + ": No Internet Connection");
     }.bind(this));
 
-
+    var u = 'profile.html?email='.concat(email);
+    window.location.href = u;
 }
 
 function verifyEmail(_email) {
