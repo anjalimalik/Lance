@@ -63,8 +63,8 @@ function onLoad_profile() {
     });
 
     var img = new Image();
-    img.src = "./Pictures/spinner.jpg";
-    document.getElementById("img_profile").src = "./Pictures/user_icon.jpg";
+    img.src = "./../css/Assets/spinner.jpg";
+    document.getElementById("img_profile").src = "./../css/Assets/user_icon.jpg";
 }
 
 function goToHome() {
@@ -270,7 +270,7 @@ function btn_getNotifications() {
                         var ul = document.createElement("a");
                         ul.setAttribute('class', 'notifClass dropdown-item');
                         ul.innerHTML = (json[i].Notification).toString();
-                        ul.style = "border-bottom: 1px solid #ccc; margin-left:-40px;font-color:black;";
+                        ul.style = "border-bottom: 1px solid #ccc; margin-left:-40px;color:#333399;";
                         document.getElementById("notif").appendChild(ul);
                         numNotifs++;
                     }

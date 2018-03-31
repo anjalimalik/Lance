@@ -170,7 +170,7 @@ function createCard(user, content, headline, postingType, price, postID, date, l
         divButtons.appendChild(btn_close);
 
         var imgClose = document.createElement('img');
-        imgClose.setAttribute('src', './css/Assets/close.png');
+        imgClose.setAttribute('src', './../css/Assets/close.png');
         imgClose.setAttribute('alt', 'Close');
         imgClose.style = "float:center;width:20px; height:20px;";
         btn_close.appendChild(imgClose);
@@ -187,7 +187,7 @@ function createCard(user, content, headline, postingType, price, postID, date, l
     divButtons.appendChild(btn_report);
 
     var imgFlag = document.createElement('img');
-    imgFlag.setAttribute('src', './css/Assets/flag.png');
+    imgFlag.setAttribute('src', './../css/Assets/flag.png');
     imgFlag.setAttribute('alt', 'Report');
     imgFlag.style = "float:left;width:20px; height:20px;";
     btn_report.appendChild(imgFlag);
@@ -205,7 +205,7 @@ function createCard(user, content, headline, postingType, price, postID, date, l
         divButtons.appendChild(btn_editPost);
 
         var imgEdit = document.createElement('img');
-        imgEdit.setAttribute('src', './css/Assets/Edit.png');
+        imgEdit.setAttribute('src', './../css/Assets/Edit.png');
         imgEdit.setAttribute('alt', 'Edit Post');
         imgEdit.style = "float:left;width:17px; height:17px;";
         btn_editPost.appendChild(imgEdit);
@@ -224,7 +224,7 @@ function createCard(user, content, headline, postingType, price, postID, date, l
     divFooter.appendChild(aHeart);
 
     var imgHeart = document.createElement('img');
-    imgHeart.setAttribute('src', './css/Assets/heart.png');
+    imgHeart.setAttribute('src', './../css/Assets/heart.png');
     imgHeart.setAttribute('alt', 'Like');
     imgHeart.style = "float:center;width:30px; height:30px;";
     aHeart.appendChild(imgHeart);
