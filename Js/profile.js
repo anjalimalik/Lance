@@ -13,10 +13,12 @@ function onLoad_profile() {
     var url = window.location.href;
     var str = url.split("?email=");
     email = str[1];
-    email = email.replace("#", "");
-    if (email === null || email === "" || email === "undefined") {
+    if (email === null) {
         alert("You have to be logged in first!");
         window.location.href = "index.html";
+    }
+    else if (email.includes("#")) {
+        email = email.replace("#", "");
     }
 
     fetch(urlGetProfile, {
@@ -61,8 +63,8 @@ function onLoad_profile() {
     });
 
     var img = new Image();
-    img.src = "./Pictures/spinner.jpg";
-    document.getElementById("img_profile").src = "./Pictures/user_icon.jpg";
+    img.src = "./../css/Assets/spinner.jpg";
+    document.getElementById("img_profile").src = "./../css/Assets/user_icon.jpg";
 }
 
 function goToHome() {
@@ -268,7 +270,7 @@ function btn_getNotifications() {
                         var ul = document.createElement("a");
                         ul.setAttribute('class', 'notifClass dropdown-item');
                         ul.innerHTML = (json[i].Notification).toString();
-                        ul.style = "border-bottom: 1px solid #ccc; margin-left:-40px;font-color:black;";
+                        ul.style = "border-bottom: 1px solid #ccc; margin-left:-40px;color:#333399;";
                         document.getElementById("notif").appendChild(ul);
                         numNotifs++;
                     }

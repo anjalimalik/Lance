@@ -82,16 +82,16 @@ function createCard(user, content, headline, postingType, price, postID, date, l
     /* Adding the cards from information from the database */
     var ul = document.getElementById('news_card_list');
 
-    var li = document.createElement('li');
-    li.setAttribute('class', 'card_list_el');
-    li.setAttribute('id', 'card_child');
-    li.style = "width:70%; margin-left: 100px;";
-    ul.appendChild(li);
+    var cardDiv = document.createElement('div');
+    cardDiv.setAttribute('class', 'card_list_el');
+    cardDiv.setAttribute('id', 'card_child');
+    cardDiv.style = "width:70%; margin-left: 7%;";
+    ul.appendChild(cardDiv);
 
     var divCenter = document.createElement("div");
     divCenter.setAttribute("id", "div".concat(postID));
     divCenter.setAttribute('class', 'card text-center');
-    li.appendChild(divCenter);
+    cardDiv.appendChild(divCenter);
 
     var divHeader = document.createElement("div");
     divHeader.setAttribute("id", "head".concat(postID));
@@ -102,7 +102,7 @@ function createCard(user, content, headline, postingType, price, postID, date, l
     /* Price */
     var divTextPrice = document.createElement("kbd");
     divTextPrice.innerHTML = "$".concat(price);
-    divTextPrice.style = "background-color:lightgrey;color:black;float:right;margin-top:-3px;margin-right:-7px;font-size: 15px;";
+    divTextPrice.style = "background-color:lightgrey;color:black;float:right;margin-top:-3px;margin-right:-1%;font-size: 15px;";
     divHeader.appendChild(divTextPrice);
 
     if (category) {
@@ -121,7 +121,7 @@ function createCard(user, content, headline, postingType, price, postID, date, l
         btnCat.setAttribute("data-toggle", "modal");
         btnCat.setAttribute("data-target", "#categoryModal");
         btnCat.innerHTML = category;
-        btnCat.style = "text-align:center;border-color:#333399;float:right;margin-top:-7px;margin-right:7px;font-size:12px;height:35px;";
+        btnCat.style = "text-align:center;border-color:#333399;float:right;margin-top:-7px;margin-right:1%;font-size:12px;height:35px;";
         divHeader.appendChild(btnCat);
     }
 
@@ -166,11 +166,11 @@ function createCard(user, content, headline, postingType, price, postID, date, l
         btn_close.setAttribute("class", "btn btn-default btn-sm");
         btn_close.setAttribute('onclick', "closePost(".concat(postID, ")"));
         btn_close.setAttribute("id", "btnClose");
-        btn_close.style = "float:right;margin-bottom:3px;margin-right:0px;margin-top:0px;";
+        btn_close.style = "float:right;margin-bottom:1%;margin-right:0%;margin-top:0%;";
         divButtons.appendChild(btn_close);
 
         var imgClose = document.createElement('img');
-        imgClose.setAttribute('src', './css/Assets/close.png');
+        imgClose.setAttribute('src', './../css/Assets/close.png');
         imgClose.setAttribute('alt', 'Close');
         imgClose.style = "float:center;width:20px; height:20px;";
         btn_close.appendChild(imgClose);
@@ -183,11 +183,11 @@ function createCard(user, content, headline, postingType, price, postID, date, l
     btn_report.setAttribute("data-toggle", "modal");
     btn_report.setAttribute("data-target", "#myModalReport");
     btn_report.setAttribute("onclick", "getIDReport(".concat(postID, ")"));
-    btn_report.style = "float:left;margin-bottom:3px;margin-right:-20px;";
+    btn_report.style = "float:left;margin-bottom:1%;margin-right:-5%;";
     divButtons.appendChild(btn_report);
 
     var imgFlag = document.createElement('img');
-    imgFlag.setAttribute('src', './css/Assets/flag.png');
+    imgFlag.setAttribute('src', './../css/Assets/flag.png');
     imgFlag.setAttribute('alt', 'Report');
     imgFlag.style = "float:left;width:20px; height:20px;";
     btn_report.appendChild(imgFlag);
@@ -201,11 +201,11 @@ function createCard(user, content, headline, postingType, price, postID, date, l
         btn_editPost.setAttribute("data-toggle", "modal");
         btn_editPost.setAttribute("data-target", "#myModalEditPost");
         btn_editPost.setAttribute("onclick", "getSelectedPost(".concat(postID, ")"));
-        btn_editPost.style = "float:right;margin-bottom:3px;margin-right:1px;margin-top:3px;";
+        btn_editPost.style = "float:right;margin-bottom:1%;margin-right:1%;margin-top:0%;";
         divButtons.appendChild(btn_editPost);
 
         var imgEdit = document.createElement('img');
-        imgEdit.setAttribute('src', './css/Assets/Edit.png');
+        imgEdit.setAttribute('src', './../css/Assets/Edit.png');
         imgEdit.setAttribute('alt', 'Edit Post');
         imgEdit.style = "float:left;width:17px; height:17px;";
         btn_editPost.appendChild(imgEdit);
@@ -220,11 +220,11 @@ function createCard(user, content, headline, postingType, price, postID, date, l
     var aHeart = document.createElement('BUTTON');
     aHeart.setAttribute('class', 'btn btn-default btn-sm');
     aHeart.setAttribute('onclick', "clickInterested(".concat(postID, ")"));
-    aHeart.style = "float:center; outline:none; border: 0; background: transparent; margin-left:310px; margin-top:-13px;";
+    aHeart.style = "float:center; outline:none; border: 0; background: transparent; margin-left:35%; margin-top:-2%;";
     divFooter.appendChild(aHeart);
 
     var imgHeart = document.createElement('img');
-    imgHeart.setAttribute('src', './css/Assets/heart.png');
+    imgHeart.setAttribute('src', './../css/Assets/heart.png');
     imgHeart.setAttribute('alt', 'Like');
     imgHeart.style = "float:center;width:30px; height:30px;";
     aHeart.appendChild(imgHeart);
@@ -237,7 +237,7 @@ function createCard(user, content, headline, postingType, price, postID, date, l
     else {
         txtlikes.innerHTML = likes.toString().concat(" likes");
     }
-    txtlikes.style = "float:center;margin-left:-12px;font-size:14px;color:grey;";
+    txtlikes.style = "float:center;margin-left:-1%;font-size:14px;color:grey;";
     divFooter.appendChild(txtlikes);
 
     /* Date Posted */
@@ -254,7 +254,7 @@ function createCard(user, content, headline, postingType, price, postID, date, l
     divComments.setAttribute('class', 'btn btn-outline-primary btn-md');
     divComments.setAttribute("data-toggle", "modal");
     divComments.setAttribute("data-target", "#myCommentsModal");
-    divComments.style = "float:right;margin-bottom:7px;margin-right:195px;margin-top:-10px; height:40px;";
+    divComments.style = "float:right;margin-bottom:1%;margin-right:20%;margin-top:-1%; height:40px;";
     divComments.setAttribute('onclick', "expandPost(".concat(postID, ")"));
     divComments.innerHTML = "Comments";
     divFooter.appendChild(divComments);
