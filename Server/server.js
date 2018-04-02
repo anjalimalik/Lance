@@ -464,6 +464,9 @@ app.post('/logout', function (req, res) {
     var signOut = req.body.signOut;
     var email = req.body.email;
 
+    if(!email) {
+        return res.status(401).json({ message: "User not logged in!" });
+    }
     if (!signOut) {
         return res.status(401).json({ message: "Logout selection not recieved" });
     }
@@ -1178,18 +1181,20 @@ app.post('/EditPost', function (req, res) {
         return res.status(400).json({ message: "Missing Money value" });
     }
 
-    // set date posted
-    var posted = new Date();
-
-    var time = posted.getTime();
+    /*
+        // set date posted
+        var posted = new Date();
+    
+        var time = posted.getTime();
+    */
 
     if (req.body.Category) {
         var cat = req.body.Category;
         var att = req.body.Attributes;
     }
 
-    let query = "UPDATE Posts SET Headline = ?, Content = ?, PostingType = ?, money = ?, DatePosted = ?, DateMSEC = ?, Category = ?, Attributes = ? WHERE idPosts = ?";
-    var params = [req.body.Headline, req.body.Content, req.body.PostingType, req.body.money, posted, time, cat, att, id];
+    let query = "UPDATE Posts SET Headline = ?, Content = ?, PostingType = ?, money = ?, Category = ?, Attributes = ? WHERE idPosts = ?";
+    var params = [req.body.Headline, req.body.Content, req.body.PostingType, req.body.money, cat, att, id];
 
     // Update post
     db.query(query, params, function (error, response) {
@@ -1244,7 +1249,7 @@ app.post('/getUserID', function (req, res) {
 // get details of one particular post 
 app.post('/getSelectedPost', function (req, res) {
     var id = req.body.PostId;
-    
+
     let query = "SELECT * FROM Posts WHERE idPosts = ?";
 
     // get that post
@@ -1268,4 +1273,3 @@ app.post('/getSelectedPost', function (req, res) {
         }
     });
 });
-
