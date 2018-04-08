@@ -10,8 +10,16 @@
 
   <title>Profile</title>
 
+     <!-- Star Rating CSS -->
+  <link href="./../vendor/jquery/themes/bars-reversed.css" rel="stylesheet">
+       <script src="./../vendor/jquery/jquery-1.11.2.min.js"></script>
+         <script src="./../vendor/jquery/jquery.barrating.min.js"></script>
+         <script src="./../vendor/jquery/examples.js"></script>
+
   <!-- Bootstrap core CSS -->
   <link href="./../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+
 
   <!-- Custom styles for this template -->
   <link href="./../css/profile.css" rel="stylesheet">
@@ -320,6 +328,23 @@
           <a href="#" id="profile_links" class="card-link">Link</a>
         </div>
 
+        <div class="card-footer">
+   
+
+          <a href="#" id="rating" class="card-link">REVIEWS:</a>
+
+
+                <select id="example-reversed" name="rating" autocomplete="off">
+                  <option value="Strongly Agree">Strongly Recommend</option>
+                  <option value="Agree">Recommend</option>
+                  <option value="Neither Agree or Disagree" selected="selected">Neutral</option>
+                  <option value="Disagree">Do Not Recommend</option>
+                  <option value="Strongly Disagree">Strongly Do Not Recommend</option>
+                </select>
+          </div>
+
+
+
 
         <!-- Bootstrap core JavaScript -->
         <script src="./../vendor/jquery/jquery.min.js"></script>
@@ -340,6 +365,11 @@
           window.jQuery || document.write('<script src="assets/js/vendor/jquery.min.js"><\/script>')
         </script>
         <script src="./../vendor/bootstrap/js/bootstrap.min.js"></script>
+
+        <!-- STAR RATING JS -->
+         <script src="./../vendor/jquery/jquery-1.11.2.min.js"></script>
+         <script src="./../vendor/jquery/jquery.barrating.min.js"></script>
+         <script src="./../vendor/jquery/examples.js"></script>
   </body>
 
   <style>
