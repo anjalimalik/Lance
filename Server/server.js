@@ -537,50 +537,46 @@ app.post('/resetPass', function (req, res) {
 app.post('/verifyPIN', function (req, res) {
 
     var email = req.body.email;
-
-    console.log(email);
+    var pass = req.body.password;
+    var PIN = req.body.PIN;
 
     if(!email) {
-        return res.status(401).json({ message: "User not logged in!" });
+        return res.status(401).json({ message: "Missing information" });
     }
 
-    var PIN = randomstring.generate({ length: 6, charset: 'numeric' });
+    if(!pass) {
+        return res.status(401).json({ message: "Missing information" });
+    }
 
-    // reset AuthToken and AuthTokenIssued
-    var dbQuery = "UPDATE Users SET resetPIN = ? WHERE Email = ?";
-    var requestParams = [PIN, email];
+    if(!PIN) {
+        return res.status(401).json({ message: "Missing information" });
+    }
 
-    var transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: '1ance.profilehelp@gmail.com',
-        pass: '1ancedev'
-      }
-    });
+    let sql = "SELECT * FROM Users WHERE Email = ? AND resetPIN = ?";
+    params = [email, PIN];
 
-    mess_text = "Hello,\n\tEnter this PIN: " + PIN + " at 1ance.com/resetPassword to change your password.\nThis PIN is valid for 24 hours.\n\nThank you for using 1ance";
+    pass = createPass(email, pass);
 
-    var mailOptions = {
-      from: '1ance.profile@gmail.com',
-      to: email,
-      subject: 'Reset Password',
-      text: mess_text
-    };
+    db.query(sql, params, function (err, result) {
+        if (err) {
+            return res.status(500).json({ message: "Internal server error" });
+        }
+        if (result == null || result == "") {
+            return res.status(401).json({ message: "Invalid PIN" });
+        }
 
-    transporter.sendMail(mailOptions, function(error, info){
-      if (error) {
-        return res.status(500).json({ message: "Internal server error" });
-      } else {
-        
-        db.query(dbQuery, requestParams, function (err, result) {
+        var passquery = "UPDATE Users Set Password = ?, AuthToken = ?, AuthTokenIssued = ? WHERE Email = ?";
+        var passparams = [pass, null, null, email];
+
+        db.query(passquery, passparams, function (err, result) {
             if (err) {
                 return res.status(500).json({ message: "Internal server error" });
             } else {
-                return res.status(200).json({ message: "Success" });
+                return res.status(200).json({ message: "Password has been reset" });
             }
         });
-      }
     });
+
 });
 
 // Endpoint to Change Password
@@ -837,48 +833,6 @@ app.post('/ClosePost', (req, res) => {
     });
 });
 
-app.post('/verifyPIN', (req, res) => {
-
-    var PIN = req.body.PIN;
-    var email = req.body.email;
-    var pass = req.body.password;
-
-    if (!PIN) {
-        return res.status(400).json({ message: "Missing information" });
-    }
-
-    if (!email) {
-        return res.status(400).json({ message: "Missing information" });
-    }
-
-    if (!pass) {
-        return res.status(400).json({ message: "Missing information" });
-    }
-
-    let query = 'DELETE FROM Posts WHERE idPosts = ?';
-
-    db.query(query, postId, (error, response) => {
-        console.log(response);
-
-        if (error) {
-            res.send(JSON.stringify({
-                "status": 500,
-                "error": error,
-                "message": "Internal server error",
-                "response": null
-            }));
-        }
-
-        else {
-            res.send(JSON.stringify({
-                "status": 200,
-                "error": null,
-                "response": response,
-                "message": "Success! Post closed/deleted."
-            }));
-        }
-    });
-});
 
 // Endpoint to click interested (like) on a post
 app.post('/ClickInterested', (req, res) => {

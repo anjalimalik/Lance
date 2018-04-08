@@ -287,6 +287,8 @@
               <label style="margin-left: 38%;">PIN</label>
               <input type="text" class="form-control" style="width: 120px; margin: auto;" maxlength="6" id="pinEntry" placeholder="XXXXXX">
               <label id="forgotPINError">PIN is 6 digits and numeric</label>
+              <br>
+              <label id="wrongPINError">Sorry, Please check the PIN entered</label>
             </div>
 
             <p class="text-info" style="text-align: center">Please enter the PIN you received<br>Didn't receive one? Check your Junk or Spam mail</p>
@@ -368,6 +370,12 @@
           display: none;
           color: red;
           margin-left: 20%;
+        }
+
+        #wrongPINError {
+          display: none;
+          color: red;
+          margin-left: 25%;
         }
 
       </style>

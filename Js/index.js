@@ -16,8 +16,6 @@ function onLoad_index() {
                 document.getElementById("btn_modal_login").click();
             }
         });
-    
-    document.getElementById("myModal5").style.display = "block";
 }
 
 function btn_login() {
@@ -189,8 +187,6 @@ function resetPassword() {
 
     email = document.getElementById("forgot_password_email").value;
 
-    console.log(verifyEmail(email, "emailError"));
-
     if (verifyEmail(email, "emailError")) {
 
         fetch(urlResetPassword, {
@@ -208,10 +204,8 @@ function resetPassword() {
             if (res.ok) {
                 res.json().then(function (data) {
 
-                    console.log("HELLO");
-
-                    document.getElementById("myModal4").style.display = "none";
-                    document.getElementById("myModal5").style.display = "block";
+                    $('#myModal4').modal('hide');
+                    $('#myModal5').modal('show');
                 }.bind(this));
             }
         }).catch(function (err) {
@@ -249,7 +243,9 @@ function sendPIN() {
             'content-type': 'application/json'
         },
         body: JSON.stringify({
-            "password": pass
+            "password": pass,
+            "email": email,
+            "PIN": PIN,
         })
 
     }).then(function (res) {
@@ -257,14 +253,20 @@ function sendPIN() {
         if (res.ok) {
             res.json().then(function (data) {
 
-                alert("worked");
+                $('#myModal5').modal('hide');
+                alert("Password was successfuly reset");
+                $('#myModal1').modal('show');
             }.bind(this));
         }
         else {
             res.json().then(function (data) {
 
+                if (res.status == 401) {
+
+                    document.getElementById("wrongPINError").style.display = "block";
+                }
                 console.log(data.message);
-                console.log(data.authToken);
+
             }.bind(this));
         }
     }).catch(function (err) {
