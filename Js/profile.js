@@ -316,3 +316,7 @@ function uploadPicture() {
         console.log(err.message + ": No Internet Connection");
     });
 }
+
+function themesModal() {
+    //Themes stuff here
+}

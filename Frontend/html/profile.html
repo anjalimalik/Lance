@@ -62,7 +62,7 @@
 
             <div class="dropdown-divider"></div>
             <button type="button" class="dropdown-item btn btn-success btn-sm" style="margin-left: 0px; font-size: 12px;" data-toggle="modal"
-              data-target="#setModal">Settings</button>
+              data-target="#settingsModal">Settings</button>
           </div>
         </li>
         <!-- End -->
@@ -87,7 +87,7 @@
           </div>
 
           <!--EDIT BUTTON-->
-          <button type="button" class="btn btn-success btn-sm" style="margin-left: 520px; font-size: 12px;" data-toggle="modal" data-target="#myModal2"
+          <button type="button" class="btn btn-success btn-sm" style="margin-top: -10%;margin-left: 80%; font-size: 12px; background-color: #00cc99;" data-toggle="modal" data-target="#myModal2"
             onclick="btn_EditProfile()">edit</button>
           <br>
           <br>
@@ -220,9 +220,78 @@
                 </div>
               </div>
             </div>
+        </div>x
+
+          <!-- Real settings MODAL-->
+          <div class="modal" style="margin-top:150px;" id="settingsModal" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">SETTINGS</h4>
+                  <button type="button" class="close" data-dismiss="modal" onclick="clearSetModal()" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+                </div>
+                <div class="modal-body">
+
+                  <form>
+                    <fieldset>
+                      <div class="form-group">
+                          <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#themesModal" data-dismiss="modal">Choose Themes</button>
+                      </div>
+                      <div class="form-group">
+                          <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#setModal" data-dismiss="modal">Change Password</button>
+                      </div>
+                      <div class="form-group">
+                          <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#deleteAccountModal" data-dismiss="modal">Delete 1ance Account</button>
+                      </div>
+
+                    </fieldset>
+                  </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="clearSetModal()">Close</button>
+                </div>
+              </div>
+            </div>
           </div>
 
-          <!-- SETTINGS MODAL-->
+
+          <!-- Themes MODAL-->
+          <div class="modal" style="margin-top:150px;" id="themesModal" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Themes</h4>
+                  <button type="button" class="close" data-dismiss="modal" onclick="themesModal()" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+                </div>
+                <div class="modal-body">
+
+                  <form>
+                    <fieldset id="fieldset_passChange">
+
+                        <div class="form-group">
+                          <label for="in_profile_currentPass">Enter Theme</label>
+                          <input type="password" class="form-control" id="deleteAccountPass" placeholder="Theme name... wip">
+                        </div>
+
+
+
+                    </fieldset>
+                  </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#settingsModal" data-dismiss="modal">Back</button>
+                  <button type="button" class="btn btn-outline-primary" onclick="btn_theme()" data-dismiss="modal">Choose</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <!-- Password Change MODAL-->
           <div class="modal" style="margin-top:150px;" id="setModal" aria-hidden="true">
             <div class="modal-dialog" role="document">
               <div class="modal-content">
@@ -257,12 +326,48 @@
                   </form>
                 </div>
                 <div class="modal-footer">
+                  <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#settingsModal" data-dismiss="modal">Back</button>
                   <button type="button" class="btn btn-outline-primary" onclick="btn_passChange()" data-dismiss="modal">Save</button>
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="clearSetModal()">Close</button>
                 </div>
               </div>
             </div>
           </div>
+
+
+          <!-- Delete Account MODAL-->
+          <div class="modal" style="margin-top:150px;" id="deleteAccountModal" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Delete 1ance Account</h4>
+                  <button type="button" class="close" data-dismiss="modal" onclick="clearSetModal()" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+                </div>
+                <div class="modal-body">
+
+                  <form>
+                    <fieldset id="fieldset_passChange">
+
+                        <div class="form-group">
+                          <label for="in_profile_currentPass">Enter Password</label>
+                          <input type="password" class="form-control" id="deleteAccountPass" placeholder="Password">
+                        </div>
+
+
+
+                    </fieldset>
+                  </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#settingsModal" data-dismiss="modal">Back</button>
+                  <button type="button" class="btn btn-outline-primary" onclick="btn_delete_account()" data-dismiss="modal">Confirm</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
 
           <!--Profile Page//-->
 
