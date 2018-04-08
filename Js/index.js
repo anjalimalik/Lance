@@ -2,19 +2,22 @@ var urlLogin = "http://localhost:5500/login";
 var urlRegister = "http://localhost:5500/signUp"
 var urlCreateProfile = "http://localhost:5500/createProfile"
 var urlLogout = "http://localhost:5500/logout"
+var urlResetPassword = "http://localhost:5500/resetPass"
+var urlMakePassword = "http://localhost:5500/verifyPIN"
 var authToken;
 var email, pass, fName, lName, edu, skills, desc, contact, links, pic, docs, name;
 var verifyFlag;
 
 //LOGIN
 function onLoad_index() {
-    document.getElementById("in_login_pass")
-        .addEventListener("keyup", function (event) {
+    document.getElementById("in_login_pass").addEventListener("keyup", function (event) {
             event.preventDefault();
             if (event.keyCode == 13) {
                 document.getElementById("btn_modal_login").click();
             }
         });
+    
+    document.getElementById("myModal5").style.display = "block";
 }
 
 function btn_login() {
@@ -66,17 +69,17 @@ function btn_login() {
 
 
 function btn_register_continue() {
-    email = in_register_email.value;
-    pass = in_register_pass.value;
-    fName = in_register_fName.value;
-    lName = in_register_lName.value;
+    email = document.getElementById("in_register_email").value;
+    pass = document.getElementById("in_register_pass").value;
+    fName = document.getElementById("in_register_fName").value;
+    lName = document.getElementById("in_register_lName").value;
 
     name = fName.trim() + " " + lName.trim();
     //verifyFlag = true  --> means no errors
     //verifyFlag = false --> means errors
     verifyFlag = true;
 
-    verifyEmail(email);
+    verifyEmail(email, "emailError");
     verifyPass(pass);
     verifyFName(fName);
     verifyLName(lName);
@@ -182,15 +185,103 @@ function btn_register_finish() {
     window.location.href = u;
 }
 
-function verifyEmail(_email) {
+function resetPassword() {
+
+    email = document.getElementById("forgot_password_email").value;
+
+    console.log(verifyEmail(email, "emailError"));
+
+    if (verifyEmail(email, "emailError")) {
+
+        fetch(urlResetPassword, {
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+            "email": email,
+        })
+
+        }).then(function (res) {
+
+            if (res.ok) {
+                res.json().then(function (data) {
+
+                    console.log("HELLO");
+
+                    document.getElementById("myModal4").style.display = "none";
+                    document.getElementById("myModal5").style.display = "block";
+                }.bind(this));
+            }
+        }).catch(function (err) {
+
+            console.log(err.message + ": No Internet Connection");
+        }.bind(this));
+    }
+}
+
+function sendPIN() {
+
+    var PIN = document.getElementById("pinEntry").value;
+    var email = document.getElementById("emailEntry").value;
+    var pass = document.getElementById("passwordEntry").value;
+
+    if (!verifyEmail(email, "forgotEmailError"))
+        return;
+
+    if (!verifyPass(pass)) {
+
+        document.getElementById("forgotPassError").style.display = 'flex';
+        return;
+    }
+
+    if (!PIN || PIN.length != 6) {
+
+        document.getElementById("forgotPINError").style.display = 'flex';
+        return;
+    }
+
+    fetch(urlMakePassword, {
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+            "password": pass
+        })
+
+    }).then(function (res) {
+
+        if (res.ok) {
+            res.json().then(function (data) {
+
+                alert("worked");
+            }.bind(this));
+        }
+        else {
+            res.json().then(function (data) {
+
+                console.log(data.message);
+                console.log(data.authToken);
+            }.bind(this));
+        }
+    }).catch(function (err) {
+
+        console.log(err.message + ": No Internet Connection");
+    }.bind(this));
+}
+
+function verifyEmail(_email, errorID) {
 
     var idx = _email.indexOf("@purdue.edu");
     if (idx == -1 || idx != _email.length - 11 || idx == 0) {
-        document.getElementById("emailError").style.display = 'flex';
+        document.getElementById(errorID).style.display = 'flex';
         verifyFlag = false;
         return false;
     }
-    document.getElementById("emailError").style.display = 'none';
+    document.getElementById(errorID).style.display = 'none';
     return true;
 }
 function verifyPass(_pass) {
