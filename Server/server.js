@@ -464,7 +464,7 @@ app.post('/logout', function (req, res) {
     var signOut = req.body.signOut;
     var email = req.body.email;
 
-    if(!email) {
+    if (!email) {
         return res.status(401).json({ message: "User not logged in!" });
     }
     if (!signOut) {
@@ -807,7 +807,7 @@ app.post('/getProfile', function (req, res) {
 
     var email = req.body.email;
     var id = req.body.id;
-    if(email) {
+    if (email) {
         let query = "SELECT * FROM Profiles WHERE Email = ?";
         params = [email];
     }
@@ -1282,6 +1282,83 @@ app.post('/getSelectedPost', function (req, res) {
                 "response": response,
                 "message": "Success! Selected post retrieved!"
             }));
+        }
+    });
+});
+
+// Delete a user from the DB
+app.post('/DeleteUser', function (req, res) {
+    var id = req.body.userid;
+    var pass = req.body.password;
+
+    // first check whether the current password given is correct
+    let queryPass = "SELECT Email, Password FROM Users WHERE idUsers = ?";
+
+    db.query(queryPass, id, (error, response) => {
+        console.log(response);
+        if (error) {
+            res.send(JSON.stringify({ "status": 500, "error": error, "response": null, "message": "Internal server error - Could not check current Password" }));
+        }
+        else {
+            // check if current password is the same as the one in database
+            //var matchPass = decipherPass(response[0].Email, response[0].Password);
+            var matchPass = response[0].Password;
+            if (pass === matchPass) {
+                console.log("Current password is correct");
+                
+                //delete users one by one from all tables
+                let queryUsers = "DELETE FROM Users WHERE idUsers = ?";
+
+                db.query(queryUsers, id, function (err1, resp1) {
+                    if (err1) {
+                        res.send(JSON.stringify({ "status": 500, "error": err1, "response": null, "message": "Internal server error" }));
+                    }
+                    else {
+                        let queryProfiles = "DELETE FROM Profiles WHERE idUsers = ?";
+                        db.query(queryProfiles, id, function (err2, resp2) {
+                            if (err2) {
+                                res.send(JSON.stringify({ "status": 500, "error": err2, "response": null, "message": "Internal server error" }));
+                            }
+                            else {
+                                let queryPosts = "DELETE FROM Posts WHERE UserID = ?";
+                                db.query(queryPosts, id, function (err3, resp3) {
+                                    if (err3) {
+                                        res.send(JSON.stringify({ "status": 500, "error": err3, "response": null, "message": "Internal server error" }));
+                                    }
+                                    else {
+                                        let queryNotifications = "DELETE FROM Notifications WHERE idUsers = ?";
+                                        db.query(queryNotifications, id, function (err4, resp4) {
+                                            if (err4) {
+                                                res.send(JSON.stringify({ "status": 500, "error": err4, "response": null, "message": "Internal server error" }));
+                                            }
+                                            else {
+                                                let queryComments = "DELETE FROM Comments WHERE idCommenter = ? OR idOwnerOfPost = ?";
+                                                var paramsComments = [id, id];
+                                                db.query(queryComments, paramsComments, function (err5, resp5) {
+                                                    if (err5) {
+                                                        res.send(JSON.stringify({ "status": 500, "error": err5, "response": null, "message": "Internal server error" }));
+                                                    }
+                                                    else {
+                                                        res.send(JSON.stringify({
+                                                            "status": 200,
+                                                            "error": null,
+                                                            "response": response,
+                                                            "message": "Success! User deleted from all tables!"
+                                                        }));
+                                                    }
+                                                });
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+            else {
+                res.send(JSON.stringify({ "status": 401, "error": error, "response": null, "message": "Current password is not correct" }));
+            }
         }
     });
 });
