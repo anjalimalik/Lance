@@ -1,3 +1,7 @@
+body {
+  background: url('./Assets/bluebackground.png') no-repeat center center fixed;
+}
+
 /* Style the form */
 #regForm {
   background-color: #ffffff;
