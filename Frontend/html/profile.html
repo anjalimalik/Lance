@@ -12,9 +12,12 @@
 
   <!-- Bootstrap core CSS -->
   <link href="./../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
   <!-- Custom styles for this template -->
+  <link href="./../css/stars.css" rel="stylesheet">
   <link href="./../css/profile.css" rel="stylesheet">
+  
 
 </head>
 
@@ -62,7 +65,7 @@
 
             <div class="dropdown-divider"></div>
             <button type="button" class="dropdown-item btn btn-success btn-sm" style="margin-left: 0px; font-size: 12px;" data-toggle="modal"
-              data-target="#settingsModal">Settings</button>
+              data-target="#setModal">Settings</button>
           </div>
         </li>
         <!-- End -->
@@ -71,27 +74,69 @@
     </div>
   </nav>
 
-  <body>
+  <body style="color: #666699;">
     <!-- Page Content -->
-    <div class="card mb-3" style="width: 40%; margin-left: 30%;">
-      <h3 class="card-header" id="profile_name">John Doe</h2>
+    <div class="card mb-3" style="width: 50%; margin-left: 25%;">
+      <div class="card-header text-capitalize" style="height:30%; font-size:30px; text-align: left; font-weight: bold;" id="profile_name">John Doe</div>
 
-        <img style="height: 100px; width: 100px; margin-left: 5%; margin-top:2%; display: block;" src="./../css/Assets/user_icon.jpg" id="img_profile"
+        <img style="height: 20%; width: 20%; margin-left: 5%; margin-top:2%; display: block;" src="./../css/Assets/user_icon.jpg" id="img_profile"
           alt="Card image">
+
+        <!--- AVERAGE STAR RATINGS
+
+        <div class="rating" data-vote="0">
+              <div class="star">
+                <span class="full" data-value="1"></span>
+                <span class="half" data-value="0.5"></span>
+                <span class="selected"></span>
+              </div>
+            
+              <div class="star">
+                <span class="full" data-value="2"></span>
+                <span class="half" data-value="1.5"></span>
+                <span class="selected"></span>
+              </div>
+            
+              <div class="star">
+                <span class="full" data-value="3"></span>
+                <span class="half" data-value="2.5"></span>
+                <span class="selected"></span>
+              </div>
+            
+              <div class="star">
+                <span class="full" data-value="4"></span>
+                <span class="half" data-value="3.5"></span>
+                <span class="selected"></span>
+              </div>
+            
+              <div class="star">
+                <span class="full" data-value="5"></span>
+                <span class="half" data-value="4.5"></span>
+                <span class="selected"></span>
+              </div>
+            
+              <div class="score">
+                <span class="score-rating js-score">0</span>
+                <span>/</span>
+                <span class="total">5</span>
+              </div>
+            </div>
+          -->
+        <!-- End average rating stars -->
+
         <div class="card-body">
           <!--Upload profile image-->
 
-          <div class="img_profile_container">
+          <div class="img_profile_container" style="margin-left:7%;">
             <label for="btn_upload_hidden" class="txt_uploadImg">Upload Image</label>
             <input id="btn_upload_hidden" style="visibility:hidden" type="file" enctype="multipart/form-data" onclick="uploadPicture()">
           </div>
 
           <!--EDIT BUTTON-->
-          <button type="button" class="btn btn-success btn-sm" style="margin-top: -10%;margin-left: 80%; font-size: 12px; background-color: #00cc99;" data-toggle="modal" data-target="#myModal2"
+          <button id="editProfileBtn" type="button" class="btn btn-info btn-sm text-capitalize" style="display:none; border: 2px solid #CCCCCC; border-radius: 8px; margin-left:92%; font-size: 13px;" data-toggle="modal" data-target="#myModal3"
             onclick="btn_EditProfile()">edit</button>
           <br>
           <br>
-
 
           <!-- EDIT PROFILE MODAL -->
           <div class="modal" style="margin-top:100px;" id="myModal2" aria-hidden="true">
@@ -112,8 +157,6 @@
                         <input type="email" class="form-control" id="in_profile_edit_email" aria-describedby="emailHelp">
                         <small id="emailHelp" class="form-text text-muted">Ex. boilermaker@purdue.edu</small>
                         <div class="valid-feedback" id="emailFeedback">Invalid Purdue Email</div>
-
-
                       </div>
 
 
@@ -153,7 +196,7 @@
             <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title">Profile</h5>
+                  <h5 class="modal-title">Edit Profile</h5>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
@@ -220,78 +263,9 @@
                 </div>
               </div>
             </div>
-        </div>x
-
-          <!-- Real settings MODAL-->
-          <div class="modal" style="margin-top:150px;" id="settingsModal" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title">SETTINGS</h4>
-                  <button type="button" class="close" data-dismiss="modal" onclick="clearSetModal()" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-                </div>
-                <div class="modal-body">
-
-                  <form>
-                    <fieldset>
-                      <div class="form-group">
-                          <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#themesModal" data-dismiss="modal">Choose Themes</button>
-                      </div>
-                      <div class="form-group">
-                          <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#setModal" data-dismiss="modal">Change Password</button>
-                      </div>
-                      <div class="form-group">
-                          <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#deleteAccountModal" data-dismiss="modal">Delete 1ance Account</button>
-                      </div>
-
-                    </fieldset>
-                  </form>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="clearSetModal()">Close</button>
-                </div>
-              </div>
-            </div>
           </div>
 
-
-          <!-- Themes MODAL-->
-          <div class="modal" style="margin-top:150px;" id="themesModal" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title">Themes</h4>
-                  <button type="button" class="close" data-dismiss="modal" onclick="themesModal()" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-                </div>
-                <div class="modal-body">
-
-                  <form>
-                    <fieldset id="fieldset_passChange">
-
-                        <div class="form-group">
-                          <label for="in_profile_currentPass">Enter Theme</label>
-                          <input type="password" class="form-control" id="deleteAccountPass" placeholder="Theme name... wip">
-                        </div>
-
-
-
-                    </fieldset>
-                  </form>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#settingsModal" data-dismiss="modal">Back</button>
-                  <button type="button" class="btn btn-outline-primary" onclick="btn_theme()" data-dismiss="modal">Choose</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-
-          <!-- Password Change MODAL-->
+          <!-- SETTINGS MODAL-->
           <div class="modal" style="margin-top:150px;" id="setModal" aria-hidden="true">
             <div class="modal-dialog" role="document">
               <div class="modal-content">
@@ -326,81 +300,45 @@
                   </form>
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#settingsModal" data-dismiss="modal">Back</button>
                   <button type="button" class="btn btn-outline-primary" onclick="btn_passChange()" data-dismiss="modal">Save</button>
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="clearSetModal()">Close</button>
                 </div>
               </div>
             </div>
           </div>
-
-
-          <!-- Delete Account MODAL-->
-          <div class="modal" style="margin-top:150px;" id="deleteAccountModal" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title">Delete 1ance Account</h4>
-                  <button type="button" class="close" data-dismiss="modal" onclick="clearSetModal()" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-                </div>
-                <div class="modal-body">
-
-                  <form>
-                    <fieldset id="fieldset_passChange">
-
-                        <div class="form-group">
-                          <label for="in_profile_currentPass">Enter Password</label>
-                          <input type="password" class="form-control" id="deleteAccountPass" placeholder="Password">
-                        </div>
-
-
-
-                    </fieldset>
-                  </form>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#settingsModal" data-dismiss="modal">Back</button>
-                  <button type="button" class="btn btn-outline-primary" onclick="btn_delete_account()" data-dismiss="modal">Confirm</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-
 
           <!--Profile Page//-->
 
-          <h6>BIO:</h6>
-          <p class="card-text" id="profile_desc"> This is an example bio</p>
+          <h6 style="font-size:13px;">BIO:</h6>
+          <p class="card-text" id="profile_desc"> Write about yourself!</p>
         </div>
 
-        <table class="table table-hover">
+        <table class="table table-hover" >
           <tbody>
             <tr>
               <th scope="row">
-                <h6>Phone Number</h6>
+                <h6 style="font-size:13px;">Phone Number</h6>
               </th>
-              <th scope="row" id="profile_contact" style="width:293px;"></th>
+              <th scope="row" id="profile_contact" style="width: 60%;font-size:14px;"></th>
             </tr>
 
             <tr>
               <th scope="row">
-                <h6>Email</h6>
+                <h6 style="font-size:13px;">Email</h6>
               </th>
-              <th scope="row" id="profile_email"></th>
+              <th scope="row" style="text-transform: lowercase; font-size:14px;" id="profile_email"></th>
             </tr>
 
             <tr>
               <th scope="row">
-                <h6>Major</h6>
+                <h6 style="font-size:13px;">Major</h6>
               </th>
-              <th scope="row" id="profile_edu"></th>
+              <th scope="row" style="text-transform: capitalize; font-size:14px;" id="profile_edu"></th>
             </tr>
 
             <tr>
               <th scope="row">
-                <h6>Skills </h6>
+                <h6 style="font-size:13px;">Skills </h6>
               </th>
               <th scope="row" id="profile_skills"></th>
 
@@ -456,18 +394,14 @@
       border-radius: 5px;
       background-color: #EEEEEE;
       color: #333333;
-      padding: 2px;
-      width: 120px;
-      height: 30px;
+      padding: 1px;
+      width: 100px;
+      height: 25px;
     }
-
     .txt_uploadImg {
-      font-size: 15px;
+      font-size: 12px;
       font-weight: bold;
     }
-
-    #btn_upload_hidden {}
-
     #options_btn {
       position: absolute;
       left: 415px;
