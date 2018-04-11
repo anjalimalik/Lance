@@ -630,12 +630,13 @@ app.post('/WriteComment', (req, res) => {
     var email = req.body.email; // email of the person who commented
     var sender = ""; // name of the person who commented
     var userid = 0; // user id of the person who is the owner of the post
+    var useridCommenter = 0; // user id of the person who commented on the post
 
     // call function to make new notification
     newNotification(comment, postId, email);
 
     /* Getting full name of the user who commented */
-    let query1 = "SELECT FullName FROM Users WHERE Email = ?";
+    let query1 = "SELECT FullName, idUsers FROM Users WHERE Email = ?";
 
     db.query(query1, email, function (err1, resp1) {
         console.log(resp1);
@@ -651,6 +652,7 @@ app.post('/WriteComment', (req, res) => {
             var string = JSON.stringify(resp1);
             var json = JSON.parse(string);
             sender = sender.concat(json[0].FullName);
+            useridCommenter = parseInt(json[0].idUsers);
 
             /* Next, getting user id of the person who's post was commented on */
             let query2 = "SELECT UserID FROM Posts WHERE idPosts = ?";
@@ -676,7 +678,8 @@ app.post('/WriteComment', (req, res) => {
                         idOwnerOfPost: userid,
                         idPosts: postId,
                         Comment: comment,
-                        SenderName: sender
+                        SenderName: sender,
+                        idCommenter: useridCommenter
                     };
 
                     // INSERT INTO Comments TABLE
@@ -803,9 +806,18 @@ app.post('/ClickInterested', (req, res) => {
 app.post('/getProfile', function (req, res) {
 
     var email = req.body.email;
-    let query = "SELECT * FROM Profiles WHERE Email = ?";
+    var id = req.body.id;
+    if(email) {
+        let query = "SELECT * FROM Profiles WHERE Email = ?";
+        params = [email];
+    }
+    else {
+        let query = "SELECT * FROM Profiles WHERE idUsers = ?";
+        params = [id];
+    }
 
-    db.query(query, email, function (error, response) {
+
+    db.query(query, params, function (error, response) {
         console.log(response);
         if (error) {
             res.send(JSON.stringify({
