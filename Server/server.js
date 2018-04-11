@@ -326,7 +326,7 @@ app.post('/CreatePost', function (req, res) {
         }
 
         else {
-            // account with given email exists, therefore, proceed with creating a post 
+            // account with given email exists, therefore, proceed with creating a post
             let query2 = "INSERT INTO Posts SET ?";
 
             var newPost = {
@@ -1043,4 +1043,3 @@ app.post('/getNotifications', function (req, res) {
         }
     });
 });
-
