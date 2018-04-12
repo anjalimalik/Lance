@@ -8,6 +8,7 @@
   <meta name="description" content="">
   <meta name="author" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="../css/index.css">
 
   <title>Welcome To Lance!</title>
 
@@ -88,6 +89,7 @@
                   </fieldset>
                 </form>
 
+                <a href="#" class="card-link" data-toggle="modal" data-target="#myModal4" data-dismiss="modal"> Forgot Password?</a>
 
               </div>
               <div class="modal-footer">
@@ -229,6 +231,44 @@
           </div>
         </div>
       </div>
+
+
+      <!-- FORGOT PASSWORD MODAL -->
+
+      <div class="modal" id="myModal4">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Forgot Password</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+
+          <img src="../css/Assets/mail.png" width="48" height="48">
+
+          <div class="form-group">
+                      <label for="in_register_email">Email</label>
+                      <input type="text" class="form-control" id="in_register_email" placeholder="boilermaker@purdue.edu">
+                      <label id="emailError">Invalid Email</label>
+          </div>
+
+          <p class="text-info">Please enter your purdue email you registered with!</p>
+
+<!--           <div class="alert alert-dismissible alert-success" id="alert1">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <strong>Well done!</strong> You successfully read <a href="#" class="alert-link">this important alert message</a>.
+          </div>
+ -->
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-toggle="alert alert-dismissible alert-success" data-target="alert1">Send Email</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+      <!-- END FORGOT PASSWORD MODAL -->
 
 
       <style>

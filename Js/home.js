@@ -127,7 +127,7 @@ function createCard(user, content, headline, postingType, price, postID, date, l
 
     /* Offer/Request */
     var ReqOff = document.createElement("p");
-    var str = postingType.concat(" by ", "<b style=\"", "color:#333399; font-weight:bold\">", user, "</b>");
+    var str = postingType.concat(" by ", "<b style=\"", "color:#333399; font-weight:bold\">", "<a href='#' onclick=\"gotoUserProfile(", userid, ",", uID, ")\">" , user, "</a></b>");
     ReqOff.style = "font-family:monaco;font-size:14px;color:#666699;float:left;";
     ReqOff.innerHTML = str;
     divHeader.appendChild(ReqOff);

@@ -291,12 +291,10 @@
   <div class="row">
     <div class="col-md-4">
       <div class="jumbotron" style="position: absolute; left: 5%; top: 15px; width: 63%; height: auto;">
-        <h4 style="position: relative; top: -40px; left: 110px;"> MENU </h4>
+        <h4 style="position: relative; top: -40px; left: 110px; font-size: 120%;"> MENU </h4>
 
-        <input type="button" value="Request" id="btnRequest" class="btn btn-outline-primary" style="position: relative; top: -30px;margin-left: 10px; width: 120px; height: 40px; text-align: center;"
-          onclick="filterPosts(null, 'Request')"></input>
-        <input type="button" value="Offer" id="btnOffer" class="btn btn-outline-primary" style="position: relative; top: -70px;margin-left: 160px; width: 120px; height: 40px; text-align: center;"
-          onclick="filterPosts(null, 'Offer')"></input>
+        <input type="button" value="Offer" id="btnOffer" class="btn btn-outline-primary" onclick="filterPosts(null, 'Offer')"></input>
+        <input type="button" value="Request" id="btnRequest" class="btn btn-outline-primary" onclick="filterPosts(null, 'Request')"></input>
 
         <!-- Price -->
         <h5 style="position: relative; top: -40px; left: 110px;"> Price </h5>
@@ -385,6 +383,23 @@
     left: 465px;
     width: 136px;
   }
+
+  #btnOffer {
+      position: relative;
+      display: inline;
+      text-align: center;
+      margin-bottom: 20%;
+      width: 45%;
+  }
+
+  #btnRequest {
+      position: relative;
+      display: inline;
+      text-align: center;
+      margin-bottom: 20%;
+      width: 45%;
+  }
+
 </style>
 
 </html>

@@ -1,9 +1,12 @@
-var email, pass, name, edu, skills, desc, contact, links, pic, docs;
+var email, pass, name, edu, skills, desc, contact, links, pic, docs, userProfileID;
 var urlChangePass = "http://localhost:5500/changePassword"
 var urlNotifications = "http://localhost:5500/getNotifications"
 var urlGetProfile = "http://localhost:5500/getProfile"
 var urlUpload = "http://localhost:5500/api/upload";
+var urlUserID = "http://localhost:5500/getUserID";
 var numNotifs = 0;
+
+var uID = "";
 
 function onLoad_profile() {
 
@@ -12,6 +15,15 @@ function onLoad_profile() {
 
     var url = window.location.href;
     var str = url.split("?email=");
+    if (url == str) {
+        str = url.split("?id1=");
+        var otheruserid = str[1];
+        if (otheruserid.includes("#")) {
+            otheruserid = otheruserid.replace("#", "");
+        }
+        getUserProfile(otheruserid, );
+        return;
+    }
     email = str[1];
     if (email === null) {
         alert("You have to be logged in first!");
@@ -20,6 +32,9 @@ function onLoad_profile() {
     else if (email.includes("#")) {
         email = email.replace("#", "");
     }
+
+    // average ratings
+    // averageRatings();
 
     fetch(urlGetProfile, {
         method: "POST",
@@ -35,9 +50,6 @@ function onLoad_profile() {
         console.log("Inside res function");
         if (res.ok) {
             res.json().then(function (data) {
-
-                console.log(data.response);
-                console.log("Inside res.ok");
                 var json = data.response;
                 name = json[0].FullName;
                 edu = json[0].Education;
@@ -45,7 +57,9 @@ function onLoad_profile() {
                 contact = json[0].ContactInfo;
                 desc = json[0].Description;
                 skills = json[0].SkillsSet;
+                userProfileID = json[0].idUsers;
                 populate_profile();
+                document.getElementById("editProfileBtn").style.display = "block";
 
             }.bind(this));
         }
@@ -307,12 +321,151 @@ function uploadPicture() {
 
     fetch(urlUpload, {
         method: 'POST',
-        body: ({'element2': data})
+        body: ({ 'element2': data })
     }).then(function (res) {
         console.log("Inside res function");
-        alert("Image Uploaded");
     }).catch(function (err) {
         alert("Error: No internet connection!");
         console.log(err.message + ": No Internet Connection");
     });
 }
+
+
+/* STAR RATINGS */
+function averageRatings() {
+
+    var starClicked = false;
+    $('.star').click(function () {
+
+        $(this).children('.selected').addClass('is-animated');
+        $(this).children('.selected').addClass('pulse');
+
+        var target = this;
+
+        setTimeout(function () {
+            $(target).children('.selected').removeClass('is-animated');
+            $(target).children('.selected').removeClass('pulse');
+        }, 1000);
+
+        starClicked = true;
+    })
+
+    $('.half').click(function () {
+        if (starClicked == true) {
+            setHalfStarState(this)
+        }
+        $(this).closest('.rating').find('.js-score').text($(this).data('value'));
+
+        $(this).closest('.rating').data('vote', $(this).data('value'));
+        //calculateAverage()
+        console.log(parseInt($(this).data('value')));
+
+    })
+
+    $('.full').click(function () {
+        if (starClicked == true) {
+            setFullStarState(this)
+        }
+        $(this).closest('.rating').find('.js-score').text($(this).data('value'));
+
+        $(this).find('js-average').text(parseInt($(this).data('value')));
+
+        $(this).closest('.rating').data('vote', $(this).data('value'));
+        //calculateAverage()
+
+        console.log(parseInt($(this).data('value')));
+    })
+
+    $('.half').hover(function () {
+        if (starClicked == false) {
+            setHalfStarState(this)
+        }
+
+    })
+
+    $('.full').hover(function () {
+        if (starClicked == false) {
+            setFullStarState(this)
+        }
+    })
+}
+
+function updateStarState(target) {
+    $(target).parent().prevAll().addClass('animate');
+    $(target).parent().prevAll().children().addClass('star-colour');
+
+    $(target).parent().nextAll().removeClass('animate');
+    $(target).parent().nextAll().children().removeClass('star-colour');
+}
+
+function setHalfStarState(target) {
+    $(target).addClass('star-colour');
+    $(target).siblings('.full').removeClass('star-colour');
+    updateStarState(target)
+}
+
+function setFullStarState(target) {
+    $(target).addClass('star-colour');
+    $(target).parent().addClass('animate');
+    $(target).siblings('.half').addClass('star-colour');
+
+    updateStarState(target)
+}
+
+/* Star ratings end */
+
+function gotoUserProfile(otheruserid, uid) {
+    window.location.href = "profile.html?id1=".concat(otheruserid);
+}
+
+function getUserProfile(otheruserid) {
+
+    //if (otheruserid == uid) {
+        //document.getElementById("editProfileBtn").style.display = "block";
+    //}
+    //else {
+        document.getElementById("editProfileBtn").style.display = "none";
+    //}
+    fetch(urlGetProfile, {
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+            "id": otheruserid,
+            "email": null
+        })
+
+    }).then(function (res) {
+        console.log("Inside res function");
+        if (res.ok) {
+            res.json().then(function (data) {
+                var json = data.response;
+                name = json[0].FullName;
+                edu = json[0].Education;
+                links = json[0].Links;
+                contact = json[0].ContactInfo;
+                desc = json[0].Description;
+                skills = json[0].SkillsSet;
+                userProfileID = json[0].idUsers;
+                populate_profile();
+            }.bind(this));
+        }
+        else {
+            alert("Error: get profile unsuccessful!");
+            res.json().then(function (data) {
+                console.log(data.message);
+            }.bind(this));
+            return;
+        }
+    }).catch(function (err) {
+        alert("Error: No internet connection!");
+        console.log(err.message + ": No Internet Connection");
+        return;
+    });
+
+}
+
+
+window.gotoUserProfile = gotoUserProfile;
