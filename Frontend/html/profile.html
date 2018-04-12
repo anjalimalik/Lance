@@ -287,7 +287,7 @@
                           <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#setModal" data-dismiss="modal">Change Password</button>
                       </div>
                       <div class="form-group">
-                          <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#deleteAccountModal" data-dismiss="modal">Delete 1ance Account</button>
+                          <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#deleteAccountModal" data-dismiss="modal" onclick="deleteAccount()">Delete 1ance Account</button>
                       </div>
 
                     </fieldset>
@@ -369,8 +369,8 @@
                   </form>
                 </div>
                 <div class="modal-footer">
+                  <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#settingsModal" data-dismiss="modal">Back</button>
                   <button type="button" class="btn btn-outline-primary" onclick="btn_passChange()" data-dismiss="modal">Save</button>
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="clearSetModal()">Close</button>
                 </div>
               </div>
             </div>
@@ -390,6 +390,13 @@
 
                   <form>
                     <fieldset id="fieldset_passChange">
+
+                        <div class="form-group">
+                            <label id="accountName"></label>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="accountEmail"></label>
+                        </div>
 
                         <div class="form-group">
                           <label for="in_profile_currentPass">Enter Password</label>
@@ -503,6 +510,11 @@
     .txt_uploadImg {
       font-size: 12px;
       font-weight: bold;
+    }
+    .btn-outline-primary {
+        width: 60%;
+        margin-left: 20%;
+
     }
     #options_btn {
       position: absolute;

@@ -320,3 +320,12 @@ function uploadPicture() {
 function themesModal() {
     //Themes stuff here
 }
+
+function deleteAccount() {
+        var str = name.concat(", confirm your password below to remove 1ance account");
+        document.getElementById("accountName").innerHTML = str;
+        document.getElementById("accountName").setAttribute("style", "font-size:120%; color:red;");
+        document.getElementById("accountEmail").value = email;
+        document.getElementById("accountEmail").readOnly = true;
+        document.getElementById("accountEmail").setAttribute("style", "background-color: #D3D3D3;");
+}
