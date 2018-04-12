@@ -464,6 +464,9 @@ app.post('/logout', function (req, res) {
     var signOut = req.body.signOut;
     var email = req.body.email;
 
+    if(!email) {
+        return res.status(401).json({ message: "User not logged in!" });
+    }
     if (!signOut) {
         return res.status(401).json({ message: "Logout selection not recieved" });
     }
@@ -943,7 +946,7 @@ app.post('/getNotifications', function (req, res) {
 
         else {
             // get data from Notifications using the user id recieved fro previous query
-            let query2 = "SELECT Notification FROM Notifications WHERE idUsers = ? ORDER BY msec DESC";
+            let query2 = "SELECT Notification FROM Notifications WHERE idUsers = ? ORDER BY msec DESC LIMIT 20";
 
             var string = JSON.stringify(response);
             var json = JSON.parse(string);
@@ -1006,7 +1009,7 @@ app.post('/getSortedPosts', (req, res) => {
         else if (!order) {
             var d1 = Date.parse(lowerBound);
             var d2 = Date.parse(upperBound);
-            query = 'SELECT * FROM Posts WHERE DateMSEC BETWEEN ? AND ?;';
+            query = 'SELECT * FROM Posts WHERE DateMSEC BETWEEN ? AND ? ORDER BY DatePosted DESC;';
             params = [d1, d2];
         }
         else if (!upperBound && !lowerBound) {
@@ -1045,7 +1048,7 @@ app.post('/getSortedPosts', (req, res) => {
         else if (order == null) {
             upperBound = parseFloat(upperBound);
             lowerBound = parseFloat(lowerBound);
-            query = 'SELECT * FROM Posts WHERE money BETWEEN ? AND ?;';
+            query = 'SELECT * FROM Posts WHERE money BETWEEN ? AND ? ORDER BY DatePosted DESC;';
             params = [lowerBound, upperBound];
         }
         else {
@@ -1178,18 +1181,20 @@ app.post('/EditPost', function (req, res) {
         return res.status(400).json({ message: "Missing Money value" });
     }
 
-    // set date posted
-    var posted = new Date();
-
-    var time = posted.getTime();
+    /*
+        // set date posted
+        var posted = new Date();
+    
+        var time = posted.getTime();
+    */
 
     if (req.body.Category) {
         var cat = req.body.Category;
         var att = req.body.Attributes;
     }
 
-    let query = "UPDATE Posts SET Headline = ?, Content = ?, PostingType = ?, money = ?, DatePosted = ?, DateMSEC = ?, Category = ?, Attributes = ? WHERE idPosts = ?";
-    var params = [Headline, Content, PostingType, money, posted, time, cat, att, id];
+    let query = "UPDATE Posts SET Headline = ?, Content = ?, PostingType = ?, money = ?, Category = ?, Attributes = ? WHERE idPosts = ?";
+    var params = [req.body.Headline, req.body.Content, req.body.PostingType, req.body.money, cat, att, id];
 
     // Update post
     db.query(query, params, function (error, response) {
@@ -1213,3 +1218,58 @@ app.post('/EditPost', function (req, res) {
     });
 });
 
+// Get user id from email
+app.post('/getUserID', function (req, res) {
+    var email = req.body.email;
+    let query = "SELECT idUsers FROM Users WHERE Email = ?";
+
+    // get user id connected to the email
+    db.query(query, email, function (error, response) {
+        console.log(response);
+        if (error) {
+            res.send(JSON.stringify({
+                "status": 500,
+                "error": error,
+                "response": null,
+                "message": "Internal server error"
+            }));
+        }
+        else {
+            res.send(JSON.stringify({
+                "status": 200,
+                "error": null,
+                "response": response,
+                "message": "Success! User ID retrieved!"
+            }));
+        }
+    });
+});
+
+// Could be used for populating edit post modal
+// get details of one particular post 
+app.post('/getSelectedPost', function (req, res) {
+    var id = req.body.PostId;
+
+    let query = "SELECT * FROM Posts WHERE idPosts = ?";
+
+    // get that post
+    db.query(query, id, function (error, response) {
+        console.log(response);
+        if (error) {
+            res.send(JSON.stringify({
+                "status": 500,
+                "error": error,
+                "response": null,
+                "message": "Internal server error"
+            }));
+        }
+        else {
+            res.send(JSON.stringify({
+                "status": 200,
+                "error": null,
+                "response": response,
+                "message": "Success! Selected post retrieved!"
+            }));
+        }
+    });
+});

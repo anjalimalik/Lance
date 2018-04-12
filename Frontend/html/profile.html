@@ -11,14 +11,14 @@
   <title>Profile</title>
 
   <!-- Bootstrap core CSS -->
-  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="./../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
   <!-- Custom styles for this template -->
-  <link href="profile.css" rel="stylesheet">
+  <link href="./../css/profile.css" rel="stylesheet">
 
 </head>
 
-<body onload="body_onload()">
+<body onload="onLoad_profile()">
 
 
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
@@ -76,14 +76,14 @@
     <div class="card mb-3" style="width: 40%; margin-left: 30%;">
       <h3 class="card-header" id="profile_name">John Doe</h2>
 
-        <img style="height: 100px; width: 100px; margin-left: 5%; margin-top:2%; display: block;" src="Pictures/user_icon.jpg" id="img_profile"
+        <img style="height: 100px; width: 100px; margin-left: 5%; margin-top:2%; display: block;" src="./../css/Assets/user_icon.jpg" id="img_profile"
           alt="Card image">
         <div class="card-body">
           <!--Upload profile image-->
 
           <div class="img_profile_container">
             <label for="btn_upload_hidden" class="txt_uploadImg">Upload Image</label>
-            <input id="btn_upload_hidden" style="visibility:hidden" type="file">
+            <input id="btn_upload_hidden" style="visibility:hidden" type="file" enctype="multipart/form-data" onclick="uploadPicture()">
           </div>
 
           <!--EDIT BUTTON-->
@@ -94,7 +94,7 @@
 
 
           <!-- EDIT PROFILE MODAL -->
-          <div class="modal" id="myModal2" aria-hidden="true">
+          <div class="modal" style="margin-top:100px;" id="myModal2" aria-hidden="true">
             <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-header">
@@ -223,7 +223,7 @@
           </div>
 
           <!-- SETTINGS MODAL-->
-          <div class="modal" id="setModal" aria-hidden="true">
+          <div class="modal" style="margin-top:150px;" id="setModal" aria-hidden="true">
             <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-header">
@@ -322,16 +322,16 @@
 
 
         <!-- Bootstrap core JavaScript -->
-        <script src="vendor/jquery/jquery.min.js"></script>
-        <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="./../vendor/jquery/jquery.min.js"></script>
+        <script src="./../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-        <script src="vendor/scripts/index.js"></script>
-        <script src="vendor/scripts/profile.js"></script>
-        <script src="vendor/scripts/home.js"></script>
+        <script src="./../../Js/index.js"></script>
+        <script src="./../../Js/profile.js"></script>
+        <script src="./../../Js/home.js"></script>
 
 
         <!-- Bootstrap core CSS -->
-        <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <link href="./../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
 
         <!-- Ratings Bootstrap core JavaScript -->
@@ -339,7 +339,7 @@
         <script>
           window.jQuery || document.write('<script src="assets/js/vendor/jquery.min.js"><\/script>')
         </script>
-        <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+        <script src="./../vendor/bootstrap/js/bootstrap.min.js"></script>
   </body>
 
   <style>

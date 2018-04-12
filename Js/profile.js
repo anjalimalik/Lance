@@ -2,9 +2,10 @@ var email, pass, name, edu, skills, desc, contact, links, pic, docs;
 var urlChangePass = "http://localhost:5500/changePassword"
 var urlNotifications = "http://localhost:5500/getNotifications"
 var urlGetProfile = "http://localhost:5500/getProfile"
+var urlUpload = "http://localhost:5500/api/upload";
 var numNotifs = 0;
 
-function body_onload() {
+function onLoad_profile() {
 
     optionsToggle.style.display = "none";
     notificationsToggle.style.display = "none";
@@ -12,10 +13,12 @@ function body_onload() {
     var url = window.location.href;
     var str = url.split("?email=");
     email = str[1];
-    email = email.replace("#", "");
-    if (email === null || email === "" || email === "undefined") {
+    if (email === null) {
         alert("You have to be logged in first!");
         window.location.href = "index.html";
+    }
+    else if (email.includes("#")) {
+        email = email.replace("#", "");
     }
 
     fetch(urlGetProfile, {
@@ -60,8 +63,8 @@ function body_onload() {
     });
 
     var img = new Image();
-    img.src = "./Pictures/spinner.jpg";
-    document.getElementById("img_profile").src = "./Pictures/user_icon.jpg";
+    img.src = "./../css/Assets/spinner.jpg";
+    document.getElementById("img_profile").src = "./../css/Assets/user_icon.jpg";
 }
 
 function goToHome() {
@@ -93,7 +96,7 @@ function displayNotifications() {
     // function to get notifications
     btn_getNotifications();
 }
-/*
+
 $(function () {
     $(":file").change(function () {
         if (this.files && this.files[0]) {
@@ -107,7 +110,7 @@ $(function () {
 function imageIsLoaded(e) {
     $('#img_profile').attr('src', e.target.result);
 }
-*/
+
 function populate_profile() {
     document.getElementById("profile_name").innerHTML = name;
     document.getElementById("profile_email").innerHTML = email;
@@ -169,7 +172,7 @@ function passMatch() {
     }
 }
 
-// clear settings modal 
+// clear settings modal
 function clearSetModal() {
     in_profile_currentPass.value = ""
     in_profile_newPass.value = "";
@@ -178,7 +181,7 @@ function clearSetModal() {
     $('.text.text-danger').remove();
 }
 
-// Password change function 
+// Password change function
 function btn_passChange() {
     var currentPass = in_profile_currentPass.value;
     var newPass = in_profile_newPass.value;
@@ -267,7 +270,7 @@ function btn_getNotifications() {
                         var ul = document.createElement("a");
                         ul.setAttribute('class', 'notifClass dropdown-item');
                         ul.innerHTML = (json[i].Notification).toString();
-                        ul.style = "border-bottom: 1px solid #ccc; margin-left:-40px;font-color:black;";
+                        ul.style = "border-bottom: 1px solid #ccc; margin-left:-40px;color:#333399;";
                         document.getElementById("notif").appendChild(ul);
                         numNotifs++;
                     }
@@ -293,4 +296,23 @@ function btn_getNotifications() {
         console.log(err.message + ": No Internet Connection");
     });
 
+}
+
+function uploadPicture() {
+
+    var input = document.querySelector('input[type="file"]')
+    var data = new FormData()
+    data.append('file', input.files[0])
+    //data.append('user', 'hubot')
+
+    fetch(urlUpload, {
+        method: 'POST',
+        body: ({'element2': data})
+    }).then(function (res) {
+        console.log("Inside res function");
+        alert("Image Uploaded");
+    }).catch(function (err) {
+        alert("Error: No internet connection!");
+        console.log(err.message + ": No Internet Connection");
+    });
 }
