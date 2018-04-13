@@ -812,7 +812,7 @@ app.post('/getProfile', function (req, res) {
     var params;
 
     if (email) {
-        query= "SELECT * FROM Profiles WHERE Email = ?";
+        query = "SELECT * FROM Profiles WHERE Email = ?";
         params = [email];
     }
     else {
@@ -955,6 +955,7 @@ app.post('/getAllNotifications', function (req, res) {
             }));
         }
         else {
+            seeNotifications(id);
             res.send(JSON.stringify({
                 "status": 200,
                 "error": null,
@@ -975,29 +976,67 @@ app.post('/getNewNotifications', function (req, res) {
     }
 
     // get data from Notifications using the user id
-    let query2 = "SELECT Notification FROM Notifications WHERE idUsers = ? ORDER BY msec DESC";
+    let query1 = "SELECT Notification FROM Notifications WHERE idUsers = ? AND seen = '0' ORDER BY msec DESC";
 
-    db.query(query2, id, (err, result) => {
+    db.query(query1, id, (err, result) => {
         console.log(result);
-        if (error) {
+        if (err) {
             res.send(JSON.stringify({
                 "status": 500,
-                "error": error,
+                "error": err,
                 "response": null,
                 "message": "Internal server error"
             }));
         }
         else {
+            seeNotifications(id);
+
             res.send(JSON.stringify({
                 "status": 200,
                 "error": null,
                 "response": result,
-                "message": "Success! All notifications for user retrieved!"
+                "message": "Success! All new/unseen notifications for user retrieved!"
             }));
         }
     });
 });
 
+// function to see all notifications 
+function seeNotifications(id) {
+    // toggle the seen attribute in the database
+    let query = "UPDATE Notifications SET seen = '1' WHERE idUsers = ? AND seen = '0'";
+
+    db.query(query, id, (error, response) => {
+        if (error) {
+            console.log("Error: Cannot 'see' new notifications");
+        }
+        else {
+            console.log("Notifications seen from unseen");
+        }
+    });
+}
+
+//Get number of unseen Notifications when the user logs in
+app.post('/getNumNotifications', function (req, res) {
+
+    var id = req.body.id;
+
+    if (!id) {
+        return res.status(400).json({ message: "Missing information" });
+    }
+
+    let query1 = "SELECT COUNT(Notification) FROM Notifications WHERE idUsers = ? AND seen = '0'";
+
+    db.query(query1, id, (err, result) => {
+        console.log(result);
+        if (err) {
+            res.send(JSON.stringify({"status": 500, "error": err,"response": null, "message": "Internal server error"}));
+        }
+        else {
+            res.send(JSON.stringify({"status": 200,"error": null,"response": result,"message": "Success! Number of new notifications recieved!"}));
+        }
+    });
+});
 
 
 

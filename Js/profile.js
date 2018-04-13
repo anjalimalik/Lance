@@ -1,10 +1,8 @@
 var email, pass, name, edu, skills, desc, contact, links, pic, docs, userProfileID;
 var urlChangePass = "http://localhost:5500/changePassword"
-var urlNotifications = "http://localhost:5500/getAllNotifications"
 var urlGetProfile = "http://localhost:5500/getProfile"
 var urlUpload = "http://localhost:5500/api/upload";
 var urlUserID = "http://localhost:5500/getUserID";
-var numNotifs = 0;
 
 var uID = "";
 
@@ -142,7 +140,7 @@ function displayNotifications() {
     }
 
     // function to get notifications
-    btn_getNotifications();
+    getNotifications();
 }
 
 $(function () {
@@ -289,65 +287,8 @@ function btn_passChange() {
     clearSetModal();
 }
 
-
-// GET ALL NOTIFICATIONS
-function btn_getNotifications() {
-
-    console.log(email);
-    fetch(urlNotifications, {
-        method: "POST",
-        headers: {
-            'Accept': 'application/json',
-            'content-type': 'application/json'
-        },
-        body: JSON.stringify({
-            // "email": email
-            "id": uID
-        })
-
-    }).then(function (res) {
-        console.log("Inside res function");
-        if (res.ok) {
-            res.json().then(function (data) {
-                console.log(data.message);
-                console.log(data.response);
-                console.log("Inside res.ok, Get Notifications successful!");
-                var length = Object.keys(data.response).length;
-                if (length != 0 && numNotifs < length) {
-                    numNotifs = 0;
-                    var json = data.response;
-                    for (i = 0; i < length; i++) {
-                        var ul = document.createElement("a");
-                        ul.setAttribute('class', 'notifClass dropdown-item');
-                        ul.innerHTML = (json[i].Notification).toString();
-                        ul.style = "border-bottom: 1px solid #ccc; margin-left:-40px;color:#333399;";
-                        document.getElementById("notif").appendChild(ul);
-                        numNotifs++;
-                    }
-                }
-                else if (numNotifs == 0) {
-                    numNotifs--;
-                    var ul = document.createElement("a");
-                    ul.setAttribute('class', 'notifClass dropdown-item');
-                    ul.innerHTML = "No notifications available for you at this time.";
-                    ul.style = "border-bottom: 1px solid #ccc;";
-                    document.getElementById("notif").appendChild(ul);
-                }
-            }.bind(this));
-        }
-        else {
-            alert("Error: Get notifications unsuccessful!");
-            res.json().then(function (data) {
-                console.log(data.message);
-            }.bind(this));
-        }
-    }).catch(function (err) {
-        alert("Error: No internet connection!");
-        console.log(err.message + ": No Internet Connection");
-    });
-
-}
-
+// upload picture method
+// need to debug as of now
 function uploadPicture() {
 
     var input = document.querySelector('input[type="file"]')

@@ -10,9 +10,12 @@ var urlCreatePost = "http://localhost:5500/CreatePost"
 var urlCatAttributes = "http://localhost:5500/getCatAttributes";
 var urlEditPost = "http://localhost:5500/EditPost";
 var urlUserID = "http://localhost:5500/getUserID";
+var urlAllNotifications = "http://localhost:5500/getAllNotifications"
+var urlNewNotifications = "http://localhost:5500/getNewNotifications";
 
 var emailAdd;
 var uID = "";
+var numNotifs = 0;
 
 function onLoad_home() {
     var url = window.location.href;
@@ -1251,25 +1254,10 @@ function closeEditPostModal() {
     document.getElementById("pickedEditCategory").value = null;
 }
 
-function showNotifications() {
-
-    document.getElementById("optionsToggle").style.display = "none";
-    var x = document.getElementById("notificationsToggle");
-
-    if (x.style.display === "none") {
-        x.style.display = "block";
-    } else {
-        x.style.display = "none";
-    }
-
-    // function to get notifications
-    getNotifications();
-}
-
 // get notifications in dropdown list
 function getNotifications() {
 
-    fetch(urlNotifications, {
+    fetch(urlNewNotifications, {
         method: "POST",
         headers: {
             'Accept': 'application/json',
@@ -1285,7 +1273,6 @@ function getNotifications() {
         if (res.ok) {
             res.json().then(function (data) {
                 console.log(data.message);
-                console.log(data.response);
                 console.log("Inside res.ok, Get Notifications successful!");
                 var length = Object.keys(data.response).length;
                 if (length != 0 && numNotifs < length) {
@@ -1297,16 +1284,31 @@ function getNotifications() {
                         ul.innerHTML = (json[i].Notification);
                         ul.style = "border-bottom: 1px solid #ccc; margin-left:-40px;color:#333399;";
                         document.getElementById("notif").appendChild(ul);
+
                         numNotifs++;
                     }
+                    
+                    // view all notifications list
+                    var listNotifs = document.createElement("a");
+                    listNotifs.setAttribute('class', 'notifClass dropdown-item');
+                    listNotifs.innerHTML = "See All";
+                    listNotifs.style = "border-bottom: 1px solid #ccc; text-align:center; color:#333399; font-weight: bold;";
+                    document.getElementById("notif").appendChild(listNotifs);
                 }
                 else if (numNotifs == 0) {
                     numNotifs--;
                     var ul = document.createElement("a");
                     ul.setAttribute('class', 'notifClass dropdown-item half-rule');
-                    ul.innerHTML = "No notifications available for you at this time.";
-                    ul.style = "border-bottom: 1px solid #ccc;";
+                    ul.innerHTML = "No new notifications available for you at this time.";
+                    ul.style = "border-bottom: 1px solid #ccc; margin-left:0;";
                     document.getElementById("notif").appendChild(ul);
+
+                    // view all notifications list
+                    var listNotifs = document.createElement("a");
+                    listNotifs.setAttribute('class', 'notifClass dropdown-item');
+                    listNotifs.innerHTML = "See All";
+                    listNotifs.style = "border-bottom: 1px solid #ccc; text-align:center; color:#333399; font-weight: bold;";
+                    document.getElementById("notif").appendChild(listNotifs);
                 }
 
 
