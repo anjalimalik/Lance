@@ -59,9 +59,11 @@
 
         <!-- Notifications -->
         <li class="nav-item dropdown show">
-          <a href="#" id="notifications_btn" onclick="displayNotifications()" class="nav-link dropdown-toggle" data-toggle="dropdown"
-            role="button" aria-haspopup="true" aria-expanded="false" style="margin-left:150px;">Notifications <span class="caret"></span></a>
-          <div id="notificationsToggle" class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 38px, 0px);margin-left: 150px; left: 355px; top: 0px; will-change: transform;">
+          <a href="#" id="notifications_btn" onclick="displayNotifications()" class="navbar-brand nav-link dropdown-toggle" data-toggle="dropdown"
+            role="button" aria-haspopup="true" aria-expanded="false" style="margin-left:250px; margin-top:-5px;">
+            <img src="../css/Assets/notifications.png" width="20" height="20" alt="Notifications"></img>
+            <span class="caret"></span></a>
+          <div id="notificationsToggle" class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 38px, 0px);margin-left: 200px; left: 355px; top: 0px; will-change: transform;">
             <div id="notif">
 
             </div>
@@ -72,9 +74,11 @@
 
         <!-- Options -->
         <li class="nav-item dropdown show">
-          <a href="#" id="options_btn" onclick="displayOptions()" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button"
-            aria-haspopup="true" aria-expanded="false" style="margin-left:305px;">Options <span class="caret"></span></a>
-          <div id="optionsToggle" class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 38px, 0px); top: 0px; left: 705px; will-change: transform;">
+          <a href="#" id="options_btn" onclick="displayOptions()" class="navbar-brand nav-link dropdown-toggle" data-toggle="dropdown" role="button"
+            aria-haspopup="true" aria-expanded="false" style="margin-left:350px; margin-top:-5px;">
+            <img src="../css/Assets/options.png" width="25" height="25" alt="Options"></img>
+            <span class="caret"></span></a>
+          <div id="optionsToggle" class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 38px, 0px); top: 0px; left: 750px; will-change: transform;">
             <a class="dropdown-item btn btn-success btn-sm" style="margin-left: 0px; font-size: 12px;" href="#" onclick="goToProfile()">View Profile</a>
             <div class="dropdown-divider"></div>
             <a href="#" class="dropdown-item btn btn-success btn-sm" style="margin-left: 0px; font-size: 12px;" onclick="btn_logout()">Logout</a>

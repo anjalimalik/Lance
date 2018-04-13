@@ -1287,12 +1287,12 @@ function getNotifications() {
 
                         numNotifs++;
                     }
-                    
+
                     // view all notifications list
                     var listNotifs = document.createElement("a");
                     listNotifs.setAttribute('class', 'notifClass dropdown-item');
                     listNotifs.innerHTML = "See All";
-                    listNotifs.style = "border-bottom: 1px solid #ccc; text-align:center; color:#333399; font-weight: bold;";
+                    listNotifs.style = "border-bottom: 1px solid #ccc; text-align:center; margin-left:-40px; color:#333399; font-weight: bold;";
                     document.getElementById("notif").appendChild(listNotifs);
                 }
                 else if (numNotifs == 0) {
