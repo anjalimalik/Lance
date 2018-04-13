@@ -715,27 +715,25 @@ app.post('/ClosePost', (req, res) => {
         return res.status(400).json({ message: "Missing information" });
     }
 
-    let query = 'DELETE FROM Posts WHERE idPosts = ?';
+    let query1 = 'DELETE FROM Posts WHERE idPosts = ?';
 
-    db.query(query, postId, (error, response) => {
-        console.log(response);
-
+    db.query(query1, postId, (error, response) => {
         if (error) {
-            res.send(JSON.stringify({
-                "status": 500,
-                "error": error,
-                "message": "Internal server error",
-                "response": null
-            }));
+            res.send(JSON.stringify({ "status": 500, "error": error, "message": "Internal server error", "response": null }));
         }
 
         else {
-            res.send(JSON.stringify({
-                "status": 200,
-                "error": null,
-                "response": response,
-                "message": "Success! Post closed/deleted."
-            }));
+            let query2 = 'DELETE FROM Comments WHERE idPosts = ?';
+
+            db.query(query2, postId, (err, resp) => {
+                if (err) {
+                    res.send(JSON.stringify({ "status": 500, "error": err, "message": "Internal server error", "response": null }));
+                }
+
+                else {
+                    res.send(JSON.stringify({"status": 200,"error": null,"response": resp,"message": "Success! Post closed/deleted."}));
+                }
+            });
         }
     });
 });
@@ -745,7 +743,7 @@ app.post('/ClickInterested', (req, res) => {
     var postId = req.body.postId;
 
     // who liked it
-    var id= req.body.id;
+    var id = req.body.id;
 
     if (!postId || !id) {
         return res.status(400).json({ message: "Missing information" });
@@ -1028,10 +1026,10 @@ app.post('/getNumNotifications', function (req, res) {
     db.query(query1, id, (err, result) => {
         console.log(result);
         if (err) {
-            res.send(JSON.stringify({"status": 500, "error": err,"response": null, "message": "Internal server error"}));
+            res.send(JSON.stringify({ "status": 500, "error": err, "response": null, "message": "Internal server error" }));
         }
         else {
-            res.send(JSON.stringify({"status": 200,"error": null,"response": result,"message": "Success! Number of new notifications recieved!"}));
+            res.send(JSON.stringify({ "status": 200, "error": null, "response": result, "message": "Success! Number of new notifications recieved!" }));
         }
     });
 });
@@ -1317,10 +1315,10 @@ app.post('/getSelectedPost', function (req, res) {
     // get that post
     db.query(query, id, function (error, response) {
         if (error) {
-            res.send(JSON.stringify({ "status": 500,"error": error, "response": null,"message": "Internal server error"}));
+            res.send(JSON.stringify({ "status": 500, "error": error, "response": null, "message": "Internal server error" }));
         }
         else {
-            res.send(JSON.stringify({ "status": 200,"error": null, "response": response,"message": "Success! Selected post retrieved!"}));
+            res.send(JSON.stringify({ "status": 200, "error": null, "response": response, "message": "Success! Selected post retrieved!" }));
         }
     });
 });
@@ -1334,10 +1332,10 @@ app.post('/getOwnerIDofPost', function (req, res) {
 
     db.query(query, id, function (error, response) {
         if (error) {
-            res.send(JSON.stringify({ "status": 500,"error": error, "response": null,"message": "Internal server error"}));
+            res.send(JSON.stringify({ "status": 500, "error": error, "response": null, "message": "Internal server error" }));
         }
         else {
-            res.send(JSON.stringify({ "status": 200,"error": null, "response": response,"message": "Success! User ID of the owner of the post retrieved!" }));
+            res.send(JSON.stringify({ "status": 200, "error": null, "response": response, "message": "Success! User ID of the owner of the post retrieved!" }));
         }
     });
 });
