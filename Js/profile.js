@@ -492,5 +492,4 @@ function getUserProfile(otheruserid) {
 
 }
 
-
-window.gotoUserProfile = gotoUserProfile;
+window.gotoUserProfile = gotoUserProfile; // just making sure the function is globally available

@@ -461,14 +461,10 @@ function decipherPass(email, encrypted) {
 // Endpoint to Logout
 app.post('/logout', function (req, res) {
 
-    var signOut = req.body.signOut;
     var email = req.body.email;
 
     if (!email) {
         return res.status(401).json({ message: "User not logged in!" });
-    }
-    if (!signOut) {
-        return res.status(401).json({ message: "Logout selection not recieved" });
     }
 
     // reset AuthToken and AuthTokenIssued
