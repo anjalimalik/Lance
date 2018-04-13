@@ -544,7 +544,8 @@ function expandComments(postID, num, json) {
 
 // ADD COMMENT METHOD
 function addComment(postID, email, num) {
-    $('.notifClass.dropdown-item').remove();
+    $('.notifClass.dropdown-item').remove(); //remove past notfications
+
     var comment = document.getElementById("txtComment").value;
     postID = parseInt(postID);
     fetch(urlWriteComment, {

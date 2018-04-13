@@ -59,10 +59,11 @@
 
         <!-- Notifications -->
         <li class="nav-item dropdown show">
-          <a href="#" id="notifications_btn" onclick="displayNotifications()" class="navbar-brand nav-link dropdown-toggle" data-toggle="dropdown"
-            role="button" aria-haspopup="true" aria-expanded="false" style="margin-left:250px; margin-top:-5px;">
+          <a href="#" id="notifications_btn" onclick="displayNotifications()" class="notifications navbar-brand nav-link dropdown-toggle"
+            data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="margin-left:250px; margin-top:-5px;">
             <img src="../css/Assets/notifications.png" width="20" height="20" alt="Notifications"></img>
-            <span class="caret"></span></a>
+            <span class="notification-counter">0</span>
+          </a>
           <div id="notificationsToggle" class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 38px, 0px);margin-left: 200px; left: 355px; top: 0px; will-change: transform;">
             <div id="notif">
 
@@ -74,8 +75,8 @@
 
         <!-- Options -->
         <li class="nav-item dropdown show">
-          <a href="#" id="options_btn" onclick="displayOptions()" class="navbar-brand nav-link dropdown-toggle" data-toggle="dropdown" role="button"
-            aria-haspopup="true" aria-expanded="false" style="margin-left:350px; margin-top:-5px;">
+          <a href="#" id="options_btn" onclick="displayOptions()" class="navbar-brand nav-link dropdown-toggle" data-toggle="dropdown"
+            role="button" aria-haspopup="true" aria-expanded="false" style="margin-left:350px; margin-top:-5px;">
             <img src="../css/Assets/options.png" width="25" height="25" alt="Options"></img>
             <span class="caret"></span></a>
           <div id="optionsToggle" class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 38px, 0px); top: 0px; left: 750px; will-change: transform;">
@@ -389,21 +390,37 @@
   }
 
   #btnOffer {
-      position: relative;
-      display: inline;
-      text-align: center;
-      margin-bottom: 20%;
-      width: 45%;
+    position: relative;
+    display: inline;
+    text-align: center;
+    margin-bottom: 20%;
+    width: 45%;
   }
 
   #btnRequest {
-      position: relative;
-      display: inline;
-      text-align: center;
-      margin-bottom: 20%;
-      width: 45%;
+    position: relative;
+    display: inline;
+    text-align: center;
+    margin-bottom: 20%;
+    width: 45%;
   }
 
+  .notifications {
+    position: relative;
+  }
+
+  .notification-counter {
+    margin-left: -15px;
+    margin-top: -5px;
+    width: 18px;
+    height: 18px;
+    position: absolute;
+    background-color: rgba(212, 19, 13, 1);
+    color: #fff;
+    border-radius: 3px;
+    padding: 1px 3px;
+    font: 11px Verdana;
+  }
 </style>
 
 </html>
