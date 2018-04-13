@@ -627,18 +627,17 @@ app.post('/WriteComment', (req, res) => {
 
     var postId = req.body.postId;
     var comment = req.body.comment;
-    var email = req.body.email; // email of the person who commented
     var sender = ""; // name of the person who commented
     var userid = 0; // user id of the person who is the owner of the post
-    var useridCommenter = 0; // user id of the person who commented on the post
+    var useridCommenter = req.body.id; // user id of the person who commented on the post
 
     // call function to make new notification
     newNotification(comment, postId, email);
 
     /* Getting full name of the user who commented */
-    let query1 = "SELECT FullName, idUsers FROM Users WHERE Email = ?";
+    let query1 = "SELECT FullName FROM Users WHERE idUsers = ?";
 
-    db.query(query1, email, function (err1, resp1) {
+    db.query(query1, useridCommenter, function (err1, resp1) {
         console.log(resp1);
         if (err1) {
             res.send(JSON.stringify({
@@ -652,7 +651,6 @@ app.post('/WriteComment', (req, res) => {
             var string = JSON.stringify(resp1);
             var json = JSON.parse(string);
             sender = sender.concat(json[0].FullName);
-            useridCommenter = parseInt(json[0].idUsers);
 
             /* Next, getting user id of the person who's post was commented on */
             let query2 = "SELECT UserID FROM Posts WHERE idPosts = ?";
@@ -1318,22 +1316,28 @@ app.post('/getSelectedPost', function (req, res) {
 
     // get that post
     db.query(query, id, function (error, response) {
-        console.log(response);
         if (error) {
-            res.send(JSON.stringify({
-                "status": 500,
-                "error": error,
-                "response": null,
-                "message": "Internal server error"
-            }));
+            res.send(JSON.stringify({ "status": 500,"error": error, "response": null,"message": "Internal server error"}));
         }
         else {
-            res.send(JSON.stringify({
-                "status": 200,
-                "error": null,
-                "response": response,
-                "message": "Success! Selected post retrieved!"
-            }));
+            res.send(JSON.stringify({ "status": 200,"error": null, "response": response,"message": "Success! Selected post retrieved!"}));
+        }
+    });
+});
+
+// get user id of the owner of the post
+// for notifications counter
+app.post('/getOwnerIDofPost', function (req, res) {
+    var id = req.body.postID;
+
+    let query = "SELECT UserID FROM Posts WHERE idPosts = ?";
+
+    db.query(query, id, function (error, response) {
+        if (error) {
+            res.send(JSON.stringify({ "status": 500,"error": error, "response": null,"message": "Internal server error"}));
+        }
+        else {
+            res.send(JSON.stringify({ "status": 200,"error": null, "response": response,"message": "Success! User ID of the owner of the post retrieved!" }));
         }
     });
 });

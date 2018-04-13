@@ -12,6 +12,7 @@ var urlEditPost = "http://localhost:5500/EditPost";
 var urlUserID = "http://localhost:5500/getUserID";
 var urlAllNotifications = "http://localhost:5500/getAllNotifications"
 var urlNewNotifications = "http://localhost:5500/getNewNotifications";
+var urlOwnerIDofPost = "http://localhost:5500/getOwnerIDofPost";
 
 var emailAdd;
 var uID = "";
@@ -548,6 +549,9 @@ function addComment(postID, email, num) {
 
     var comment = document.getElementById("txtComment").value;
     postID = parseInt(postID);
+
+    let OwnerID = getUserIDofPost(postID);
+
     fetch(urlWriteComment, {
         method: "POST",
         headers: {
@@ -557,11 +561,26 @@ function addComment(postID, email, num) {
         body: JSON.stringify({
             "postId": postID,
             "comment": comment,
-            "email": emailAdd
+            "id": uID
         })
 
     }).then(function (res) {
         if (res.ok) {
+
+            // notificationc counter incremented
+            if (OwnerID == uID) {
+                $('.notification-counter').style = "display: block;";
+                $counter = $('.notification-counter');
+                val = parseInt($counter.text());
+                val++;
+                
+                $counter
+                .css({opacity: 0})
+                .text(val)
+                .css({top: '-10px'})
+                .transition({top: '-2px', opacity: 1})
+            }
+
             res.json().then(function (data) {
                 console.log("Inside res.ok. New comment added");
             }.bind(this));
@@ -577,8 +596,43 @@ function addComment(postID, email, num) {
         console.log(err.message + ": No Internet Connection");
     });
 
+    // remoce past comments and close the modal
     $('.comment').remove();
     $('#myCommentsModal').modal('hide');
+}
+
+// Function to get user id from post id (id of the owner of the post)
+function getUserIDofPost(postID){
+    var OwnerID = 0;
+
+    fetch(urlOwnerIDofPost, {
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+            "postID": postID
+        })
+    }).then(function (res) {
+        if (res.ok) {
+            res.json().then(function (data) {
+                OwnerID = parseInt(data.response[0].UserID);
+                console.log("Inside res.ok. Owner ID retrieved");
+            }.bind(this));
+        }
+        else {
+            alert("Error: getting Owner ID unsuccessful!");
+            res.json().then(function (data) {
+                console.log(data.message);
+            }.bind(this));
+        }
+    }).catch(function (err) {
+        alert("Error: No internet connection!");
+        console.log(err.message + ": No Internet Connection");
+    });
+
+    return OwnerID;
 }
 
 // SORT POSTS based on either date or price
