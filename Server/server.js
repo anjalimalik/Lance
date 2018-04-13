@@ -745,14 +745,14 @@ app.post('/ClickInterested', (req, res) => {
     var postId = req.body.postId;
 
     // who liked it
-    var email = req.body.email;
+    var id= req.body.id;
 
-    if (!postId || !email) {
+    if (!postId || !id) {
         return res.status(400).json({ message: "Missing information" });
     }
 
     // function to send new notification for the like
-    newNotification("like", postId, email);
+    newNotification("like", postId, id);
 
     let query = "SELECT numLikes FROM Posts WHERE idPosts = ?";
 

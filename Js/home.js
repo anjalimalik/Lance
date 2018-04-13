@@ -17,6 +17,7 @@ var urlOwnerIDofPost = "http://localhost:5500/getOwnerIDofPost";
 var emailAdd;
 var uID = "";
 var numNotifs = 0;
+var OwnerIDofPost = 0; 
 
 function onLoad_home() {
     var url = window.location.href;
@@ -318,6 +319,9 @@ function clickInterested(postID) {
 
     $('.notifClass.dropdown-item').remove(); //remove past notfications
     $('.notifClass.dropdown-item.half-rule').remove(); //remove past notfications
+
+    // get id of the owner
+    getUserIDofPost(postID);
     
     postID = parseInt(postID);
     fetch(urlLike, {
@@ -327,11 +331,20 @@ function clickInterested(postID) {
             'content-type': 'application/json'
         },
         body: JSON.stringify({
-            "email": emailAdd,
+            "id": uID,
             "postId": postID
         })
 
     }).then(function (res) {
+
+        // notifications counter incremented
+        if (OwnerIDofPost == uID) {
+            var val = document.getElementById("counter").innerHTML;
+            val++;
+            document.getElementById("counter").innerHTML = val;
+            document.getElementById("counter").style.display ="block";
+        }
+
         if (res.ok) {
             res.json().then(function (data) {
                 var likesid = "txtLikes".concat(postID);
@@ -555,8 +568,10 @@ function addComment(postID, email, num) {
     var comment = document.getElementById("txtComment").value;
     postID = parseInt(postID);
 
-    let OwnerID = getUserIDofPost(postID);
+    // get id of the owner
+    getUserIDofPost(postID);
 
+    // send new comment to the server
     fetch(urlWriteComment, {
         method: "POST",
         headers: {
@@ -571,19 +586,12 @@ function addComment(postID, email, num) {
 
     }).then(function (res) {
         if (res.ok) {
-
-            // notificationc counter incremented
-            if (OwnerID == uID) {
-                $('.notification-counter').style = "display: block;";
-                $counter = $('.notification-counter');
-                val = parseInt($counter.text());
+            // notifications counter incremented
+            if (OwnerIDofPost == uID) {
+                var val = document.getElementById("counter").innerHTML;
                 val++;
-                
-                $counter
-                .css({opacity: 0})
-                .text(val)
-                .css({top: '-10px'})
-                .transition({top: '-2px', opacity: 1})
+                document.getElementById("counter").innerHTML = val;
+                document.getElementById("counter").style.display ="block";
             }
 
             res.json().then(function (data) {
@@ -608,7 +616,6 @@ function addComment(postID, email, num) {
 
 // Function to get user id from post id (id of the owner of the post)
 function getUserIDofPost(postID){
-    var OwnerID = 0;
 
     fetch(urlOwnerIDofPost, {
         method: "POST",
@@ -622,7 +629,7 @@ function getUserIDofPost(postID){
     }).then(function (res) {
         if (res.ok) {
             res.json().then(function (data) {
-                OwnerID = parseInt(data.response[0].UserID);
+                OwnerIDofPost = parseInt(data.response[0].UserID);
                 console.log("Inside res.ok. Owner ID retrieved");
             }.bind(this));
         }
@@ -636,8 +643,6 @@ function getUserIDofPost(postID){
         alert("Error: No internet connection!");
         console.log(err.message + ": No Internet Connection");
     });
-
-    return OwnerID;
 }
 
 // SORT POSTS based on either date or price
