@@ -632,7 +632,7 @@ app.post('/WriteComment', (req, res) => {
     var useridCommenter = req.body.id; // user id of the person who commented on the post
 
     // call function to make new notification
-    newNotification(comment, postId, email);
+    newNotification(comment, postId, useridCommenter);
 
     /* Getting full name of the user who commented */
     let query1 = "SELECT FullName FROM Users WHERE idUsers = ?";
@@ -842,7 +842,7 @@ app.post('/getProfile', function (req, res) {
 
 
 // Function to add a new notification after every like and comment
-function newNotification(str, postid, senderEmail) {
+function newNotification(str, postid, useridActor) {
 
     var notification = "";
     var sender = ""; // name of the person who liked or commented
@@ -850,9 +850,9 @@ function newNotification(str, postid, senderEmail) {
     var headline = ""; //headline of the post that was liked or commented on
 
     /* Getting full name of the user who liked or commented */
-    let query1 = "SELECT FullName FROM Users WHERE Email = ?";
+    let query1 = "SELECT FullName FROM Users WHERE idUsers = ?";
 
-    db.query(query1, senderEmail, function (err1, resp1) {
+    db.query(query1, useridActor, function (err1, resp1) {
         console.log(resp1);
         if (err1) {
             console.log("Internal server error");

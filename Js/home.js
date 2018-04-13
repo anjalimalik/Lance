@@ -315,7 +315,10 @@ function reportPost(postID) {
 
 // CLICK INTERESTED
 function clickInterested(postID) {
-    $('.notifClass.dropdown-item').remove();
+
+    $('.notifClass.dropdown-item').remove(); //remove past notfications
+    $('.notifClass.dropdown-item.half-rule').remove(); //remove past notfications
+    
     postID = parseInt(postID);
     fetch(urlLike, {
         method: "POST",
@@ -545,8 +548,10 @@ function expandComments(postID, num, json) {
 
 // ADD COMMENT METHOD
 function addComment(postID, email, num) {
-    $('.notifClass.dropdown-item').remove(); //remove past notfications
 
+    $('.notifClass.dropdown-item').remove(); //remove past notfications
+    $('.notifClass.dropdown-item.half-rule').remove(); //remove past notfications
+    
     var comment = document.getElementById("txtComment").value;
     postID = parseInt(postID);
 
@@ -1337,7 +1342,7 @@ function getNotifications() {
                         var ul = document.createElement("a");
                         ul.setAttribute('class', 'notifClass dropdown-item');
                         ul.innerHTML = (json[i].Notification);
-                        ul.style = "border-bottom: 1px solid #ccc; margin-left:-40px;color:#333399;";
+                        ul.style = "border-bottom: 1px solid #ccc;color:#333399;";
                         document.getElementById("notif").appendChild(ul);
 
                         numNotifs++;
@@ -1347,7 +1352,7 @@ function getNotifications() {
                     var listNotifs = document.createElement("a");
                     listNotifs.setAttribute('class', 'notifClass dropdown-item');
                     listNotifs.innerHTML = "See All";
-                    listNotifs.style = "border-bottom: 1px solid #ccc; text-align:center; margin-left:-40px; color:#333399; font-weight: bold;";
+                    listNotifs.style = "border-bottom: 1px solid #ccc; text-align:center; color:#333399; font-weight: bold;";
                     document.getElementById("notif").appendChild(listNotifs);
                 }
                 else if (numNotifs == 0) {
