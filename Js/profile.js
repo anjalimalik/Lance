@@ -15,19 +15,21 @@ function onLoad_profile() {
     // get email
     var url = window.location.href;
     var str = url.split("?email=");
-    if (url == str) {
-        str = url.split("?id1=");
+
+    email = str[1];
+    if (email === null) {
+        alert("You have to be logged in first!");
+        window.location.href = "index.html";
+    }
+    else if (email.includes("&")) {
+        str = email.split("&id1=");
+        email = str[0];
         var otheruserid = str[1];
         if (otheruserid.includes("#")) {
             otheruserid = otheruserid.replace("#", "");
         }
         getUserProfile(otheruserid);
         return;
-    }
-    email = str[1];
-    if (email === null) {
-        alert("You have to be logged in first!");
-        window.location.href = "index.html";
     }
     else if (email.includes("#")) {
         email = email.replace("#", "");
@@ -77,7 +79,7 @@ function onLoad_profile() {
                             desc = json[0].Description;
                             skills = json[0].SkillsSet;
                             userProfileID = json[0].idUsers;
-                            populate_profile();
+                            populate_profile(email);
                             document.getElementById("editProfileBtn").style.display = "block";
 
                             // notifications
@@ -202,9 +204,9 @@ function imageIsLoaded(e) {
     $('#img_profile').attr('src', e.target.result);
 }
 
-function populate_profile() {
+function populate_profile(useremail) {
     document.getElementById("profile_name").innerHTML = name;
-    document.getElementById("profile_email").innerHTML = email;
+    document.getElementById("profile_email").innerHTML = useremail;
     document.getElementById("profile_edu").innerHTML = edu;
     document.getElementById("profile_contact").innerHTML = contact;
     document.getElementById("profile_desc").innerHTML = desc;
@@ -436,8 +438,8 @@ function setFullStarState(target) {
 
 /* Star ratings end */
 
-function gotoUserProfile(otheruserid, uid) {
-    window.location.href = "profile.html?id1=".concat(otheruserid);
+function gotoUserProfile(otheruserid) {
+    window.location.href = "profile.html?email=".concat(emailAdd, "&id1=", otheruserid);
 }
 
 function getUserProfile(otheruserid) {
@@ -471,7 +473,8 @@ function getUserProfile(otheruserid) {
                 desc = json[0].Description;
                 skills = json[0].SkillsSet;
                 userProfileID = json[0].idUsers;
-                populate_profile();
+                otheruseremail = json[0].Email;
+                populate_profile(otheruseremail);
             }.bind(this));
         }
         else {
