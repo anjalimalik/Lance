@@ -935,20 +935,21 @@ function newNotification(str, postid, senderEmail) {
 app.post('/getAllNotifications', function (req, res) {
 
     var id = req.body.id;
+    console.log(id);
 
     if (!id) {
         return res.status(400).json({ message: "Missing information" });
     }
 
     // get data from Notifications using the user id
-    let query2 = "SELECT Notification FROM Notifications WHERE idUsers = ? ORDER BY msec DESC";
+    let query = "SELECT Notification FROM Notifications WHERE idUsers = ? ORDER BY msec DESC";
 
-    db.query(query2, id, (err, result) => {
+    db.query(query, id, (err, result) => {
         console.log(result);
-        if (error) {
+        if (err) {
             res.send(JSON.stringify({
                 "status": 500,
-                "error": error,
+                "error": err,
                 "response": null,
                 "message": "Internal server error"
             }));

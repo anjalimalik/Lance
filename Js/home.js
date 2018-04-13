@@ -1269,7 +1269,6 @@ function showNotifications() {
 // get notifications in dropdown list
 function getNotifications() {
 
-    console.log(emailAdd);
     fetch(urlNotifications, {
         method: "POST",
         headers: {
