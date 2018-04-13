@@ -15,6 +15,7 @@ function onLoad_profile() {
     // get email
     var url = window.location.href;
     var str = url.split("?email=");
+    var otheruserid = null;
 
     email = str[1];
     if (email === null) {
@@ -22,14 +23,12 @@ function onLoad_profile() {
         window.location.href = "index.html";
     }
     else if (email.includes("&")) {
-        str = email.split("&id1=");
+        str = email.split("&id=");
         email = str[0];
-        var otheruserid = str[1];
+        otheruserid = str[1];
         if (otheruserid.includes("#")) {
             otheruserid = otheruserid.replace("#", "");
         }
-        getUserProfile(otheruserid);
-        return;
     }
     else if (email.includes("#")) {
         email = email.replace("#", "");
@@ -54,6 +53,12 @@ function onLoad_profile() {
             res.json().then(function (data) {
                 console.log("Inside res.ok. User ID retrieved");
                 uID = data.response[0].idUsers;
+
+                // if visiting another user's profile, get their profile
+                if (otheruserid){
+                    getUserProfile(otheruserid);
+                    return;
+                }
 
                 // get profile
                 fetch(urlGetProfile, {
@@ -439,17 +444,21 @@ function setFullStarState(target) {
 /* Star ratings end */
 
 function gotoUserProfile(otheruserid) {
-    window.location.href = "profile.html?email=".concat(emailAdd, "&id1=", otheruserid);
+    window.location.href = "profile.html?email=".concat(emailAdd, "&id=", otheruserid);
 }
 
 function getUserProfile(otheruserid) {
 
-    //if (otheruserid == uid) {
-    //document.getElementById("editProfileBtn").style.display = "block";
-    //}
-    //else {
-    document.getElementById("editProfileBtn").style.display = "none";
-    //}
+    // if the user is same as the one logged in, show edit and upload buttons.
+    if (otheruserid == uID) {
+        document.getElementById("editProfileBtn").style.display = "block";
+    }
+    else {
+        document.getElementById('uploadBtn').style.display = "none";
+        document.getElementById("editProfileBtn").style.display = "none";
+    }
+
+    // get profile of user
     fetch(urlGetProfile, {
         method: "POST",
         headers: {
