@@ -1277,7 +1277,8 @@ function getNotifications() {
             'content-type': 'application/json'
         },
         body: JSON.stringify({
-            "email": emailAdd
+            //"email": emailAdd
+            "id": uID
         })
 
     }).then(function (res) {

@@ -807,12 +807,16 @@ app.post('/getProfile', function (req, res) {
 
     var email = req.body.email;
     var id = req.body.id;
+
+    var query;
+    var params;
+
     if (email) {
-        let query = "SELECT * FROM Profiles WHERE Email = ?";
+        query= "SELECT * FROM Profiles WHERE Email = ?";
         params = [email];
     }
     else {
-        let query = "SELECT * FROM Profiles WHERE idUsers = ?";
+        query = "SELECT * FROM Profiles WHERE idUsers = ?";
         params = [id];
     }
 
@@ -907,7 +911,8 @@ function newNotification(str, postid, senderEmail) {
                         idPosts: postid,
                         Notification: notification,
                         SenderName: sender,
-                        msec: msec
+                        msec: msec,
+                        seen: 0
                     };
 
                     // INSERT INTO Notifications TABLE
@@ -926,18 +931,20 @@ function newNotification(str, postid, senderEmail) {
     });
 }
 
-//Get Notifications for user to view them
-app.post('/getNotifications', function (req, res) {
+//Get all Notifications for user to view them
+app.post('/getAllNotifications', function (req, res) {
 
-    var email = req.body.email;
+    var id = req.body.id;
 
-    if (!email) {
+    if (!id) {
         return res.status(400).json({ message: "Missing information" });
     }
 
-    let query1 = "SELECT idUsers FROM Users WHERE Email = ?";
-    db.query(query1, email, function (error, response) {
+    // get data from Notifications using the user id
+    let query2 = "SELECT Notification FROM Notifications WHERE idUsers = ? ORDER BY msec DESC";
 
+    db.query(query2, id, (err, result) => {
+        console.log(result);
         if (error) {
             res.send(JSON.stringify({
                 "status": 500,
@@ -946,47 +953,52 @@ app.post('/getNotifications', function (req, res) {
                 "message": "Internal server error"
             }));
         }
-
-        // Enter here if no account corresponds to the given email
-        if (response == null || response == "") {
-            res.send(JSON.stringify({
-                "status": 401,
-                "response": null,
-                "message": "Could not find account with this email"
-            }));
-        }
-
         else {
-            // get data from Notifications using the user id recieved fro previous query
-            let query2 = "SELECT Notification FROM Notifications WHERE idUsers = ? ORDER BY msec DESC LIMIT 20";
-
-            var string = JSON.stringify(response);
-            var json = JSON.parse(string);
-
-            var id = parseInt(json[0].idUsers);
-
-            db.query(query2, id, (err, result) => {
-                console.log(result);
-                if (error) {
-                    res.send(JSON.stringify({
-                        "status": 500,
-                        "error": error,
-                        "response": null,
-                        "message": "Internal server error"
-                    }));
-                }
-                else {
-                    res.send(JSON.stringify({
-                        "status": 200,
-                        "error": null,
-                        "response": result,
-                        "message": "Success! All notifications for user retrieved!"
-                    }));
-                }
-            });
+            res.send(JSON.stringify({
+                "status": 200,
+                "error": null,
+                "response": result,
+                "message": "Success! All notifications for user retrieved!"
+            }));
         }
     });
 });
+
+//Get unseen Notifications for user to view them
+app.post('/getNewNotifications', function (req, res) {
+
+    var id = req.body.id;
+
+    if (!id) {
+        return res.status(400).json({ message: "Missing information" });
+    }
+
+    // get data from Notifications using the user id
+    let query2 = "SELECT Notification FROM Notifications WHERE idUsers = ? ORDER BY msec DESC";
+
+    db.query(query2, id, (err, result) => {
+        console.log(result);
+        if (error) {
+            res.send(JSON.stringify({
+                "status": 500,
+                "error": error,
+                "response": null,
+                "message": "Internal server error"
+            }));
+        }
+        else {
+            res.send(JSON.stringify({
+                "status": 200,
+                "error": null,
+                "response": result,
+                "message": "Success! All notifications for user retrieved!"
+            }));
+        }
+    });
+});
+
+
+
 
 // Get Sorted list of Posts, using either by order - ASCENDING OR DESCENDING or by range - upper/lower bounds (either for money or date posted)
 app.post('/getSortedPosts', (req, res) => {
@@ -1305,7 +1317,7 @@ app.post('/DeleteUser', function (req, res) {
             var matchPass = response[0].Password;
             if (pass === matchPass) {
                 console.log("Current password is correct");
-                
+
                 //delete users one by one from all tables
                 let queryUsers = "DELETE FROM Users WHERE idUsers = ?";
 

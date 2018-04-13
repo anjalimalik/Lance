@@ -1,6 +1,6 @@
 var email, pass, name, edu, skills, desc, contact, links, pic, docs, userProfileID;
 var urlChangePass = "http://localhost:5500/changePassword"
-var urlNotifications = "http://localhost:5500/getNotifications"
+var urlNotifications = "http://localhost:5500/getAllNotifications"
 var urlGetProfile = "http://localhost:5500/getProfile"
 var urlUpload = "http://localhost:5500/api/upload";
 var urlUserID = "http://localhost:5500/getUserID";
@@ -21,7 +21,7 @@ function onLoad_profile() {
         if (otheruserid.includes("#")) {
             otheruserid = otheruserid.replace("#", "");
         }
-        getUserProfile(otheruserid, );
+        getUserProfile(otheruserid);
         return;
     }
     email = str[1];
@@ -36,7 +36,8 @@ function onLoad_profile() {
     // average ratings
     // averageRatings();
 
-    fetch(urlGetProfile, {
+    // get user id
+    fetch(urlUserID, {
         method: "POST",
         headers: {
             'Accept': 'application/json',
@@ -47,37 +48,70 @@ function onLoad_profile() {
         })
 
     }).then(function (res) {
-        console.log("Inside res function");
         if (res.ok) {
             res.json().then(function (data) {
-                var json = data.response;
-                name = json[0].FullName;
-                edu = json[0].Education;
-                links = json[0].Links;
-                contact = json[0].ContactInfo;
-                desc = json[0].Description;
-                skills = json[0].SkillsSet;
-                userProfileID = json[0].idUsers;
-                populate_profile();
-                document.getElementById("editProfileBtn").style.display = "block";
+                console.log("Inside res.ok. User ID retrieved");
+                uID = data.response[0].idUsers;
+
+                // get profile
+                fetch(urlGetProfile, {
+                    method: "POST",
+                    headers: {
+                        'Accept': 'application/json',
+                        'content-type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        "email": null,
+                        "id": uID
+                    })
+
+                }).then(function (res) {
+                    console.log("Inside res function");
+                    if (res.ok) {
+                        res.json().then(function (data) {
+                            var json = data.response;
+                            name = json[0].FullName;
+                            edu = json[0].Education;
+                            links = json[0].Links;
+                            contact = json[0].ContactInfo;
+                            desc = json[0].Description;
+                            skills = json[0].SkillsSet;
+                            userProfileID = json[0].idUsers;
+                            populate_profile();
+                            document.getElementById("editProfileBtn").style.display = "block";
+
+                        }.bind(this));
+                    }
+                    else {
+                        alert("Error: get profile unsuccessful!");
+                        res.json().then(function (data) {
+                            console.log(data.message);
+                        }.bind(this));
+                        return;
+                    }
+                }).catch(function (err) {
+                    alert("Error: No internet connection!");
+                    console.log(err.message + ": No Internet Connection");
+                    return;
+                });
 
             }.bind(this));
         }
         else {
-            alert("Error: get profile unsuccessful!");
+            console.log("Error: Cannot get UserID");
             res.json().then(function (data) {
                 console.log(data.message);
             }.bind(this));
-            return;
         }
     }).catch(function (err) {
         alert("Error: No internet connection!");
         console.log(err.message + ": No Internet Connection");
-        return;
     });
 
-    var img = new Image();
-    img.src = "./../css/Assets/spinner.jpg";
+
+
+    //var img = new Image();
+    //img.src = "./../css/Assets/spinner.jpg";
     document.getElementById("img_profile").src = "./../css/Assets/user_icon.jpg";
 }
 
@@ -256,6 +290,7 @@ function btn_passChange() {
 }
 
 
+// GET ALL NOTIFICATIONS
 function btn_getNotifications() {
 
     console.log(email);
@@ -266,7 +301,8 @@ function btn_getNotifications() {
             'content-type': 'application/json'
         },
         body: JSON.stringify({
-            "email": email
+            // "email": email
+            "id": uID
         })
 
     }).then(function (res) {
@@ -421,10 +457,10 @@ function gotoUserProfile(otheruserid, uid) {
 function getUserProfile(otheruserid) {
 
     //if (otheruserid == uid) {
-        //document.getElementById("editProfileBtn").style.display = "block";
+    //document.getElementById("editProfileBtn").style.display = "block";
     //}
     //else {
-        document.getElementById("editProfileBtn").style.display = "none";
+    document.getElementById("editProfileBtn").style.display = "none";
     //}
     fetch(urlGetProfile, {
         method: "POST",
