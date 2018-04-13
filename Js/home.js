@@ -17,7 +17,7 @@ var urlOwnerIDofPost = "http://localhost:5500/getOwnerIDofPost";
 var emailAdd;
 var uID = "";
 var numNotifs = 0;
-var OwnerIDofPost = 0; 
+var OwnerIDofPost = 0;
 
 function onLoad_home() {
     var url = window.location.href;
@@ -46,6 +46,7 @@ function onLoad_home() {
             res.json().then(function (data) {
                 console.log("Inside res.ok. User ID retrieved");
                 uID = data.response[0].idUsers;
+                getNumOfNewNotifs(); // get num of notifs
                 getAllPosts();
             }.bind(this));
         }
@@ -132,7 +133,7 @@ function createCard(user, content, headline, postingType, price, postID, date, l
 
     /* Offer/Request */
     var ReqOff = document.createElement("p");
-    var str = postingType.concat(" by ", "<b style=\"", "color:#333399; font-weight:bold\">", "<a href='#' onclick=\"gotoUserProfile(", userid, ",", uID, ")\">" , user, "</a></b>");
+    var str = postingType.concat(" by ", "<b style=\"", "color:#333399; font-weight:bold\">", "<a href='#' onclick=\"gotoUserProfile(", userid, ",", uID, ")\">", user, "</a></b>");
     ReqOff.style = "font-family:monaco;font-size:14px;color:#666699;float:left;";
     ReqOff.innerHTML = str;
     divHeader.appendChild(ReqOff);
@@ -317,12 +318,9 @@ function reportPost(postID) {
 // CLICK INTERESTED
 function clickInterested(postID) {
 
-    $('.notifClass.dropdown-item').remove(); //remove past notfications
-    $('.notifClass.dropdown-item.half-rule').remove(); //remove past notfications
-
     // get id of the owner
     getUserIDofPost(postID);
-    
+
     postID = parseInt(postID);
     fetch(urlLike, {
         method: "POST",
@@ -342,7 +340,7 @@ function clickInterested(postID) {
             var val = document.getElementById("counter").innerHTML;
             val++;
             document.getElementById("counter").innerHTML = val;
-            document.getElementById("counter").style.display ="block";
+            document.getElementById("counter").style.display = "block";
         }
 
         if (res.ok) {
@@ -355,6 +353,10 @@ function clickInterested(postID) {
                 else {
                     document.getElementById(likesid).innerHTML = (num + 1).toString().concat(" likes");
                 }
+
+                $('.notifClass.dropdown-item').remove(); //remove past notfications
+                $('.notifClass.dropdown-item.half-rule').remove(); //remove past notfications
+
                 console.log("Inside res.ok. Number of Likes increased.");
             }.bind(this));
         }
@@ -564,7 +566,7 @@ function addComment(postID, email, num) {
 
     $('.notifClass.dropdown-item').remove(); //remove past notfications
     $('.notifClass.dropdown-item.half-rule').remove(); //remove past notfications
-    
+
     var comment = document.getElementById("txtComment").value;
     postID = parseInt(postID);
 
@@ -591,7 +593,7 @@ function addComment(postID, email, num) {
                 var val = document.getElementById("counter").innerHTML;
                 val++;
                 document.getElementById("counter").innerHTML = val;
-                document.getElementById("counter").style.display ="block";
+                document.getElementById("counter").style.display = "block";
             }
 
             res.json().then(function (data) {
@@ -615,7 +617,7 @@ function addComment(postID, email, num) {
 }
 
 // Function to get user id from post id (id of the owner of the post)
-function getUserIDofPost(postID){
+function getUserIDofPost(postID) {
 
     fetch(urlOwnerIDofPost, {
         method: "POST",
@@ -1375,7 +1377,6 @@ function getNotifications() {
                     listNotifs.style = "border-bottom: 1px solid #ccc; text-align:center; color:#333399; font-weight: bold;";
                     document.getElementById("notif").appendChild(listNotifs);
                 }
-
 
             }.bind(this));
         }

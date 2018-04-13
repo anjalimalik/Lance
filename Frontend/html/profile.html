@@ -46,7 +46,7 @@
           <a href="#" id="notifications_btn" onclick="displayNotifications()" class="notifications navbar-brand nav-link dropdown-toggle"
             data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="margin-left: 250px; margin-top:-5px;">
             <img src="../css/Assets/notifications.png" width="20" height="20" alt="Notifications"></img>
-            <span id="counter" class="notification-counter">0</span>
+            <span id="counter" class="notification-counter" style="display:none;">0</span>
           </a>
           <div id="notificationsToggle" class="dropdown-menu show" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 38px, 0px); top: 0px; margin-left: 200px; left: 355px; will-change: transform;">
             <ul id="notif">
@@ -426,8 +426,8 @@
     }
 
     .notification-counter {
-      margin-left: -15px;
-      margin-top: -5px;
+      margin-left: 12px;
+      margin-top: -30px;
       width: 18px;
       height: 18px;
       position: absolute;

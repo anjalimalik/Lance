@@ -1023,7 +1023,7 @@ app.post('/getNumNotifications', function (req, res) {
         return res.status(400).json({ message: "Missing information" });
     }
 
-    let query1 = "SELECT COUNT(Notification) FROM Notifications WHERE idUsers = ? AND seen = '0'";
+    let query1 = "SELECT COUNT(Notification) AS count FROM Notifications WHERE idUsers = ? AND seen = '0'";
 
     db.query(query1, id, (err, result) => {
         console.log(result);

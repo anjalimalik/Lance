@@ -3,6 +3,7 @@ var urlChangePass = "http://localhost:5500/changePassword"
 var urlGetProfile = "http://localhost:5500/getProfile"
 var urlUpload = "http://localhost:5500/api/upload";
 var urlUserID = "http://localhost:5500/getUserID";
+var urlNumNewNotifs = "http://localhost:5500/getNumNotifications";
 
 var uID = "";
 
@@ -11,6 +12,7 @@ function onLoad_profile() {
     optionsToggle.style.display = "none";
     notificationsToggle.style.display = "none";
 
+    // get email
     var url = window.location.href;
     var str = url.split("?email=");
     if (url == str) {
@@ -78,6 +80,9 @@ function onLoad_profile() {
                             populate_profile();
                             document.getElementById("editProfileBtn").style.display = "block";
 
+                            // notifications
+                            getNumOfNewNotifs();
+
                         }.bind(this));
                     }
                     else {
@@ -106,11 +111,49 @@ function onLoad_profile() {
         console.log(err.message + ": No Internet Connection");
     });
 
-
-
     //var img = new Image();
     //img.src = "./../css/Assets/spinner.jpg";
     document.getElementById("img_profile").src = "./../css/Assets/user_icon.jpg";
+}
+
+// to get notifications counter 
+function getNumOfNewNotifs() {
+
+    fetch(urlNumNewNotifs, {
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+            "id": uID
+        })
+
+    }).then(function (res) {
+        console.log("Inside res function");
+        if (res.ok) {
+            res.json().then(function (data) {
+                var json = data.response;
+                var num = parseInt(json[0].count);
+                if (num > 0) {
+                    document.getElementById("counter").innerHTML = num;
+                    document.getElementById("counter").style.display = "block";
+                }
+
+            }.bind(this));
+        }
+        else {
+            alert("Error: Get number of notifications unsuccessful!");
+            res.json().then(function (data) {
+                console.log(data.message);
+            }.bind(this));
+            return;
+        }
+    }).catch(function (err) {
+        alert("Error: No internet connection!");
+        console.log(err.message + ": No Internet Connection");
+        return;
+    });
 }
 
 function goToHome() {
@@ -141,6 +184,8 @@ function displayNotifications() {
 
     // function to get notifications
     getNotifications();
+    document.getElementById('counter').style.display = "none";// remove counter
+    document.getElementById('counter').innerHTML = 0;
 }
 
 $(function () {
