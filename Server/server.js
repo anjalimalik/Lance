@@ -461,14 +461,10 @@ function decipherPass(email, encrypted) {
 // Endpoint to Logout
 app.post('/logout', function (req, res) {
 
-    var signOut = req.body.signOut;
     var email = req.body.email;
 
-    if(!email) {
+    if (!email) {
         return res.status(401).json({ message: "User not logged in!" });
-    }
-    if (!signOut) {
-        return res.status(401).json({ message: "Logout selection not recieved" });
     }
 
     // reset AuthToken and AuthTokenIssued
@@ -627,17 +623,17 @@ app.post('/WriteComment', (req, res) => {
 
     var postId = req.body.postId;
     var comment = req.body.comment;
-    var email = req.body.email; // email of the person who commented
     var sender = ""; // name of the person who commented
     var userid = 0; // user id of the person who is the owner of the post
+    var useridCommenter = req.body.id; // user id of the person who commented on the post
 
     // call function to make new notification
-    newNotification(comment, postId, email);
+    newNotification(comment, postId, useridCommenter);
 
     /* Getting full name of the user who commented */
-    let query1 = "SELECT FullName FROM Users WHERE Email = ?";
+    let query1 = "SELECT FullName FROM Users WHERE idUsers = ?";
 
-    db.query(query1, email, function (err1, resp1) {
+    db.query(query1, useridCommenter, function (err1, resp1) {
         console.log(resp1);
         if (err1) {
             res.send(JSON.stringify({
@@ -676,7 +672,8 @@ app.post('/WriteComment', (req, res) => {
                         idOwnerOfPost: userid,
                         idPosts: postId,
                         Comment: comment,
-                        SenderName: sender
+                        SenderName: sender,
+                        idCommenter: useridCommenter
                     };
 
                     // INSERT INTO Comments TABLE
@@ -714,27 +711,25 @@ app.post('/ClosePost', (req, res) => {
         return res.status(400).json({ message: "Missing information" });
     }
 
-    let query = 'DELETE FROM Posts WHERE idPosts = ?';
+    let query1 = 'DELETE FROM Posts WHERE idPosts = ?';
 
-    db.query(query, postId, (error, response) => {
-        console.log(response);
-
+    db.query(query1, postId, (error, response) => {
         if (error) {
-            res.send(JSON.stringify({
-                "status": 500,
-                "error": error,
-                "message": "Internal server error",
-                "response": null
-            }));
+            res.send(JSON.stringify({ "status": 500, "error": error, "message": "Internal server error", "response": null }));
         }
 
         else {
-            res.send(JSON.stringify({
-                "status": 200,
-                "error": null,
-                "response": response,
-                "message": "Success! Post closed/deleted."
-            }));
+            let query2 = 'DELETE FROM Comments WHERE idPosts = ?';
+
+            db.query(query2, postId, (err, resp) => {
+                if (err) {
+                    res.send(JSON.stringify({ "status": 500, "error": err, "message": "Internal server error", "response": null }));
+                }
+
+                else {
+                    res.send(JSON.stringify({"status": 200,"error": null,"response": resp,"message": "Success! Post closed/deleted."}));
+                }
+            });
         }
     });
 });
@@ -744,14 +739,14 @@ app.post('/ClickInterested', (req, res) => {
     var postId = req.body.postId;
 
     // who liked it
-    var email = req.body.email;
+    var id = req.body.id;
 
-    if (!postId || !email) {
+    if (!postId || !id) {
         return res.status(400).json({ message: "Missing information" });
     }
 
     // function to send new notification for the like
-    newNotification("like", postId, email);
+    newNotification("like", postId, id);
 
     let query = "SELECT numLikes FROM Posts WHERE idPosts = ?";
 
@@ -803,9 +798,22 @@ app.post('/ClickInterested', (req, res) => {
 app.post('/getProfile', function (req, res) {
 
     var email = req.body.email;
-    let query = "SELECT * FROM Profiles WHERE Email = ?";
+    var id = req.body.id;
 
-    db.query(query, email, function (error, response) {
+    var query;
+    var params;
+
+    if (email) {
+        query = "SELECT * FROM Profiles WHERE Email = ?";
+        params = [email];
+    }
+    else {
+        query = "SELECT * FROM Profiles WHERE idUsers = ?";
+        params = [id];
+    }
+
+
+    db.query(query, params, function (error, response) {
         console.log(response);
         if (error) {
             res.send(JSON.stringify({
@@ -828,7 +836,7 @@ app.post('/getProfile', function (req, res) {
 
 
 // Function to add a new notification after every like and comment
-function newNotification(str, postid, senderEmail) {
+function newNotification(str, postid, useridActor) {
 
     var notification = "";
     var sender = ""; // name of the person who liked or commented
@@ -836,9 +844,9 @@ function newNotification(str, postid, senderEmail) {
     var headline = ""; //headline of the post that was liked or commented on
 
     /* Getting full name of the user who liked or commented */
-    let query1 = "SELECT FullName FROM Users WHERE Email = ?";
+    let query1 = "SELECT FullName FROM Users WHERE idUsers = ?";
 
-    db.query(query1, senderEmail, function (err1, resp1) {
+    db.query(query1, useridActor, function (err1, resp1) {
         console.log(resp1);
         if (err1) {
             console.log("Internal server error");
@@ -895,7 +903,8 @@ function newNotification(str, postid, senderEmail) {
                         idPosts: postid,
                         Notification: notification,
                         SenderName: sender,
-                        msec: msec
+                        msec: msec,
+                        seen: 0
                     };
 
                     // INSERT INTO Notifications TABLE
@@ -914,67 +923,114 @@ function newNotification(str, postid, senderEmail) {
     });
 }
 
-//Get Notifications for user to view them
-app.post('/getNotifications', function (req, res) {
+//Get all Notifications for user to view them
+app.post('/getAllNotifications', function (req, res) {
 
-    var email = req.body.email;
+    var id = req.body.id;
+    console.log(id);
 
-    if (!email) {
+    if (!id) {
         return res.status(400).json({ message: "Missing information" });
     }
 
-    let query1 = "SELECT idUsers FROM Users WHERE Email = ?";
-    db.query(query1, email, function (error, response) {
+    // get data from Notifications using the user id
+    let query = "SELECT Notification FROM Notifications WHERE idUsers = ? ORDER BY msec DESC";
 
-        if (error) {
+    db.query(query, id, (err, result) => {
+        console.log(result);
+        if (err) {
             res.send(JSON.stringify({
                 "status": 500,
-                "error": error,
+                "error": err,
                 "response": null,
                 "message": "Internal server error"
             }));
         }
-
-        // Enter here if no account corresponds to the given email
-        if (response == null || response == "") {
-            res.send(JSON.stringify({
-                "status": 401,
-                "response": null,
-                "message": "Could not find account with this email"
-            }));
-        }
-
         else {
-            // get data from Notifications using the user id recieved fro previous query
-            let query2 = "SELECT Notification FROM Notifications WHERE idUsers = ? ORDER BY msec DESC LIMIT 20";
-
-            var string = JSON.stringify(response);
-            var json = JSON.parse(string);
-
-            var id = parseInt(json[0].idUsers);
-
-            db.query(query2, id, (err, result) => {
-                console.log(result);
-                if (error) {
-                    res.send(JSON.stringify({
-                        "status": 500,
-                        "error": error,
-                        "response": null,
-                        "message": "Internal server error"
-                    }));
-                }
-                else {
-                    res.send(JSON.stringify({
-                        "status": 200,
-                        "error": null,
-                        "response": result,
-                        "message": "Success! All notifications for user retrieved!"
-                    }));
-                }
-            });
+            seeNotifications(id);
+            res.send(JSON.stringify({
+                "status": 200,
+                "error": null,
+                "response": result,
+                "message": "Success! All notifications for user retrieved!"
+            }));
         }
     });
 });
+
+//Get unseen Notifications for user to view them
+app.post('/getNewNotifications', function (req, res) {
+
+    var id = req.body.id;
+
+    if (!id) {
+        return res.status(400).json({ message: "Missing information" });
+    }
+
+    // get data from Notifications using the user id
+    let query1 = "SELECT Notification FROM Notifications WHERE idUsers = ? AND seen = '0' ORDER BY msec DESC";
+
+    db.query(query1, id, (err, result) => {
+        console.log(result);
+        if (err) {
+            res.send(JSON.stringify({
+                "status": 500,
+                "error": err,
+                "response": null,
+                "message": "Internal server error"
+            }));
+        }
+        else {
+            seeNotifications(id);
+
+            res.send(JSON.stringify({
+                "status": 200,
+                "error": null,
+                "response": result,
+                "message": "Success! All new/unseen notifications for user retrieved!"
+            }));
+        }
+    });
+});
+
+// function to see all notifications 
+function seeNotifications(id) {
+    // toggle the seen attribute in the database
+    let query = "UPDATE Notifications SET seen = '1' WHERE idUsers = ? AND seen = '0'";
+
+    db.query(query, id, (error, response) => {
+        if (error) {
+            console.log("Error: Cannot 'see' new notifications");
+        }
+        else {
+            console.log("Notifications seen from unseen");
+        }
+    });
+}
+
+//Get number of unseen Notifications when the user logs in
+app.post('/getNumNotifications', function (req, res) {
+
+    var id = req.body.id;
+
+    if (!id) {
+        return res.status(400).json({ message: "Missing information" });
+    }
+
+    let query1 = "SELECT COUNT(Notification) AS count FROM Notifications WHERE idUsers = ? AND seen = '0'";
+
+    db.query(query1, id, (err, result) => {
+        console.log(result);
+        if (err) {
+            res.send(JSON.stringify({ "status": 500, "error": err, "response": null, "message": "Internal server error" }));
+        }
+        else {
+            res.send(JSON.stringify({ "status": 200, "error": null, "response": result, "message": "Success! Number of new notifications recieved!" }));
+        }
+    });
+});
+
+
 
 // Get Sorted list of Posts, using either by order - ASCENDING OR DESCENDING or by range - upper/lower bounds (either for money or date posted)
 app.post('/getSortedPosts', (req, res) => {
@@ -1254,22 +1310,105 @@ app.post('/getSelectedPost', function (req, res) {
 
     // get that post
     db.query(query, id, function (error, response) {
-        console.log(response);
         if (error) {
-            res.send(JSON.stringify({
-                "status": 500,
-                "error": error,
-                "response": null,
-                "message": "Internal server error"
-            }));
+            res.send(JSON.stringify({ "status": 500, "error": error, "response": null, "message": "Internal server error" }));
         }
         else {
-            res.send(JSON.stringify({
-                "status": 200,
-                "error": null,
-                "response": response,
-                "message": "Success! Selected post retrieved!"
-            }));
+            res.send(JSON.stringify({ "status": 200, "error": null, "response": response, "message": "Success! Selected post retrieved!" }));
+        }
+    });
+});
+
+// get user id of the owner of the post
+// for notifications counter
+app.post('/getOwnerIDofPost', function (req, res) {
+    var id = req.body.postID;
+
+    let query = "SELECT UserID FROM Posts WHERE idPosts = ?";
+
+    db.query(query, id, function (error, response) {
+        if (error) {
+            res.send(JSON.stringify({ "status": 500, "error": error, "response": null, "message": "Internal server error" }));
+        }
+        else {
+            res.send(JSON.stringify({ "status": 200, "error": null, "response": response, "message": "Success! User ID of the owner of the post retrieved!" }));
+        }
+    });
+});
+
+// Delete a user from the DB
+app.post('/DeleteUser', function (req, res) {
+    var id = req.body.userid;
+    var pass = req.body.password;
+
+    // first check whether the current password given is correct
+    let queryPass = "SELECT Email, Password FROM Users WHERE idUsers = ?";
+
+    db.query(queryPass, id, (error, response) => {
+        console.log(response);
+        if (error) {
+            res.send(JSON.stringify({ "status": 500, "error": error, "response": null, "message": "Internal server error - Could not check current Password" }));
+        }
+        else {
+            // check if current password is the same as the one in database
+            //var matchPass = decipherPass(response[0].Email, response[0].Password);
+            var matchPass = response[0].Password;
+            if (pass === matchPass) {
+                console.log("Current password is correct");
+
+                //delete users one by one from all tables
+                let queryUsers = "DELETE FROM Users WHERE idUsers = ?";
+
+                db.query(queryUsers, id, function (err1, resp1) {
+                    if (err1) {
+                        res.send(JSON.stringify({ "status": 500, "error": err1, "response": null, "message": "Internal server error" }));
+                    }
+                    else {
+                        let queryProfiles = "DELETE FROM Profiles WHERE idUsers = ?";
+                        db.query(queryProfiles, id, function (err2, resp2) {
+                            if (err2) {
+                                res.send(JSON.stringify({ "status": 500, "error": err2, "response": null, "message": "Internal server error" }));
+                            }
+                            else {
+                                let queryPosts = "DELETE FROM Posts WHERE UserID = ?";
+                                db.query(queryPosts, id, function (err3, resp3) {
+                                    if (err3) {
+                                        res.send(JSON.stringify({ "status": 500, "error": err3, "response": null, "message": "Internal server error" }));
+                                    }
+                                    else {
+                                        let queryNotifications = "DELETE FROM Notifications WHERE idUsers = ?";
+                                        db.query(queryNotifications, id, function (err4, resp4) {
+                                            if (err4) {
+                                                res.send(JSON.stringify({ "status": 500, "error": err4, "response": null, "message": "Internal server error" }));
+                                            }
+                                            else {
+                                                let queryComments = "DELETE FROM Comments WHERE idCommenter = ? OR idOwnerOfPost = ?";
+                                                var paramsComments = [id, id];
+                                                db.query(queryComments, paramsComments, function (err5, resp5) {
+                                                    if (err5) {
+                                                        res.send(JSON.stringify({ "status": 500, "error": err5, "response": null, "message": "Internal server error" }));
+                                                    }
+                                                    else {
+                                                        res.send(JSON.stringify({
+                                                            "status": 200,
+                                                            "error": null,
+                                                            "response": response,
+                                                            "message": "Success! User deleted from all tables!"
+                                                        }));
+                                                    }
+                                                });
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+            else {
+                res.send(JSON.stringify({ "status": 401, "error": error, "response": null, "message": "Current password is not correct" }));
+            }
         }
     });
 });

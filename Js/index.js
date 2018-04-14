@@ -37,15 +37,8 @@ function btn_login() {
         console.log("Inside res function");
         if (res.ok) {
             res.json().then(function (data) {
-                if(confirm("Login successful!")) {
-                    var u = 'profile.html?email='.concat(_email);
-                    window.location.href = u;
-                    //window.location.href = 'home.html';
-                }
-                else {
-                    var u = 'profile.html?email='.concat(_email);
-                    window.location.href = u;
-                }
+                var u = 'profile.html?email='.concat(_email);
+                window.location.href = u;
                 this.authToken = data.authToken
                 this.email = _email;
                 console.log("Inside res.ok");
@@ -221,7 +214,7 @@ function verifyLName(_lName) {
     return true;
 }
 
-function btn_logout() {
+function btn_logout(useremail) {
     fetch(urlLogout, {
         method: "POST",
         headers: {
@@ -229,8 +222,7 @@ function btn_logout() {
             'content-type': 'application/json'
         },
         body: JSON.stringify({
-            "email": email,
-            "signOut": true
+            "email": useremail
         })
 
     }).then(function (res) {
