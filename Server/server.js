@@ -166,6 +166,53 @@ app.get('/getPosts', (req, res) => {
     });
 });
 
+//Run Search
+app.post('/runSearch', function (req, res) {
+
+    var key = req.body.key;
+
+    key = "%" + key + "%";
+
+    if (key == "") { 
+        
+        let query = 'SELECT * FROM Posts ORDER BY DatePosted DESC';
+
+        db.query(query, (error, response) => {
+            console.log(response);
+
+            if (error) {
+                res.send(JSON.stringify({
+                    "status": 500,
+                    "error": error,
+                    "message": "Internal server error",
+                    "response": null
+                }));
+            }
+
+            else {
+                res.send(JSON.stringify({
+                    "status": 200,
+                    "error": null,
+                    "response": response,
+                    "message": "Success! All posts retrived."
+                }));
+            }
+        });
+    }
+
+    var dbQuery = "SELECT * FROM Posts WHERE Headline LIKE ? OR Content LIKE ?";
+    var requestParams = [key, key];
+
+    db.query(dbQuery, requestParams, function (err, result) {
+
+        if (err) {
+            return res.status(500).json({ message: "Internal server error" });
+        }
+
+        return res.status(200).json({ response: result });
+    });
+}); 
+
 //Login
 app.post('/login', function (req, res) {
 
