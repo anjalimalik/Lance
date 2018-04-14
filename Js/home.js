@@ -10,9 +10,15 @@ var urlCreatePost = "http://localhost:5500/CreatePost"
 var urlCatAttributes = "http://localhost:5500/getCatAttributes";
 var urlEditPost = "http://localhost:5500/EditPost";
 var urlUserID = "http://localhost:5500/getUserID";
+var urlAllNotifications = "http://localhost:5500/getAllNotifications"
+var urlNewNotifications = "http://localhost:5500/getNewNotifications";
+var urlOwnerIDofPost = "http://localhost:5500/getOwnerIDofPost";
+var urlSearch = "http://localhost:5500/runSearch";
 
 var emailAdd;
 var uID = "";
+var numNotifs = 0;
+var OwnerIDofPost = 0;
 
 function onLoad_home() {
     var url = window.location.href;
@@ -41,6 +47,7 @@ function onLoad_home() {
             res.json().then(function (data) {
                 console.log("Inside res.ok. User ID retrieved");
                 uID = data.response[0].idUsers;
+                getNumOfNewNotifs(); // get num of notifs
                 getAllPosts();
             }.bind(this));
         }
@@ -127,7 +134,7 @@ function createCard(user, content, headline, postingType, price, postID, date, l
 
     /* Offer/Request */
     var ReqOff = document.createElement("p");
-    var str = postingType.concat(" by ", "<b style=\"", "color:#333399; font-weight:bold\">", user, "</b>");
+    var str = postingType.concat(" by ", "<b style=\"", "color:#333399; font-weight:bold\">", "<a href='#' onclick=\"gotoUserProfile(", userid, ")\">", user, "</a></b>");
     ReqOff.style = "font-family:monaco;font-size:14px;color:#666699;float:left;";
     ReqOff.innerHTML = str;
     divHeader.appendChild(ReqOff);
@@ -311,7 +318,10 @@ function reportPost(postID) {
 
 // CLICK INTERESTED
 function clickInterested(postID) {
-    $('.notifClass.dropdown-item').remove();
+
+    // get id of the owner
+    getUserIDofPost(postID);
+
     postID = parseInt(postID);
     fetch(urlLike, {
         method: "POST",
@@ -320,11 +330,20 @@ function clickInterested(postID) {
             'content-type': 'application/json'
         },
         body: JSON.stringify({
-            "email": emailAdd,
+            "id": uID,
             "postId": postID
         })
 
     }).then(function (res) {
+
+        // notifications counter incremented
+        if (OwnerIDofPost == uID) {
+            var val = document.getElementById("counter").innerHTML;
+            val++;
+            document.getElementById("counter").innerHTML = val;
+            document.getElementById("counter").style.display = "block";
+        }
+
         if (res.ok) {
             res.json().then(function (data) {
                 var likesid = "txtLikes".concat(postID);
@@ -335,6 +354,10 @@ function clickInterested(postID) {
                 else {
                     document.getElementById(likesid).innerHTML = (num + 1).toString().concat(" likes");
                 }
+
+                $('.notifClass.dropdown-item').remove(); //remove past notfications
+                $('.notifClass.dropdown-item.half-rule').remove(); //remove past notfications
+
                 console.log("Inside res.ok. Number of Likes increased.");
             }.bind(this));
         }
@@ -541,9 +564,17 @@ function expandComments(postID, num, json) {
 
 // ADD COMMENT METHOD
 function addComment(postID, email, num) {
-    $('.notifClass.dropdown-item').remove();
+
+    $('.notifClass.dropdown-item').remove(); //remove past notfications
+    $('.notifClass.dropdown-item.half-rule').remove(); //remove past notfications
+
     var comment = document.getElementById("txtComment").value;
     postID = parseInt(postID);
+
+    // get id of the owner
+    getUserIDofPost(postID);
+
+    // send new comment to the server
     fetch(urlWriteComment, {
         method: "POST",
         headers: {
@@ -553,11 +584,19 @@ function addComment(postID, email, num) {
         body: JSON.stringify({
             "postId": postID,
             "comment": comment,
-            "email": emailAdd
+            "id": uID
         })
 
     }).then(function (res) {
         if (res.ok) {
+            // notifications counter incremented
+            if (OwnerIDofPost == uID) {
+                var val = document.getElementById("counter").innerHTML;
+                val++;
+                document.getElementById("counter").innerHTML = val;
+                document.getElementById("counter").style.display = "block";
+            }
+
             res.json().then(function (data) {
                 console.log("Inside res.ok. New comment added");
             }.bind(this));
@@ -573,8 +612,40 @@ function addComment(postID, email, num) {
         console.log(err.message + ": No Internet Connection");
     });
 
+    // remoce past comments and close the modal
     $('.comment').remove();
     $('#myCommentsModal').modal('hide');
+}
+
+// Function to get user id from post id (id of the owner of the post)
+function getUserIDofPost(postID) {
+
+    fetch(urlOwnerIDofPost, {
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+            "postID": postID
+        })
+    }).then(function (res) {
+        if (res.ok) {
+            res.json().then(function (data) {
+                OwnerIDofPost = parseInt(data.response[0].UserID);
+                console.log("Inside res.ok. Owner ID retrieved");
+            }.bind(this));
+        }
+        else {
+            alert("Error: getting Owner ID unsuccessful!");
+            res.json().then(function (data) {
+                console.log(data.message);
+            }.bind(this));
+        }
+    }).catch(function (err) {
+        alert("Error: No internet connection!");
+        console.log(err.message + ": No Internet Connection");
+    });
 }
 
 // SORT POSTS based on either date or price
@@ -1227,6 +1298,49 @@ function expandCreatePModal(category, edit) {
 
 }
 
+//Perform search
+function runSearch() {
+
+    key = document.getElementById("searchBar").value;
+    
+    fetch(urlSearch, {
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+            "key": key,
+        })
+
+    }).then(function (res) {
+        if (res.ok) {
+            
+            res.json().then(function (data) {
+                
+                var numPost = Object.keys(data.response).length;
+                var json = data.response;
+
+                var ul = document.getElementById('news_card_list');
+                ul.innerHTML = "";
+
+                for (i = 0; i < numPost; i++) {
+                    createCard(json[i].UserName, json[i].Content, json[i].Headline, json[i].PostingType, json[i].money, json[i].idPosts, json[i].DatePosted, json[i].numLikes, json[i].Category, json[i].Attributes, json[i].UserID);
+                }
+            });
+        }
+        else {
+            alert("Error: couldn't run search");
+            res.json().then(function (data) {
+                console.log(data.message);
+            }.bind(this));
+        }
+    }).catch(function (err) {
+        alert("Error: No internet connection!");
+        console.log(err.message + ": No Internet Connection");
+    });
+}
+
 // close new post modal and remove previous enteries
 function closeNewPostModal() {
     $('.catDiv').remove();
@@ -1251,33 +1365,18 @@ function closeEditPostModal() {
     document.getElementById("pickedEditCategory").value = null;
 }
 
-function showNotifications() {
-
-    document.getElementById("optionsToggle").style.display = "none";
-    var x = document.getElementById("notificationsToggle");
-
-    if (x.style.display === "none") {
-        x.style.display = "block";
-    } else {
-        x.style.display = "none";
-    }
-
-    // function to get notifications
-    getNotifications();
-}
-
 // get notifications in dropdown list
 function getNotifications() {
 
-    console.log(emailAdd);
-    fetch(urlNotifications, {
+    fetch(urlNewNotifications, {
         method: "POST",
         headers: {
             'Accept': 'application/json',
             'content-type': 'application/json'
         },
         body: JSON.stringify({
-            "email": emailAdd
+            //"email": emailAdd
+            "id": uID
         })
 
     }).then(function (res) {
@@ -1285,7 +1384,6 @@ function getNotifications() {
         if (res.ok) {
             res.json().then(function (data) {
                 console.log(data.message);
-                console.log(data.response);
                 console.log("Inside res.ok, Get Notifications successful!");
                 var length = Object.keys(data.response).length;
                 if (length != 0 && numNotifs < length) {
@@ -1295,20 +1393,34 @@ function getNotifications() {
                         var ul = document.createElement("a");
                         ul.setAttribute('class', 'notifClass dropdown-item');
                         ul.innerHTML = (json[i].Notification);
-                        ul.style = "border-bottom: 1px solid #ccc; margin-left:-40px;color:#333399;";
+                        ul.style = "border-bottom: 1px solid #ccc;color:#333399;";
                         document.getElementById("notif").appendChild(ul);
+
                         numNotifs++;
                     }
+
+                    // view all notifications list
+                    var listNotifs = document.createElement("a");
+                    listNotifs.setAttribute('class', 'notifClass dropdown-item');
+                    listNotifs.innerHTML = "See All";
+                    listNotifs.style = "border-bottom: 1px solid #ccc; text-align:center; color:#333399; font-weight: bold;";
+                    document.getElementById("notif").appendChild(listNotifs);
                 }
                 else if (numNotifs == 0) {
                     numNotifs--;
                     var ul = document.createElement("a");
                     ul.setAttribute('class', 'notifClass dropdown-item half-rule');
-                    ul.innerHTML = "No notifications available for you at this time.";
-                    ul.style = "border-bottom: 1px solid #ccc;";
+                    ul.innerHTML = "No new notifications available for you at this time.";
+                    ul.style = "border-bottom: 1px solid #ccc; margin-left:0;";
                     document.getElementById("notif").appendChild(ul);
-                }
 
+                    // view all notifications list
+                    var listNotifs = document.createElement("a");
+                    listNotifs.setAttribute('class', 'notifClass dropdown-item');
+                    listNotifs.innerHTML = "See All";
+                    listNotifs.style = "border-bottom: 1px solid #ccc; text-align:center; color:#333399; font-weight: bold;";
+                    document.getElementById("notif").appendChild(listNotifs);
+                }
 
             }.bind(this));
         }

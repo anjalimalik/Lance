@@ -34,6 +34,8 @@ var env = require('dotenv/config');
 var path = require('path');
 var uuid = require("uuid/v4");
 var crypto = require('crypto');
+var randomstring = require("randomstring");
+var nodemailer = require("nodemailer");
 
 var app = express();
 
@@ -461,14 +463,10 @@ function decipherPass(email, encrypted) {
 // Endpoint to Logout
 app.post('/logout', function (req, res) {
 
-    var signOut = req.body.signOut;
     var email = req.body.email;
 
     if (!email) {
         return res.status(401).json({ message: "User not logged in!" });
-    }
-    if (!signOut) {
-        return res.status(401).json({ message: "Logout selection not recieved" });
     }
 
     // reset AuthToken and AuthTokenIssued
@@ -484,6 +482,99 @@ app.post('/logout', function (req, res) {
     });
 });
 
+app.post('/resetPass', function (req, res) {
+
+    var email = req.body.email;
+
+    console.log(email);
+
+    if(!email) {
+        return res.status(401).json({ message: "User not logged in!" });
+    }
+
+    var PIN = randomstring.generate({ length: 6, charset: 'numeric' });
+
+    // reset AuthToken and AuthTokenIssued
+    var dbQuery = "UPDATE Users SET resetPIN = ? WHERE Email = ?";
+    var requestParams = [PIN, email];
+
+    var transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: '1ance.profilehelp@gmail.com',
+        pass: '1ancedev'
+      }
+    });
+
+    mess_text = "Hello,\n\tEnter this PIN: " + PIN + " to change your password.\nThis PIN is valid for 24 hours.\n\nThank you for using 1ance";
+
+    var mailOptions = {
+      from: '1ance.profile@gmail.com',
+      to: email,
+      subject: 'Reset Password',
+      text: mess_text
+    };
+
+    transporter.sendMail(mailOptions, function(error, info){
+      if (error) {
+        return res.status(500).json({ message: "Internal server error" });
+      } else {
+        
+        db.query(dbQuery, requestParams, function (err, result) {
+            if (err) {
+                return res.status(500).json({ message: "Internal server error" });
+            } else {
+                return res.status(200).json({ message: "Success" });
+            }
+        });
+      }
+    });
+});
+
+app.post('/verifyPIN', function (req, res) {
+
+    var email = req.body.email;
+    var pass = req.body.password;
+    var PIN = req.body.PIN;
+
+    if(!email) {
+        return res.status(401).json({ message: "Missing information" });
+    }
+
+    if(!pass) {
+        return res.status(401).json({ message: "Missing information" });
+    }
+
+    if(!PIN) {
+        return res.status(401).json({ message: "Missing information" });
+    }
+
+    let sql = "SELECT * FROM Users WHERE Email = ? AND resetPIN = ?";
+    params = [email, PIN];
+
+    pass = createPass(email, pass);
+
+    db.query(sql, params, function (err, result) {
+        if (err) {
+            return res.status(500).json({ message: "Internal server error" });
+        }
+        if (result == null || result == "") {
+            return res.status(401).json({ message: "Invalid PIN" });
+        }
+
+        var passquery = "UPDATE Users Set Password = ?, AuthToken = ?, AuthTokenIssued = ? WHERE Email = ?";
+        var passparams = [pass, null, null, email];
+
+        db.query(passquery, passparams, function (err, result) {
+            if (err) {
+                return res.status(500).json({ message: "Internal server error" });
+            } else {
+                return res.status(200).json({ message: "Password has been reset" });
+            }
+        });
+    });
+
+});
 
 // Endpoint to Change Password
 app.post('/changePassword', (req, res) => {
@@ -627,18 +718,17 @@ app.post('/WriteComment', (req, res) => {
 
     var postId = req.body.postId;
     var comment = req.body.comment;
-    var email = req.body.email; // email of the person who commented
     var sender = ""; // name of the person who commented
     var userid = 0; // user id of the person who is the owner of the post
-    var useridCommenter = 0; // user id of the person who commented on the post
+    var useridCommenter = req.body.id; // user id of the person who commented on the post
 
     // call function to make new notification
-    newNotification(comment, postId, email);
+    newNotification(comment, postId, useridCommenter);
 
     /* Getting full name of the user who commented */
-    let query1 = "SELECT FullName, idUsers FROM Users WHERE Email = ?";
+    let query1 = "SELECT FullName FROM Users WHERE idUsers = ?";
 
-    db.query(query1, email, function (err1, resp1) {
+    db.query(query1, useridCommenter, function (err1, resp1) {
         console.log(resp1);
         if (err1) {
             res.send(JSON.stringify({
@@ -652,7 +742,6 @@ app.post('/WriteComment', (req, res) => {
             var string = JSON.stringify(resp1);
             var json = JSON.parse(string);
             sender = sender.concat(json[0].FullName);
-            useridCommenter = parseInt(json[0].idUsers);
 
             /* Next, getting user id of the person who's post was commented on */
             let query2 = "SELECT UserID FROM Posts WHERE idPosts = ?";
@@ -717,27 +806,25 @@ app.post('/ClosePost', (req, res) => {
         return res.status(400).json({ message: "Missing information" });
     }
 
-    let query = 'DELETE FROM Posts WHERE idPosts = ?';
+    let query1 = 'DELETE FROM Posts WHERE idPosts = ?';
 
-    db.query(query, postId, (error, response) => {
-        console.log(response);
-
+    db.query(query1, postId, (error, response) => {
         if (error) {
-            res.send(JSON.stringify({
-                "status": 500,
-                "error": error,
-                "message": "Internal server error",
-                "response": null
-            }));
+            res.send(JSON.stringify({ "status": 500, "error": error, "message": "Internal server error", "response": null }));
         }
 
         else {
-            res.send(JSON.stringify({
-                "status": 200,
-                "error": null,
-                "response": response,
-                "message": "Success! Post closed/deleted."
-            }));
+            let query2 = 'DELETE FROM Comments WHERE idPosts = ?';
+
+            db.query(query2, postId, (err, resp) => {
+                if (err) {
+                    res.send(JSON.stringify({ "status": 500, "error": err, "message": "Internal server error", "response": null }));
+                }
+
+                else {
+                    res.send(JSON.stringify({"status": 200,"error": null,"response": resp,"message": "Success! Post closed/deleted."}));
+                }
+            });
         }
     });
 });
@@ -747,14 +834,14 @@ app.post('/ClickInterested', (req, res) => {
     var postId = req.body.postId;
 
     // who liked it
-    var email = req.body.email;
+    var id = req.body.id;
 
-    if (!postId || !email) {
+    if (!postId || !id) {
         return res.status(400).json({ message: "Missing information" });
     }
 
     // function to send new notification for the like
-    newNotification("like", postId, email);
+    newNotification("like", postId, id);
 
     let query = "SELECT numLikes FROM Posts WHERE idPosts = ?";
 
@@ -807,12 +894,16 @@ app.post('/getProfile', function (req, res) {
 
     var email = req.body.email;
     var id = req.body.id;
+
+    var query;
+    var params;
+
     if (email) {
-        let query = "SELECT * FROM Profiles WHERE Email = ?";
+        query = "SELECT * FROM Profiles WHERE Email = ?";
         params = [email];
     }
     else {
-        let query = "SELECT * FROM Profiles WHERE idUsers = ?";
+        query = "SELECT * FROM Profiles WHERE idUsers = ?";
         params = [id];
     }
 
@@ -840,7 +931,7 @@ app.post('/getProfile', function (req, res) {
 
 
 // Function to add a new notification after every like and comment
-function newNotification(str, postid, senderEmail) {
+function newNotification(str, postid, useridActor) {
 
     var notification = "";
     var sender = ""; // name of the person who liked or commented
@@ -848,9 +939,9 @@ function newNotification(str, postid, senderEmail) {
     var headline = ""; //headline of the post that was liked or commented on
 
     /* Getting full name of the user who liked or commented */
-    let query1 = "SELECT FullName FROM Users WHERE Email = ?";
+    let query1 = "SELECT FullName FROM Users WHERE idUsers = ?";
 
-    db.query(query1, senderEmail, function (err1, resp1) {
+    db.query(query1, useridActor, function (err1, resp1) {
         console.log(resp1);
         if (err1) {
             console.log("Internal server error");
@@ -907,7 +998,8 @@ function newNotification(str, postid, senderEmail) {
                         idPosts: postid,
                         Notification: notification,
                         SenderName: sender,
-                        msec: msec
+                        msec: msec,
+                        seen: 0
                     };
 
                     // INSERT INTO Notifications TABLE
@@ -926,67 +1018,114 @@ function newNotification(str, postid, senderEmail) {
     });
 }
 
-//Get Notifications for user to view them
-app.post('/getNotifications', function (req, res) {
+//Get all Notifications for user to view them
+app.post('/getAllNotifications', function (req, res) {
 
-    var email = req.body.email;
+    var id = req.body.id;
+    console.log(id);
 
-    if (!email) {
+    if (!id) {
         return res.status(400).json({ message: "Missing information" });
     }
 
-    let query1 = "SELECT idUsers FROM Users WHERE Email = ?";
-    db.query(query1, email, function (error, response) {
+    // get data from Notifications using the user id
+    let query = "SELECT Notification FROM Notifications WHERE idUsers = ? ORDER BY msec DESC";
 
-        if (error) {
+    db.query(query, id, (err, result) => {
+        console.log(result);
+        if (err) {
             res.send(JSON.stringify({
                 "status": 500,
-                "error": error,
+                "error": err,
                 "response": null,
                 "message": "Internal server error"
             }));
         }
-
-        // Enter here if no account corresponds to the given email
-        if (response == null || response == "") {
-            res.send(JSON.stringify({
-                "status": 401,
-                "response": null,
-                "message": "Could not find account with this email"
-            }));
-        }
-
         else {
-            // get data from Notifications using the user id recieved fro previous query
-            let query2 = "SELECT Notification FROM Notifications WHERE idUsers = ? ORDER BY msec DESC LIMIT 20";
-
-            var string = JSON.stringify(response);
-            var json = JSON.parse(string);
-
-            var id = parseInt(json[0].idUsers);
-
-            db.query(query2, id, (err, result) => {
-                console.log(result);
-                if (error) {
-                    res.send(JSON.stringify({
-                        "status": 500,
-                        "error": error,
-                        "response": null,
-                        "message": "Internal server error"
-                    }));
-                }
-                else {
-                    res.send(JSON.stringify({
-                        "status": 200,
-                        "error": null,
-                        "response": result,
-                        "message": "Success! All notifications for user retrieved!"
-                    }));
-                }
-            });
+            seeNotifications(id);
+            res.send(JSON.stringify({
+                "status": 200,
+                "error": null,
+                "response": result,
+                "message": "Success! All notifications for user retrieved!"
+            }));
         }
     });
 });
+
+//Get unseen Notifications for user to view them
+app.post('/getNewNotifications', function (req, res) {
+
+    var id = req.body.id;
+
+    if (!id) {
+        return res.status(400).json({ message: "Missing information" });
+    }
+
+    // get data from Notifications using the user id
+    let query1 = "SELECT Notification FROM Notifications WHERE idUsers = ? AND seen = '0' ORDER BY msec DESC";
+
+    db.query(query1, id, (err, result) => {
+        console.log(result);
+        if (err) {
+            res.send(JSON.stringify({
+                "status": 500,
+                "error": err,
+                "response": null,
+                "message": "Internal server error"
+            }));
+        }
+        else {
+            seeNotifications(id);
+
+            res.send(JSON.stringify({
+                "status": 200,
+                "error": null,
+                "response": result,
+                "message": "Success! All new/unseen notifications for user retrieved!"
+            }));
+        }
+    });
+});
+
+// function to see all notifications 
+function seeNotifications(id) {
+    // toggle the seen attribute in the database
+    let query = "UPDATE Notifications SET seen = '1' WHERE idUsers = ? AND seen = '0'";
+
+    db.query(query, id, (error, response) => {
+        if (error) {
+            console.log("Error: Cannot 'see' new notifications");
+        }
+        else {
+            console.log("Notifications seen from unseen");
+        }
+    });
+}
+
+//Get number of unseen Notifications when the user logs in
+app.post('/getNumNotifications', function (req, res) {
+
+    var id = req.body.id;
+
+    if (!id) {
+        return res.status(400).json({ message: "Missing information" });
+    }
+
+    let query1 = "SELECT COUNT(Notification) AS count FROM Notifications WHERE idUsers = ? AND seen = '0'";
+
+    db.query(query1, id, (err, result) => {
+        console.log(result);
+        if (err) {
+            res.send(JSON.stringify({ "status": 500, "error": err, "response": null, "message": "Internal server error" }));
+        }
+        else {
+            res.send(JSON.stringify({ "status": 200, "error": null, "response": result, "message": "Success! Number of new notifications recieved!" }));
+        }
+    });
+});
+
+
 
 // Get Sorted list of Posts, using either by order - ASCENDING OR DESCENDING or by range - upper/lower bounds (either for money or date posted)
 app.post('/getSortedPosts', (req, res) => {
@@ -1230,6 +1369,53 @@ app.post('/EditPost', function (req, res) {
     });
 });
 
+//Run Search
+app.post('/runSearch', function (req, res) {
+
+    var key = req.body.key;
+
+    key = "%" + key + "%";
+
+    if (key == "") { 
+        
+        let query = 'SELECT * FROM Posts ORDER BY DatePosted DESC';
+
+        db.query(query, (error, response) => {
+            console.log(response);
+
+            if (error) {
+                res.send(JSON.stringify({
+                    "status": 500,
+                    "error": error,
+                    "message": "Internal server error",
+                    "response": null
+                }));
+            }
+
+            else {
+                res.send(JSON.stringify({
+                    "status": 200,
+                    "error": null,
+                    "response": response,
+                    "message": "Success! All posts retrived."
+                }));
+            }
+        });
+    }
+
+    var dbQuery = "SELECT * FROM Posts WHERE Headline LIKE ? OR Content LIKE ?";
+    var requestParams = [key, key];
+
+    db.query(dbQuery, requestParams, function (err, result) {
+
+        if (err) {
+            return res.status(500).json({ message: "Internal server error" });
+        }
+
+        return res.status(200).json({ response: result });
+    });
+}); 
+
 // Get user id from email
 app.post('/getUserID', function (req, res) {
     var email = req.body.email;
@@ -1266,22 +1452,28 @@ app.post('/getSelectedPost', function (req, res) {
 
     // get that post
     db.query(query, id, function (error, response) {
-        console.log(response);
         if (error) {
-            res.send(JSON.stringify({
-                "status": 500,
-                "error": error,
-                "response": null,
-                "message": "Internal server error"
-            }));
+            res.send(JSON.stringify({ "status": 500, "error": error, "response": null, "message": "Internal server error" }));
         }
         else {
-            res.send(JSON.stringify({
-                "status": 200,
-                "error": null,
-                "response": response,
-                "message": "Success! Selected post retrieved!"
-            }));
+            res.send(JSON.stringify({ "status": 200, "error": null, "response": response, "message": "Success! Selected post retrieved!" }));
+        }
+    });
+});
+
+// get user id of the owner of the post
+// for notifications counter
+app.post('/getOwnerIDofPost', function (req, res) {
+    var id = req.body.postID;
+
+    let query = "SELECT UserID FROM Posts WHERE idPosts = ?";
+
+    db.query(query, id, function (error, response) {
+        if (error) {
+            res.send(JSON.stringify({ "status": 500, "error": error, "response": null, "message": "Internal server error" }));
+        }
+        else {
+            res.send(JSON.stringify({ "status": 200, "error": null, "response": response, "message": "Success! User ID of the owner of the post retrieved!" }));
         }
     });
 });
@@ -1305,7 +1497,7 @@ app.post('/DeleteUser', function (req, res) {
             var matchPass = response[0].Password;
             if (pass === matchPass) {
                 console.log("Current password is correct");
-                
+
                 //delete users one by one from all tables
                 let queryUsers = "DELETE FROM Users WHERE idUsers = ?";
 

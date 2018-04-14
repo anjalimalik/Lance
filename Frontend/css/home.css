@@ -1,5 +1,6 @@
 body {
-  background: url('Assets/train.jpg') no-repeat center center fixed;
+  background: url('./Assets/bluebackground.png') no-repeat center center fixed;
+  /*background-color: #333333;*/
   -webkit-background-size: cover;
   -moz-background-size: cover;
   background-size: cover;
