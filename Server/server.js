@@ -34,6 +34,8 @@ var env = require('dotenv/config');
 var path = require('path');
 var uuid = require("uuid/v4");
 var crypto = require('crypto');
+var randomstring = require("randomstring");
+var nodemailer = require("nodemailer");
 
 var app = express();
 
@@ -480,6 +482,99 @@ app.post('/logout', function (req, res) {
     });
 });
 
+app.post('/resetPass', function (req, res) {
+
+    var email = req.body.email;
+
+    console.log(email);
+
+    if(!email) {
+        return res.status(401).json({ message: "User not logged in!" });
+    }
+
+    var PIN = randomstring.generate({ length: 6, charset: 'numeric' });
+
+    // reset AuthToken and AuthTokenIssued
+    var dbQuery = "UPDATE Users SET resetPIN = ? WHERE Email = ?";
+    var requestParams = [PIN, email];
+
+    var transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: '1ance.profilehelp@gmail.com',
+        pass: '1ancedev'
+      }
+    });
+
+    mess_text = "Hello,\n\tEnter this PIN: " + PIN + " to change your password.\nThis PIN is valid for 24 hours.\n\nThank you for using 1ance";
+
+    var mailOptions = {
+      from: '1ance.profile@gmail.com',
+      to: email,
+      subject: 'Reset Password',
+      text: mess_text
+    };
+
+    transporter.sendMail(mailOptions, function(error, info){
+      if (error) {
+        return res.status(500).json({ message: "Internal server error" });
+      } else {
+        
+        db.query(dbQuery, requestParams, function (err, result) {
+            if (err) {
+                return res.status(500).json({ message: "Internal server error" });
+            } else {
+                return res.status(200).json({ message: "Success" });
+            }
+        });
+      }
+    });
+});
+
+app.post('/verifyPIN', function (req, res) {
+
+    var email = req.body.email;
+    var pass = req.body.password;
+    var PIN = req.body.PIN;
+
+    if(!email) {
+        return res.status(401).json({ message: "Missing information" });
+    }
+
+    if(!pass) {
+        return res.status(401).json({ message: "Missing information" });
+    }
+
+    if(!PIN) {
+        return res.status(401).json({ message: "Missing information" });
+    }
+
+    let sql = "SELECT * FROM Users WHERE Email = ? AND resetPIN = ?";
+    params = [email, PIN];
+
+    pass = createPass(email, pass);
+
+    db.query(sql, params, function (err, result) {
+        if (err) {
+            return res.status(500).json({ message: "Internal server error" });
+        }
+        if (result == null || result == "") {
+            return res.status(401).json({ message: "Invalid PIN" });
+        }
+
+        var passquery = "UPDATE Users Set Password = ?, AuthToken = ?, AuthTokenIssued = ? WHERE Email = ?";
+        var passparams = [pass, null, null, email];
+
+        db.query(passquery, passparams, function (err, result) {
+            if (err) {
+                return res.status(500).json({ message: "Internal server error" });
+            } else {
+                return res.status(200).json({ message: "Password has been reset" });
+            }
+        });
+    });
+
+});
 
 // Endpoint to Change Password
 app.post('/changePassword', (req, res) => {

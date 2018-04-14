@@ -19,8 +19,6 @@
   <!-- Custom styles for this template -->
   <link href="./../css/full.css" rel="stylesheet">
   <script src="./../../Js/index.js"></script>
-  <script src="./../../Js/profile.js"></script>
-  <script src="./../../Js/home.js"></script>
 </head>
 
  <body onload="onLoad_index()">
@@ -235,40 +233,75 @@
 
       <!-- FORGOT PASSWORD MODAL -->
 
-      <div class="modal" id="myModal4">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Forgot Password</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
+        <div class="modal" id="myModal4">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Forgot Password</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+          
+            <img src="mail.png" width="48" height="48">
 
-          <img src="../css/Assets/mail.png" width="48" height="48">
+            <div class="form-group">
+                        <label for="forgot_password_email">Email</label>
+                        <input type="text" class="form-control" id="forgot_password_email" placeholder="boilermaker@purdue.edu">
+                        <label id="emailError">Invalid Email</label>
+            </div>
 
-          <div class="form-group">
-                      <label for="in_register_email">Email</label>
-                      <input type="text" class="form-control" id="in_register_email" placeholder="boilermaker@purdue.edu">
-                      <label id="emailError">Invalid Email</label>
-          </div>
+            <p class="text-info" style="text-align: center">Please enter your purdue email you registered with!</p>
 
-          <p class="text-info">Please enter your purdue email you registered with!</p>
-
-<!--           <div class="alert alert-dismissible alert-success" id="alert1">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-            <strong>Well done!</strong> You successfully read <a href="#" class="alert-link">this important alert message</a>.
-          </div>
- -->
-          <div class="modal-footer">
-            <button type="button" class="btn btn-primary" data-toggle="alert alert-dismissible alert-success" data-target="alert1">Send Email</button>
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" data-toggle="alert alert-dismissible alert-success" data-target="alert1" onclick="resetPassword()">Send Email</button>
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
       <!-- END FORGOT PASSWORD MODAL -->
+
+      <!-- FORGOT PASSWORD PIN MODAL -->
+
+        <div class="modal" id="myModal5">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Forgot Password</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+
+            <div class="form-group">
+              <label style="margin-left: 20%;">Email</label>
+              <input type="text" class="form-control" style="width: 300px; margin: auto;" id="emailEntry">
+              <label id="forgotEmailError">Invalid Email</label>
+              <br>
+              <label style="margin-left: 20%;">New Password</label>
+              <input type="password" class="form-control" style="width: 300px; margin: auto;" id="passwordEntry">
+              <label id="forgotPassError">Invalid Password</label>
+              <br>
+              <label style="margin-left: 38%;">PIN</label>
+              <input type="text" class="form-control" style="width: 120px; margin: auto;" maxlength="6" id="pinEntry" placeholder="XXXXXX">
+              <label id="forgotPINError">PIN is 6 digits and numeric</label>
+              <br>
+              <label id="wrongPINError">Sorry, Please check the PIN entered</label>
+            </div>
+
+            <p class="text-info" style="text-align: center">Please enter the PIN you received<br>Didn't receive one? Check your Junk or Spam mail</p>
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" data-toggle="alert alert-dismissible alert-success" data-target="alert1" onclick="sendPIN()">ENTER</button>
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- END FORGOT PASSWORD PIN MODAL -->
 
 
       <style>
@@ -319,6 +352,30 @@
 
         #pb-modalreglog-progressbar {
           border-radius: 2px;
+        }
+
+        #forgotPINError {
+          display: none;
+          color: red;
+          margin-left: 30%;
+        }
+
+        #forgotEmailError {
+          display: none;
+          color: red;
+          margin-left: 20%;
+        }
+
+        #forgotPassError {
+          display: none;
+          color: red;
+          margin-left: 20%;
+        }
+
+        #wrongPINError {
+          display: none;
+          color: red;
+          margin-left: 25%;
         }
       </style>
 
