@@ -1,6 +1,3 @@
-<!-- LOOK FOR "*//*" TO SEE CHANGES I (KENAN) MADE -->
-<!-- CODE HAS BEEN INDENTED AND EXTRA COMMENTS TO INCREASE READABILITY -->
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -57,27 +54,40 @@
           <a class="nav-link" href="about.html">About</a>
         </li>
 
-        <!-- Notifications -->
-        <li class="nav-item dropdown show">
-          <a href="#" id="notifications_btn" onclick="showNotifications()" class="nav-link dropdown-toggle" data-toggle="dropdown"
-            role="button" aria-haspopup="true" aria-expanded="false" style="margin-left:150px;">Notifications <span class="caret"></span></a>
-          <div id="notificationsToggle" class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 38px, 0px); left: 355px; top: 0px; will-change: transform;">
-            <ul id="notif">
+        <li class="nav-item">
+          <input type="text" style="height: 44px; width: 300px; margin-left: 150%; font-size: 20px" id="searchBar" placeholder="Enter keyword to search for...">
+        </li>
 
-            </ul>
+        <li class="nav-item">
+          <button class="btn btn-secondary" onclick="runSearch()" style="margin-left: 360%">Search</button>
+        </li>
+
+        <!-- Notifications -->
+        <li class="nav-item dropdown show" style="margin-left: 5%">
+          <a href="#" id="notifications_btn" onclick="displayNotifications()" class="notifications navbar-brand nav-link dropdown-toggle"
+            data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+            <img src="../css/Assets/notifications.png" width="20" height="20" alt="Notifications"></img>
+            <span id="counter" class="notification-counter" style = "display: none;">0</span>
+          </a>
+          <div id="notificationsToggle" class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 38px, 0px);top: 0px; will-change: transform;">
+            <div id="notif">
+
+            </div>
             <!-- <a class="dropdown-item" href="#">View all Notifications</a>-->
           </div>
         </li>
         <!-- End Notifications -->
 
         <!-- Options -->
-        <li class="nav-item dropdown show">
-          <a href="#" id="options_btn" onclick="displayOptions()" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button"
-            aria-haspopup="true" aria-expanded="false" style="margin-left:305px;">Options <span class="caret"></span></a>
-          <div id="optionsToggle" class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 38px, 0px); top: 0px; left: 705px; will-change: transform;">
-            <a class="dropdown-item btn btn-success btn-sm" style="margin-left: 0px; font-size: 12px;" href="#" onclick="goToProfile()">View Profile</a>
+        <li class="nav-item dropdown show" style="margin-left: 10%">
+          <a href="#" id="options_btn" onclick="displayOptions()" class="navbar-brand nav-link dropdown-toggle" data-toggle="dropdown"
+            role="button" aria-haspopup="true" aria-expanded="false">
+            <img src="../css/Assets/options.png" width="25" height="25" alt="Options"></img>
+            <span class="caret"></span></a>
+          <div id="optionsToggle" class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 38px, 0px); top: 0px; will-change: transform;">
+            <a class="dropdown-item btn btn-success btn-sm" style="font-size: 12px;" href="#" onclick="goToProfile()">View Profile</a>
             <div class="dropdown-divider"></div>
-            <a href="#" class="dropdown-item btn btn-success btn-sm" style="margin-left: 0px; font-size: 12px;" onclick="btn_logout()">Logout</a>
+            <a href="#" class="dropdown-item btn btn-success btn-sm" style="font-size: 12px;" onclick="btn_logout(emailAdd)">Logout</a>
           </div>
         </li>
         <!-- End Options -->
@@ -385,21 +395,43 @@
   }
 
   #btnOffer {
-      position: relative;
-      display: inline;
-      text-align: center;
-      margin-bottom: 20%;
-      width: 45%;
+    position: relative;
+    display: inline;
+    text-align: center;
+    margin-bottom: 20%;
+    width: 45%;
   }
 
   #btnRequest {
-      position: relative;
-      display: inline;
-      text-align: center;
-      margin-bottom: 20%;
-      width: 45%;
+    position: relative;
+    display: inline;
+    text-align: center;
+    margin-bottom: 20%;
+    width: 45%;
   }
 
+  .notifications {
+    position: relative;
+  }
+
+  .notification-counter {
+    margin-left: 12px;
+    margin-top: -30px;
+    width: 18px;
+    height: 18px;
+    position: absolute;
+    background-color: rgba(212, 19, 13, 1);
+    color: #fff;
+    border-radius: 3px;
+    padding: 1px 3px;
+    font: 11px Verdana;
+  }
+
+  ::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+    
+    font-size: 15px;
+    font-family: sans-serif;
+  }
 </style>
 
 </html>

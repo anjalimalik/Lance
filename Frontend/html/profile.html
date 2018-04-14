@@ -17,7 +17,7 @@
   <!-- Custom styles for this template -->
   <link href="./../css/stars.css" rel="stylesheet">
   <link href="./../css/profile.css" rel="stylesheet">
-  
+
 
 </head>
 
@@ -43,9 +43,12 @@
         <!-- Notifications -->
 
         <li class="nav-item dropdown show">
-          <a href="#" id="notifications_btn" onclick="displayNotifications()" class="nav-link dropdown-toggle" data-toggle="dropdown"
-            role="button" aria-haspopup="true" aria-expanded="false" style="margin-left: 150px;">Notifications <span class="caret"></span></a>
-          <div id="notificationsToggle" class="dropdown-menu show" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 38px, 0px); top: 0px; left: 255px; will-change: transform;">
+          <a href="#" id="notifications_btn" onclick="displayNotifications()" class="notifications navbar-brand nav-link dropdown-toggle"
+            data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="margin-left: 250px; margin-top:-5px;">
+            <img src="../css/Assets/notifications.png" width="20" height="20" alt="Notifications"></img>
+            <span id="counter" class="notification-counter" style="display:none;">0</span>
+          </a>
+          <div id="notificationsToggle" class="dropdown-menu show" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 38px, 0px); top: 0px; margin-left: 200px; left: 355px; will-change: transform;">
             <ul id="notif">
 
             </ul>
@@ -57,11 +60,13 @@
         <!-- Options -->
 
         <li class="nav-item dropdown show">
-          <a href="#" id="options_btn" onclick="displayOptions()" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button"
-            aria-haspopup="true" aria-expanded="false" style="margin-left: 305px;">Options <span class="caret"></span></a>
-          <div id="optionsToggle" class="dropdown-menu show" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 38px, 0px); top: 0px; left: 705px; will-change: transform;">
+          <a href="#" id="options_btn" onclick="displayOptions()" class="navbar-brand nav-link dropdown-toggle" data-toggle="dropdown"
+            role="button" aria-haspopup="true" aria-expanded="false" style="margin-left: 350px; margin-top:-5px;">
+            <img src="../css/Assets/options.png" width="25" height="25" alt="Options"></img>
+            <span class="caret"></span></a>
+          <div id="optionsToggle" class="dropdown-menu show" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 38px, 0px); top: 0px; left: 750px; will-change: transform;">
             <!--<a class="dropdown-item" href="#">Log Out</a>-->
-            <a href="#" class="dropdown-item btn btn-success btn-sm" style="margin-left: 0px; font-size: 12px;" onclick="btn_logout()">Logout</a>
+            <a href="#" class="dropdown-item btn btn-success btn-sm" style="margin-left: 0px; font-size: 12px;" onclick="btn_logout(email)">Logout</a>
 
             <div class="dropdown-divider"></div>
             <button type="button" class="dropdown-item btn btn-success btn-sm" style="margin-left: 0px; font-size: 12px;" data-toggle="modal"
@@ -79,10 +84,10 @@
     <div class="card mb-3" style="width: 50%; margin-left: 25%;">
       <div class="card-header text-capitalize" style="height:30%; font-size:30px; text-align: left; font-weight: bold;" id="profile_name">John Doe</div>
 
-        <img style="height: 20%; width: 20%; margin-left: 5%; margin-top:2%; display: block;" src="./../css/Assets/user_icon.jpg" id="img_profile"
-          alt="Card image">
+      <img style="height: 20%; width: 20%; margin-left: 5%; margin-top:2%; display: block;" src="./../css/Assets/user_icon.jpg"
+        id="img_profile" alt="Card image">
 
-        <!--- AVERAGE STAR RATINGS
+      <!--- AVERAGE STAR RATINGS
 
         <div class="rating" data-vote="0">
               <div class="star">
@@ -122,228 +127,228 @@
               </div>
             </div>
           -->
-        <!-- End average rating stars -->
+      <!-- End average rating stars -->
 
-        <div class="card-body">
-          <!--Upload profile image-->
+      <div class="card-body">
+        <!--Upload profile image-->
 
-          <div class="img_profile_container" style="margin-left:7%;">
-            <label for="btn_upload_hidden" class="txt_uploadImg">Upload Image</label>
-            <input id="btn_upload_hidden" style="visibility:hidden" type="file" enctype="multipart/form-data" onclick="uploadPicture()">
-          </div>
-
-          <!--EDIT BUTTON-->
-          <button id="editProfileBtn" type="button" class="btn btn-info btn-sm text-capitalize" style="display:none; border: 2px solid #CCCCCC; border-radius: 8px; margin-left:92%; font-size: 13px;" data-toggle="modal" data-target="#myModal3"
-            onclick="btn_EditProfile()">edit</button>
-          <br>
-          <br>
-
-          <!-- EDIT PROFILE MODAL -->
-          <div class="modal" style="margin-top:100px;" id="myModal2" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title">Basic Info</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-                </div>
-                <div class="modal-body">
-
-                  <form>
-                    <fieldset>
-                      <div class="form-group">
-                        <label for="exampleInputEmail1">Email</label>
-                        <input type="email" class="form-control" id="in_profile_edit_email" aria-describedby="emailHelp">
-                        <small id="emailHelp" class="form-text text-muted">Ex. boilermaker@purdue.edu</small>
-                        <div class="valid-feedback" id="emailFeedback">Invalid Purdue Email</div>
-                      </div>
-
-
-                      <div class="form-group">
-                        <label for="exampleInputPassword1">Password</label>
-                        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
-                      </div>
-
-
-                      <div class="form-group">
-                        <label class="col-form-label" for="inputDefault">First Name</label>
-                        <input type="text" class="form-control" placeholder="First Name" id="inputDefault">
-                      </div>
-
-                      <div class="form-group">
-                        <label class="col-form-label" for="inputDefault">Last Name</label>
-                        <input type="text" class="form-control" placeholder="Last Name" id="inputDefault">
-                      </div>
-
-
-                    </fieldset>
-                  </form>
-
-
-                </div>
-                <div class="modal-footer">
-                  <button class="btn btn-outline-primary" data-toggle="modal" data-target="#myModal3" data-dismiss="modal">Continue</button>
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-
-          <!-- Edit Modal in Profile Page -->
-          <div class="modal" id="myModal3" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title">Edit Profile</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-                </div>
-                <div class="modal-body">
-
-                  <form>
-                    <fieldset>
-
-                      <div class="form-group">
-                        <label class="col-form-label" for="inputDefault">Major</label>
-                        <input id="edit_edu" type="text" class="form-control" placeholder="(optional)">
-                      </div>
-
-                      <div class="form-group">
-                        <label class="col-form-label" for="inputDefault">Links</label>
-                        <input type="text" class="form-control" placeholder="Example: https://twitter.com/JohnPurdue/ (optional)" id="edit_links">
-                      </div>
-
-                      <div class="form-group">
-                        <label class="col-form-label" for="inputDefault">Phone Number</label>
-                        <input type="text" class="form-control" placeholder="(optional)" id="edit_contact">
-                      </div>
-
-                      <div class="form-group">
-                        <label for="exampleTextarea">Bio</label>
-                        <grammarly-ghost spellcheck="false"></grammarly-ghost><textarea class="form-control" id="edit_desc" placeholder="Something about yourself (optional)"
-                          rows="3" data-gramm="true" data-txt_gramm_id="eb4089ef-e26f-ce7a-9117-b156d9e1a197" data-gramm_id="eb4089ef-e26f-ce7a-9117-b156d9e1a197"
-                          spellcheck="false" data-gramm_editor="true" style="z-index: auto; position: relative; line-height: 21px; font-size: 14px; transition: none; background-color: transparent !important; background-position: initial initial !important; background-repeat: initial initial !important;"></textarea>
-                        <grammarly-btn>
-                          <div style="z-index: 2; opacity: 1; transform: translate(509px, 640px);" class="_9b5ef6-textarea_btn _9b5ef6-show _9b5ef6-field_hovered"
-                            data-grammarly-reactid=".0">
-                            <div class="_9b5ef6-transform_wrap" data-grammarly-reactid=".0.0">
-                              <div title="Protected by Grammarly" class="_9b5ef6-status" data-grammarly-reactid=".0.0.0">&nbsp;</div>
-                            </div>
-                          </div>
-                        </grammarly-btn>
-                      </div>
-
-
-                      <div class="form-group">
-                        <label for="exampleTextarea">Skills</label>
-                        <grammarly-ghost spellcheck="false"></grammarly-ghost><textarea class="form-control" id="edit_skills" placeholder="Your skills separated by commas (optional)"
-                          rows="3" data-gramm="true" data-txt_gramm_id="eb4089ef-e26f-ce7a-9117-b156d9e1a197" data-gramm_id="eb4089ef-e26f-ce7a-9117-b156d9e1a197"
-                          spellcheck="false" data-gramm_editor="true" style="z-index: auto; position: relative; line-height: 21px; font-size: 14px; transition: none; background-color: transparent !important; background-position: initial initial !important; background-repeat: initial initial !important;"></textarea>
-                        <grammarly-btn>
-                          <div style="z-index: 2; opacity: 1; transform: translate(509px, 640px);" class="_9b5ef6-textarea_btn _9b5ef6-show _9b5ef6-field_hovered"
-                            data-grammarly-reactid=".0">
-                            <div class="_9b5ef6-transform_wrap" data-grammarly-reactid=".0.0">
-                              <div title="Protected by Grammarly" class="_9b5ef6-status" data-grammarly-reactid=".0.0.0">&nbsp;</div>
-                            </div>
-                          </div>
-                        </grammarly-btn>
-                      </div>
-
-                    </fieldset>
-                  </form>
-
-
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-outline-primary" onclick="btn_finish_edit()" data-dismiss="modal">Finish</button>
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- SETTINGS MODAL-->
-          <div class="modal" style="margin-top:150px;" id="setModal" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title">Password Change</h5>
-                  <button type="button" class="close" data-dismiss="modal" onclick="clearSetModal()" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-                </div>
-                <div class="modal-body">
-
-                  <form>
-                    <fieldset id="fieldset_passChange">
-
-                      <div class="form-group">
-                        <label for="in_profile_currentPass">Current Password</label>
-                        <input type="password" class="form-control" id="in_profile_currentPass" placeholder="Password">
-                      </div>
-
-                      <div class="form-group">
-                        <label for="in_profile_newPass">New Password</label>
-                        <input type="password" class="form-control" id="in_profile_newPass" onchange="passMatch()" placeholder="Password">
-                      </div>
-
-                      <div class="form-group">
-                        <label for="in_profile_confirmPass">Confirm Password</label>
-                        <input type="password" class="form-control" id="in_profile_confirmPass" onchange="passMatch()" placeholder="Password">
-                      </div>
-
-
-                    </fieldset>
-                  </form>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-outline-primary" onclick="btn_passChange()" data-dismiss="modal">Save</button>
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="clearSetModal()">Close</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!--Profile Page//-->
-
-          <h6 style="font-size:13px;">BIO:</h6>
-          <p class="card-text" id="profile_desc"> Write about yourself!</p>
+        <div id="uploadBtn" class="img_profile_container" style="margin-left:7%;">
+          <label for="btn_upload_hidden" class="txt_uploadImg">Upload Image</label>
+          <input id="btn_upload_hidden" style="visibility:hidden" type="file" enctype="multipart/form-data" onclick="uploadPicture()">
         </div>
 
-        <table class="table table-hover" >
-          <tbody>
-            <tr>
-              <th scope="row">
-                <h6 style="font-size:13px;">Phone Number</h6>
-              </th>
-              <th scope="row" id="profile_contact" style="width: 60%;font-size:14px;"></th>
-            </tr>
+        <!--EDIT BUTTON-->
+        <button id="editProfileBtn" type="button" class="btn btn-info btn-sm text-capitalize" style="display:none; border: 2px solid #CCCCCC; border-radius: 8px; margin-left:92%; font-size: 13px;"
+          data-toggle="modal" data-target="#myModal3" onclick="btn_EditProfile()">edit</button>
+        <br>
+        <br>
 
-            <tr>
-              <th scope="row">
-                <h6 style="font-size:13px;">Email</h6>
-              </th>
-              <th scope="row" style="text-transform: lowercase; font-size:14px;" id="profile_email"></th>
-            </tr>
+        <!-- EDIT PROFILE MODAL -->
+        <div class="modal" style="margin-top:100px;" id="myModal2" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Basic Info</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+              </div>
+              <div class="modal-body">
 
-            <tr>
-              <th scope="row">
-                <h6 style="font-size:13px;">Major</h6>
-              </th>
-              <th scope="row" style="text-transform: capitalize; font-size:14px;" id="profile_edu"></th>
-            </tr>
-
-            <tr>
-              <th scope="row">
-                <h6 style="font-size:13px;">Skills </h6>
-              </th>
-              <th scope="row" id="profile_skills"></th>
+                <form>
+                  <fieldset>
+                    <div class="form-group">
+                      <label for="exampleInputEmail1">Email</label>
+                      <input type="email" class="form-control" id="in_profile_edit_email" aria-describedby="emailHelp">
+                      <small id="emailHelp" class="form-text text-muted">Ex. boilermaker@purdue.edu</small>
+                      <div class="valid-feedback" id="emailFeedback">Invalid Purdue Email</div>
+                    </div>
 
 
-              <!--Colors must be selected that we rotate through all types of the colors through each skill
+                    <div class="form-group">
+                      <label for="exampleInputPassword1">Password</label>
+                      <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                    </div>
+
+
+                    <div class="form-group">
+                      <label class="col-form-label" for="inputDefault">First Name</label>
+                      <input type="text" class="form-control" placeholder="First Name" id="inputDefault">
+                    </div>
+
+                    <div class="form-group">
+                      <label class="col-form-label" for="inputDefault">Last Name</label>
+                      <input type="text" class="form-control" placeholder="Last Name" id="inputDefault">
+                    </div>
+
+
+                  </fieldset>
+                </form>
+
+
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-outline-primary" data-toggle="modal" data-target="#myModal3" data-dismiss="modal">Continue</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- Edit Modal in Profile Page -->
+        <div class="modal" id="myModal3" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Edit Profile</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+              </div>
+              <div class="modal-body">
+
+                <form>
+                  <fieldset>
+
+                    <div class="form-group">
+                      <label class="col-form-label" for="inputDefault">Major</label>
+                      <input id="edit_edu" type="text" class="form-control" placeholder="(optional)">
+                    </div>
+
+                    <div class="form-group">
+                      <label class="col-form-label" for="inputDefault">Links</label>
+                      <input type="text" class="form-control" placeholder="Example: https://twitter.com/JohnPurdue/ (optional)" id="edit_links">
+                    </div>
+
+                    <div class="form-group">
+                      <label class="col-form-label" for="inputDefault">Phone Number</label>
+                      <input type="text" class="form-control" placeholder="(optional)" id="edit_contact">
+                    </div>
+
+                    <div class="form-group">
+                      <label for="exampleTextarea">Bio</label>
+                      <grammarly-ghost spellcheck="false"></grammarly-ghost><textarea class="form-control" id="edit_desc" placeholder="Something about yourself (optional)"
+                        rows="3" data-gramm="true" data-txt_gramm_id="eb4089ef-e26f-ce7a-9117-b156d9e1a197" data-gramm_id="eb4089ef-e26f-ce7a-9117-b156d9e1a197"
+                        spellcheck="false" data-gramm_editor="true" style="z-index: auto; position: relative; line-height: 21px; font-size: 14px; transition: none; background-color: transparent !important; background-position: initial initial !important; background-repeat: initial initial !important;"></textarea>
+                      <grammarly-btn>
+                        <div style="z-index: 2; opacity: 1; transform: translate(509px, 640px);" class="_9b5ef6-textarea_btn _9b5ef6-show _9b5ef6-field_hovered"
+                          data-grammarly-reactid=".0">
+                          <div class="_9b5ef6-transform_wrap" data-grammarly-reactid=".0.0">
+                            <div title="Protected by Grammarly" class="_9b5ef6-status" data-grammarly-reactid=".0.0.0">&nbsp;</div>
+                          </div>
+                        </div>
+                      </grammarly-btn>
+                    </div>
+
+
+                    <div class="form-group">
+                      <label for="exampleTextarea">Skills</label>
+                      <grammarly-ghost spellcheck="false"></grammarly-ghost><textarea class="form-control" id="edit_skills" placeholder="Your skills separated by commas (optional)"
+                        rows="3" data-gramm="true" data-txt_gramm_id="eb4089ef-e26f-ce7a-9117-b156d9e1a197" data-gramm_id="eb4089ef-e26f-ce7a-9117-b156d9e1a197"
+                        spellcheck="false" data-gramm_editor="true" style="z-index: auto; position: relative; line-height: 21px; font-size: 14px; transition: none; background-color: transparent !important; background-position: initial initial !important; background-repeat: initial initial !important;"></textarea>
+                      <grammarly-btn>
+                        <div style="z-index: 2; opacity: 1; transform: translate(509px, 640px);" class="_9b5ef6-textarea_btn _9b5ef6-show _9b5ef6-field_hovered"
+                          data-grammarly-reactid=".0">
+                          <div class="_9b5ef6-transform_wrap" data-grammarly-reactid=".0.0">
+                            <div title="Protected by Grammarly" class="_9b5ef6-status" data-grammarly-reactid=".0.0.0">&nbsp;</div>
+                          </div>
+                        </div>
+                      </grammarly-btn>
+                    </div>
+
+                  </fieldset>
+                </form>
+
+
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-outline-primary" onclick="btn_finish_edit()" data-dismiss="modal">Finish</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SETTINGS MODAL-->
+        <div class="modal" style="margin-top:150px;" id="setModal" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Password Change</h5>
+                <button type="button" class="close" data-dismiss="modal" onclick="clearSetModal()" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+              </div>
+              <div class="modal-body">
+
+                <form>
+                  <fieldset id="fieldset_passChange">
+
+                    <div class="form-group">
+                      <label for="in_profile_currentPass">Current Password</label>
+                      <input type="password" class="form-control" id="in_profile_currentPass" placeholder="Password">
+                    </div>
+
+                    <div class="form-group">
+                      <label for="in_profile_newPass">New Password</label>
+                      <input type="password" class="form-control" id="in_profile_newPass" onchange="passMatch()" placeholder="Password">
+                    </div>
+
+                    <div class="form-group">
+                      <label for="in_profile_confirmPass">Confirm Password</label>
+                      <input type="password" class="form-control" id="in_profile_confirmPass" onchange="passMatch()" placeholder="Password">
+                    </div>
+
+
+                  </fieldset>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-outline-primary" onclick="btn_passChange()" data-dismiss="modal">Save</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="clearSetModal()">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!--Profile Page//-->
+
+        <h6 style="font-size:13px;">BIO:</h6>
+        <p class="card-text" id="profile_desc"> Write about yourself!</p>
+      </div>
+
+      <table class="table table-hover">
+        <tbody>
+          <tr>
+            <th scope="row">
+              <h6 style="font-size:13px;">Phone Number</h6>
+            </th>
+            <th scope="row" id="profile_contact" style="width: 60%;font-size:14px;"></th>
+          </tr>
+
+          <tr>
+            <th scope="row">
+              <h6 style="font-size:13px;">Email</h6>
+            </th>
+            <th scope="row" style="text-transform: lowercase; font-size:14px;" id="profile_email"></th>
+          </tr>
+
+          <tr>
+            <th scope="row">
+              <h6 style="font-size:13px;">Major</h6>
+            </th>
+            <th scope="row" style="text-transform: capitalize; font-size:14px;" id="profile_edu"></th>
+          </tr>
+
+          <tr>
+            <th scope="row">
+              <h6 style="font-size:13px;">Skills </h6>
+            </th>
+            <th scope="row" id="profile_skills"></th>
+
+
+            <!--Colors must be selected that we rotate through all types of the colors through each skill
           <span class="badge badge-pill badge-primary">CS180</span>
           <span class="badge badge-pill badge-secondary">Java</span>
           <span class="badge badge-pill badge-success">C</span>
@@ -354,35 +359,35 @@
           <span class="badge badge-pill badge-dark">Teamwork</span>
 
           //-->
-            </tr>
+          </tr>
 
-          </tbody>
-        </table>
+        </tbody>
+      </table>
 
-        <div class="card-body">
-          <a href="#" id="profile_links" class="card-link">Link</a>
-        </div>
-
-
-        <!-- Bootstrap core JavaScript -->
-        <script src="./../vendor/jquery/jquery.min.js"></script>
-        <script src="./../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-        <script src="./../../Js/index.js"></script>
-        <script src="./../../Js/profile.js"></script>
-        <script src="./../../Js/home.js"></script>
+      <div class="card-body">
+        <a href="#" id="profile_links" class="card-link">Link</a>
+      </div>
 
 
-        <!-- Bootstrap core CSS -->
-        <link href="./../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+      <!-- Bootstrap core JavaScript -->
+      <script src="./../vendor/jquery/jquery.min.js"></script>
+      <script src="./../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+      <script src="./../../Js/index.js"></script>
+      <script src="./../../Js/profile.js"></script>
+      <script src="./../../Js/home.js"></script>
 
 
-        <!-- Ratings Bootstrap core JavaScript -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-        <script>
-          window.jQuery || document.write('<script src="assets/js/vendor/jquery.min.js"><\/script>')
-        </script>
-        <script src="./../vendor/bootstrap/js/bootstrap.min.js"></script>
+      <!-- Bootstrap core CSS -->
+      <link href="./../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+
+      <!-- Ratings Bootstrap core JavaScript -->
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+      <script>
+        window.jQuery || document.write('<script src="assets/js/vendor/jquery.min.js"><\/script>')
+      </script>
+      <script src="./../vendor/bootstrap/js/bootstrap.min.js"></script>
   </body>
 
   <style>
@@ -398,10 +403,12 @@
       width: 100px;
       height: 25px;
     }
+
     .txt_uploadImg {
       font-size: 12px;
       font-weight: bold;
     }
+
     #options_btn {
       position: absolute;
       left: 415px;
@@ -412,6 +419,23 @@
       position: absolute;
       left: 465px;
       width: 136px;
+    }
+
+    .notifications {
+      position: relative;
+    }
+
+    .notification-counter {
+      margin-left: 12px;
+      margin-top: -30px;
+      width: 18px;
+      height: 18px;
+      position: absolute;
+      background-color: rgba(212, 19, 13, 1);
+      color: #fff;
+      border-radius: 3px;
+      padding: 1px 3px;
+      font: 11px Verdana;
     }
   </style>
 

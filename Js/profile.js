@@ -1,10 +1,9 @@
 var email, pass, name, edu, skills, desc, contact, links, pic, docs, userProfileID;
 var urlChangePass = "http://localhost:5500/changePassword"
-var urlNotifications = "http://localhost:5500/getNotifications"
 var urlGetProfile = "http://localhost:5500/getProfile"
 var urlUpload = "http://localhost:5500/api/upload";
 var urlUserID = "http://localhost:5500/getUserID";
-var numNotifs = 0;
+var urlNumNewNotifs = "http://localhost:5500/getNumNotifications";
 
 var uID = "";
 
@@ -13,21 +12,23 @@ function onLoad_profile() {
     optionsToggle.style.display = "none";
     notificationsToggle.style.display = "none";
 
+    // get email
     var url = window.location.href;
     var str = url.split("?email=");
-    if (url == str) {
-        str = url.split("?id1=");
-        var otheruserid = str[1];
-        if (otheruserid.includes("#")) {
-            otheruserid = otheruserid.replace("#", "");
-        }
-        getUserProfile(otheruserid, );
-        return;
-    }
+    var otheruserid = null;
+
     email = str[1];
     if (email === null) {
         alert("You have to be logged in first!");
         window.location.href = "index.html";
+    }
+    else if (email.includes("&")) {
+        str = email.split("&id=");
+        email = str[0];
+        otheruserid = str[1];
+        if (otheruserid.includes("#")) {
+            otheruserid = otheruserid.replace("#", "");
+        }
     }
     else if (email.includes("#")) {
         email = email.replace("#", "");
@@ -36,7 +37,8 @@ function onLoad_profile() {
     // average ratings
     // averageRatings();
 
-    fetch(urlGetProfile, {
+    // get user id
+    fetch(urlUserID, {
         method: "POST",
         headers: {
             'Accept': 'application/json',
@@ -47,24 +49,108 @@ function onLoad_profile() {
         })
 
     }).then(function (res) {
-        console.log("Inside res function");
         if (res.ok) {
             res.json().then(function (data) {
-                var json = data.response;
-                name = json[0].FullName;
-                edu = json[0].Education;
-                links = json[0].Links;
-                contact = json[0].ContactInfo;
-                desc = json[0].Description;
-                skills = json[0].SkillsSet;
-                userProfileID = json[0].idUsers;
-                populate_profile();
-                document.getElementById("editProfileBtn").style.display = "block";
+                console.log("Inside res.ok. User ID retrieved");
+                uID = data.response[0].idUsers;
+
+                // if visiting another user's profile, get their profile
+                if (otheruserid){
+                    getUserProfile(otheruserid);
+                    return;
+                }
+
+                // get profile
+                fetch(urlGetProfile, {
+                    method: "POST",
+                    headers: {
+                        'Accept': 'application/json',
+                        'content-type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        "email": null,
+                        "id": uID
+                    })
+
+                }).then(function (res) {
+                    console.log("Inside res function");
+                    if (res.ok) {
+                        res.json().then(function (data) {
+                            var json = data.response;
+                            name = json[0].FullName;
+                            edu = json[0].Education;
+                            links = json[0].Links;
+                            contact = json[0].ContactInfo;
+                            desc = json[0].Description;
+                            skills = json[0].SkillsSet;
+                            userProfileID = json[0].idUsers;
+                            populate_profile(email);
+                            document.getElementById("editProfileBtn").style.display = "block";
+
+                            // notifications
+                            getNumOfNewNotifs();
+
+                        }.bind(this));
+                    }
+                    else {
+                        alert("Error: get profile unsuccessful!");
+                        res.json().then(function (data) {
+                            console.log(data.message);
+                        }.bind(this));
+                        return;
+                    }
+                }).catch(function (err) {
+                    alert("Error: No internet connection!");
+                    console.log(err.message + ": No Internet Connection");
+                    return;
+                });
 
             }.bind(this));
         }
         else {
-            alert("Error: get profile unsuccessful!");
+            console.log("Error: Cannot get UserID");
+            res.json().then(function (data) {
+                console.log(data.message);
+            }.bind(this));
+        }
+    }).catch(function (err) {
+        alert("Error: No internet connection!");
+        console.log(err.message + ": No Internet Connection");
+    });
+
+    //var img = new Image();
+    //img.src = "./../css/Assets/spinner.jpg";
+    document.getElementById("img_profile").src = "./../css/Assets/user_icon.jpg";
+}
+
+// to get notifications counter 
+function getNumOfNewNotifs() {
+
+    fetch(urlNumNewNotifs, {
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+            "id": uID
+        })
+
+    }).then(function (res) {
+        console.log("Inside res function");
+        if (res.ok) {
+            res.json().then(function (data) {
+                var json = data.response;
+                var num = parseInt(json[0].count);
+                if (num > 0) {
+                    document.getElementById("counter").innerHTML = num;
+                    document.getElementById("counter").style.display = "block";
+                }
+
+            }.bind(this));
+        }
+        else {
+            alert("Error: Get number of notifications unsuccessful!");
             res.json().then(function (data) {
                 console.log(data.message);
             }.bind(this));
@@ -75,10 +161,6 @@ function onLoad_profile() {
         console.log(err.message + ": No Internet Connection");
         return;
     });
-
-    var img = new Image();
-    img.src = "./../css/Assets/spinner.jpg";
-    document.getElementById("img_profile").src = "./../css/Assets/user_icon.jpg";
 }
 
 function goToHome() {
@@ -108,7 +190,9 @@ function displayNotifications() {
     }
 
     // function to get notifications
-    btn_getNotifications();
+    getNotifications();
+    document.getElementById('counter').style.display = "none";// remove counter
+    document.getElementById('counter').innerHTML = 0;
 }
 
 $(function () {
@@ -125,9 +209,9 @@ function imageIsLoaded(e) {
     $('#img_profile').attr('src', e.target.result);
 }
 
-function populate_profile() {
+function populate_profile(useremail) {
     document.getElementById("profile_name").innerHTML = name;
-    document.getElementById("profile_email").innerHTML = email;
+    document.getElementById("profile_email").innerHTML = useremail;
     document.getElementById("profile_edu").innerHTML = edu;
     document.getElementById("profile_contact").innerHTML = contact;
     document.getElementById("profile_desc").innerHTML = desc;
@@ -255,63 +339,8 @@ function btn_passChange() {
     clearSetModal();
 }
 
-
-function btn_getNotifications() {
-
-    console.log(email);
-    fetch(urlNotifications, {
-        method: "POST",
-        headers: {
-            'Accept': 'application/json',
-            'content-type': 'application/json'
-        },
-        body: JSON.stringify({
-            "email": email
-        })
-
-    }).then(function (res) {
-        console.log("Inside res function");
-        if (res.ok) {
-            res.json().then(function (data) {
-                console.log(data.message);
-                console.log(data.response);
-                console.log("Inside res.ok, Get Notifications successful!");
-                var length = Object.keys(data.response).length;
-                if (length != 0 && numNotifs < length) {
-                    numNotifs = 0;
-                    var json = data.response;
-                    for (i = 0; i < length; i++) {
-                        var ul = document.createElement("a");
-                        ul.setAttribute('class', 'notifClass dropdown-item');
-                        ul.innerHTML = (json[i].Notification).toString();
-                        ul.style = "border-bottom: 1px solid #ccc; margin-left:-40px;color:#333399;";
-                        document.getElementById("notif").appendChild(ul);
-                        numNotifs++;
-                    }
-                }
-                else if (numNotifs == 0) {
-                    numNotifs--;
-                    var ul = document.createElement("a");
-                    ul.setAttribute('class', 'notifClass dropdown-item');
-                    ul.innerHTML = "No notifications available for you at this time.";
-                    ul.style = "border-bottom: 1px solid #ccc;";
-                    document.getElementById("notif").appendChild(ul);
-                }
-            }.bind(this));
-        }
-        else {
-            alert("Error: Get notifications unsuccessful!");
-            res.json().then(function (data) {
-                console.log(data.message);
-            }.bind(this));
-        }
-    }).catch(function (err) {
-        alert("Error: No internet connection!");
-        console.log(err.message + ": No Internet Connection");
-    });
-
-}
-
+// upload picture method
+// need to debug as of now
 function uploadPicture() {
 
     var input = document.querySelector('input[type="file"]')
@@ -414,18 +443,22 @@ function setFullStarState(target) {
 
 /* Star ratings end */
 
-function gotoUserProfile(otheruserid, uid) {
-    window.location.href = "profile.html?id1=".concat(otheruserid);
+function gotoUserProfile(otheruserid) {
+    window.location.href = "profile.html?email=".concat(emailAdd, "&id=", otheruserid);
 }
 
 function getUserProfile(otheruserid) {
 
-    //if (otheruserid == uid) {
-        //document.getElementById("editProfileBtn").style.display = "block";
-    //}
-    //else {
+    // if the user is same as the one logged in, show edit and upload buttons.
+    if (otheruserid == uID) {
+        document.getElementById("editProfileBtn").style.display = "block";
+    }
+    else {
+        document.getElementById('uploadBtn').style.display = "none";
         document.getElementById("editProfileBtn").style.display = "none";
-    //}
+    }
+
+    // get profile of user
     fetch(urlGetProfile, {
         method: "POST",
         headers: {
@@ -449,7 +482,8 @@ function getUserProfile(otheruserid) {
                 desc = json[0].Description;
                 skills = json[0].SkillsSet;
                 userProfileID = json[0].idUsers;
-                populate_profile();
+                otheruseremail = json[0].Email;
+                populate_profile(otheruseremail);
             }.bind(this));
         }
         else {
@@ -467,5 +501,4 @@ function getUserProfile(otheruserid) {
 
 }
 
-
-window.gotoUserProfile = gotoUserProfile;
+window.gotoUserProfile = gotoUserProfile; // just making sure the function is globally available

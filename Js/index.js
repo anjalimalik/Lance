@@ -214,7 +214,7 @@ function verifyLName(_lName) {
     return true;
 }
 
-function btn_logout() {
+function btn_logout(useremail) {
     fetch(urlLogout, {
         method: "POST",
         headers: {
@@ -222,8 +222,7 @@ function btn_logout() {
             'content-type': 'application/json'
         },
         body: JSON.stringify({
-            "email": email,
-            "signOut": true
+            "email": useremail
         })
 
     }).then(function (res) {
