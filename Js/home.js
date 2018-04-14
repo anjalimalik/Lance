@@ -13,6 +13,7 @@ var urlUserID = "http://localhost:5500/getUserID";
 var urlAllNotifications = "http://localhost:5500/getAllNotifications"
 var urlNewNotifications = "http://localhost:5500/getNewNotifications";
 var urlOwnerIDofPost = "http://localhost:5500/getOwnerIDofPost";
+var urlSearch = "http://localhost:5500/runSearch";
 
 var emailAdd;
 var uID = "";
@@ -1295,6 +1296,49 @@ function expandCreatePModal(category, edit) {
         newLbl.appendChild(newR);
     }
 
+}
+
+//Perform search
+function runSearch() {
+
+    key = document.getElementById("searchBar").value;
+    
+    fetch(urlSearch, {
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+            "key": key,
+        })
+
+    }).then(function (res) {
+        if (res.ok) {
+            
+            res.json().then(function (data) {
+                
+                var numPost = Object.keys(data.response).length;
+                var json = data.response;
+
+                var ul = document.getElementById('news_card_list');
+                ul.innerHTML = "";
+
+                for (i = 0; i < numPost; i++) {
+                    createCard(json[i].UserName, json[i].Content, json[i].Headline, json[i].PostingType, json[i].money, json[i].idPosts, json[i].DatePosted, json[i].numLikes, json[i].Category, json[i].Attributes, json[i].UserID);
+                }
+            });
+        }
+        else {
+            alert("Error: couldn't run search");
+            res.json().then(function (data) {
+                console.log(data.message);
+            }.bind(this));
+        }
+    }).catch(function (err) {
+        alert("Error: No internet connection!");
+        console.log(err.message + ": No Internet Connection");
+    });
 }
 
 // close new post modal and remove previous enteries
