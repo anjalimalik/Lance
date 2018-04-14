@@ -149,14 +149,11 @@ function getNumOfNewNotifs() {
 
             }.bind(this));
         }
-<<<<<<< HEAD
-
-        /*else {
+        else {
             alert("Error: get profile unsuccessful!");
-=======
         else {
             alert("Error: Get number of notifications unsuccessful!");
->>>>>>> master
+
             res.json().then(function (data) {
                 console.log(data.message);
             }.bind(this));
@@ -167,16 +164,13 @@ function getNumOfNewNotifs() {
         console.log(err.message + ": No Internet Connection");
         return;
     });
-<<<<<<< HEAD
-    */
+
     var img = new Image();
     img.src = "./../css/Assets/spinner.jpg";
     document.getElementById("img_profile").src = "./../css/Assets/user_icon.jpg";
     var background = localStorage.getItem("style");
     document.body.style.backgroundColor = background;
 
-=======
->>>>>>> master
 }
 
 function goToHome() {
