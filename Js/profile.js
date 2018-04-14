@@ -49,7 +49,8 @@ function onLoad_profile() {
 
             }.bind(this));
         }
-        else {
+
+        /*else {
             alert("Error: get profile unsuccessful!");
             res.json().then(function (data) {
                 console.log(data.message);
@@ -61,10 +62,13 @@ function onLoad_profile() {
         console.log(err.message + ": No Internet Connection");
         return;
     });
-
+    */
     var img = new Image();
     img.src = "./../css/Assets/spinner.jpg";
     document.getElementById("img_profile").src = "./../css/Assets/user_icon.jpg";
+    var background = localStorage.getItem("style");
+    document.body.style.backgroundColor = background;
+
 }
 
 function goToHome() {
@@ -317,9 +321,32 @@ function uploadPicture() {
     });
 }
 
-function themesModal() {
-    //Themes stuff here
+function btn_theme_1() {
+    var theme = "Tomato";
+    document.body.style.backgroundColor = theme;
+    localStorage.setItem('style', theme);
+    location.reload();
 }
+function btn_theme_2() {
+    var theme = "Orange";
+    document.body.style.backgroundColor = theme;
+    localStorage.setItem('style', theme);
+    location.reload();
+}
+function btn_theme_3() {
+    var theme = "DodgerBlue";
+    document.body.style.backgroundColor = theme;
+    localStorage.setItem('style', theme);
+    location.reload();
+}
+function btn_theme_4() {
+    var theme = "Gray"
+    localStorage.setItem('style', theme);
+    document.body.style.backgroundColor = theme;
+    location.reload();
+    
+}
+
 
 function deleteAccount() {
         var str = name.concat(", confirm your password below to remove 1ance account");

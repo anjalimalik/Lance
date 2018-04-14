@@ -315,17 +315,26 @@
 
                   <form>
                     <fieldset id="fieldset_passChange">
-
-                        <div class="form-group">
-                          <label for="in_profile_currentPass">Enter Theme</label>
-                          <input type="password" class="form-control" id="deleteAccountPass" placeholder="Theme name... wip">
+                        <div class="floating-box theme1">
+                            <div style="color: gold;">Theme 1</div>
+                            <button class="btnThemes" onclick="btn_theme_1()">Select</button>
                         </div>
-
-
-
+                        <div class="floating-box theme2">
+                            <div style="color: gold;">Theme 2</div>
+                            <button class="btnThemes" onclick="btn_theme_2()">Select</button>
+                        </div>
+                        <div class="floating-box theme3">
+                            <div style="color: gold;">Theme 3</div>
+                            <button class="btnThemes" onclick="btn_theme_3()">Select</button>
+                        </div>
+                        <div class="floating-box theme4">
+                            <div style="color: gold;">Theme 4</div>
+                            <button class="btnThemes" onclick="btn_theme_4()">Select</button>
+                        </div>
                     </fieldset>
                   </form>
                 </div>
+
                 <div class="modal-footer">
                   <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#settingsModal" data-dismiss="modal">Back</button>
                   <button type="button" class="btn btn-outline-primary" onclick="btn_theme()" data-dismiss="modal">Choose</button>
@@ -526,6 +535,32 @@
       position: absolute;
       left: 465px;
       width: 136px;
+    }
+    .floating-box {
+        float: left;
+        width: 150px;
+        height: 75px;
+        margin: 10px;
+        border: 3px solid #73AD21;
+    }
+    .btnThemes {
+        width: 45%;
+        height: 30%;
+        border-radius: 5%;
+        margin-top: 15%;
+        margin-left: 5%;
+    }
+    .theme1 {
+        background-color: Tomato;
+    }
+    .theme2 {
+        background-color: Orange;
+    }
+    .theme3 {
+        background-color: DodgerBlue;
+    }
+    .theme4 {
+        background-color: Gray;
     }
   </style>
 
