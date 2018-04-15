@@ -4,6 +4,7 @@ var urlGetProfile = "http://localhost:5500/getProfile"
 var urlUpload = "http://localhost:5500/api/upload";
 var urlUserID = "http://localhost:5500/getUserID";
 var urlNumNewNotifs = "http://localhost:5500/getNumNotifications";
+var urlDeleteAccount = "http://localhost:5500/DeleteUser";
 
 var uID = "";
 
@@ -123,7 +124,7 @@ function onLoad_profile() {
     document.getElementById("img_profile").src = "./../css/Assets/user_icon.jpg";
 }
 
-// to get notifications counter 
+// to get notifications counter
 function getNumOfNewNotifs() {
 
     fetch(urlNumNewNotifs, {
@@ -502,3 +503,74 @@ function getUserProfile(otheruserid) {
 }
 
 window.gotoUserProfile = gotoUserProfile; // just making sure the function is globally available
+
+
+function btn_theme_1() {
+    var theme = "Tomato";
+    document.body.style.backgroundColor = theme;
+    localStorage.setItem('style', theme);
+    location.reload();
+}
+function btn_theme_2() {
+    var theme = "Orange";
+    document.body.style.backgroundColor = theme;
+    localStorage.setItem('style', theme);
+    location.reload();
+}
+function btn_theme_3() {
+    var theme = "DodgerBlue";
+    document.body.style.backgroundColor = theme;
+    localStorage.setItem('style', theme);
+    location.reload();
+}
+function btn_theme_4() {
+    var theme = "Gray"
+    localStorage.setItem('style', theme);
+    document.body.style.backgroundColor = theme;
+    location.reload();
+
+}
+
+function deleteShowModal(){
+    var str = name.concat(", confirm your password below to remove 1ance account");
+    document.getElementById("accountName").innerHTML = str;
+    document.getElementById("accountName").setAttribute("style", "font-size:120%; color:red;");
+    document.getElementById("accountEmail").value = email;
+    document.getElementById("accountEmail").readOnly = true;
+    document.getElementById("accountEmail").setAttribute("style", "background-color: #D3D3D3;");
+}
+
+
+function deleteAccount() {
+        var userPass = document.getElementById("deleteAccountPass").value;
+    
+        fetch(urlDeleteAccount, {
+            method: "POST",
+            headers: {
+                'Accept': 'application/json',
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify({
+                "userid": uID,
+                "password": userPass
+            })
+        }).then(function (res) {
+            console.log("Inside res function");
+            if (res.ok) {
+                res.json().then(function (data) {
+                    alert("Your account has been Deleted, you will be redirected to the Login Page");
+                    window.location.href = "./index.html";
+                    console.log("Inside res.ok");
+                }.bind(this));
+            }
+            else {
+                alert("Error: Delete User Account unsuccessful!");
+                res.json().then(function (data) {
+                    console.log(data.message);
+                }.bind(this));
+            }
+        }).catch(function (err) {
+            alert("Error: No internet connection!");
+            console.log(err.message + ": No Internet Connection");
+        });
+}

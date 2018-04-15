@@ -349,7 +349,7 @@
                           <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#setModal" data-dismiss="modal">Change Password</button>
                       </div>
                       <div class="form-group">
-                          <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#deleteAccountModal" data-dismiss="modal" onclick="deleteAccount()">Delete 1ance Account</button>
+                          <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#deleteAccountModal" data-dismiss="modal" onclick="deleteShowModal()">Delete 1ance Account</button>
                       </div>
 
                     </fieldset>
@@ -481,37 +481,10 @@
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#settingsModal" data-dismiss="modal">Back</button>
-                  <button type="button" class="btn btn-outline-primary" onclick="btn_delete_account()" data-dismiss="modal">Confirm</button>
+                  <button type="button" class="btn btn-outline-primary" onclick="deleteAccount()" data-dismiss="modal">DELETE ACCOUNT</button>
                 </div>
               </div>
-              <div class="modal-body">
 
-                <form>
-                  <fieldset id="fieldset_passChange">
-
-                    <div class="form-group">
-                      <label for="in_profile_currentPass">Current Password</label>
-                      <input type="password" class="form-control" id="in_profile_currentPass" placeholder="Password">
-                    </div>
-
-                    <div class="form-group">
-                      <label for="in_profile_newPass">New Password</label>
-                      <input type="password" class="form-control" id="in_profile_newPass" onchange="passMatch()" placeholder="Password">
-                    </div>
-
-                    <div class="form-group">
-                      <label for="in_profile_confirmPass">Confirm Password</label>
-                      <input type="password" class="form-control" id="in_profile_confirmPass" onchange="passMatch()" placeholder="Password">
-                    </div>
-
-
-                  </fieldset>
-                </form>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-outline-primary" onclick="btn_passChange()" data-dismiss="modal">Save</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="clearSetModal()">Close</button>
-              </div>
             </div>
           </div>
         </div>
@@ -586,6 +559,35 @@
       padding: 1px 3px;
       font: 11px Verdana;
     }
+
+    .floating-box {
+        float: left;
+        width: 150px;
+        height: 75px;
+        margin: 10px;
+        border: 3px solid #73AD21;
+    }
+    .btnThemes {
+        width: 45%;
+        height: 30%;
+        border-radius: 5%;
+        margin-top: 15%;
+        margin-left: 5%;
+    }
+    .theme1 {
+        background-color: Tomato;
+    }
+    .theme2 {
+        background-color: Orange;
+    }
+    .theme3 {
+        background-color: DodgerBlue;
+    }
+    .theme4 {
+        background-color: Gray;
+    }
+
+
   </style>
 
 </html>

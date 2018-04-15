@@ -272,7 +272,7 @@ app.post('/CreatePost', function (req, res) {
         }
 
         else {
-            // account with given email exists, therefore, proceed with creating a post 
+            // account with given email exists, therefore, proceed with creating a post
             let query2 = "INSERT INTO Posts SET ?";
 
             var newPost = {
@@ -519,7 +519,7 @@ app.post('/resetPass', function (req, res) {
       if (error) {
         return res.status(500).json({ message: "Internal server error" });
       } else {
-        
+
         db.query(dbQuery, requestParams, function (err, result) {
             if (err) {
                 return res.status(500).json({ message: "Internal server error" });
@@ -1088,7 +1088,7 @@ app.post('/getNewNotifications', function (req, res) {
     });
 });
 
-// function to see all notifications 
+// function to see all notifications
 function seeNotifications(id) {
     // toggle the seen attribute in the database
     let query = "UPDATE Notifications SET seen = '1' WHERE idUsers = ? AND seen = '0'";
@@ -1335,7 +1335,7 @@ app.post('/EditPost', function (req, res) {
     /*
         // set date posted
         var posted = new Date();
-    
+
         var time = posted.getTime();
     */
 
@@ -1376,8 +1376,8 @@ app.post('/runSearch', function (req, res) {
 
     key = "%" + key + "%";
 
-    if (key == "") { 
-        
+    if (key == "") {
+
         let query = 'SELECT * FROM Posts ORDER BY DatePosted DESC';
 
         db.query(query, (error, response) => {
@@ -1414,7 +1414,7 @@ app.post('/runSearch', function (req, res) {
 
         return res.status(200).json({ response: result });
     });
-}); 
+});
 
 // Get user id from email
 app.post('/getUserID', function (req, res) {
@@ -1444,7 +1444,7 @@ app.post('/getUserID', function (req, res) {
 });
 
 // Could be used for populating edit post modal
-// get details of one particular post 
+// get details of one particular post
 app.post('/getSelectedPost', function (req, res) {
     var id = req.body.PostId;
 
@@ -1487,14 +1487,14 @@ app.post('/DeleteUser', function (req, res) {
     let queryPass = "SELECT Email, Password FROM Users WHERE idUsers = ?";
 
     db.query(queryPass, id, (error, response) => {
-        console.log(response);
+
         if (error) {
             res.send(JSON.stringify({ "status": 500, "error": error, "response": null, "message": "Internal server error - Could not check current Password" }));
         }
         else {
             // check if current password is the same as the one in database
-            //var matchPass = decipherPass(response[0].Email, response[0].Password);
-            var matchPass = response[0].Password;
+            var matchPass = decipherPass(response[0].Email, response[0].Password);
+            //var matchPass = response[0].Password;
             if (pass === matchPass) {
                 console.log("Current password is correct");
 
@@ -1531,6 +1531,7 @@ app.post('/DeleteUser', function (req, res) {
                                                         res.send(JSON.stringify({ "status": 500, "error": err5, "response": null, "message": "Internal server error" }));
                                                     }
                                                     else {
+                                                        console.log("HERE: DELETED");
                                                         res.send(JSON.stringify({
                                                             "status": 200,
                                                             "error": null,
