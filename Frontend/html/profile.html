@@ -79,7 +79,7 @@
     </div>
   </nav>
 
-  <body style="color: #666699;">
+  <body id="bodyProfile" style="color: #666699;">
     <!-- Page Content -->
     <div class="card mb-3" style="width: 50%; margin-left: 25%;">
       <div class="card-header text-capitalize" style="height:30%; font-size:30px; text-align: left; font-weight: bold;" id="profile_name">John Doe</div>
@@ -138,7 +138,7 @@
         </div>
 
         <!--EDIT BUTTON-->
-        <button id="editProfileBtn" type="button" class="btn btn-info btn-sm text-capitalize" style="display:none; border: 2px solid #CCCCCC; border-radius: 8px; margin-left:92%; font-size: 13px;"
+        <button id="editProfileBtn" type="button" class="btn btn-sm text-capitalize" style="display:none; border: 2px solid #CCCCCC; border-radius: 8px; margin-left:92%; font-size: 13px;"
           data-toggle="modal" data-target="#myModal3" onclick="btn_EditProfile()">edit</button>
         <br>
         <br>
@@ -369,29 +369,29 @@
               <div class="modal-content">
                 <div class="modal-header">
                   <h5 class="modal-title">Themes</h4>
-                  <button type="button" class="close" data-dismiss="modal" onclick="themesModal()" aria-label="Close">
+                  <button type="button" class="close" id="closeThemes" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
-            </button>
+          </button>
                 </div>
                 <div class="modal-body">
 
                   <form>
-                    <fieldset id="fieldset_passChange">
+                    <fieldset>
                         <div class="floating-box theme1">
                             <div style="color: gold;">Theme 1</div>
-                            <button class="btnThemes" onclick="btn_theme_1()">Select</button>
+                            <input type="button" class="btnThemes" data-dismiss="modal" onclick="btn_theme_1()" value="Select"></input>
                         </div>
                         <div class="floating-box theme2">
                             <div style="color: gold;">Theme 2</div>
-                            <button class="btnThemes" onclick="btn_theme_2()">Select</button>
+                            <input type="button" class="btnThemes" data-dismiss="modal" onclick="btn_theme_2()" value="Select"></input>
                         </div>
                         <div class="floating-box theme3">
                             <div style="color: gold;">Theme 3</div>
-                            <button class="btnThemes" onclick="btn_theme_3()">Select</button>
+                            <input type="button" class="btnThemes" data-dismiss="modal" onclick="btn_theme_3()" value="Select"></input>
                         </div>
                         <div class="floating-box theme4">
                             <div style="color: gold;">Theme 4</div>
-                            <button class="btnThemes" onclick="btn_theme_4()">Select</button>
+                            <input type="button" class="btnThemes" data-dismiss="modal" onclick="btn_theme_4()" value="Select"></input>
                         </div>
                     </fieldset>
                   </form>
@@ -399,7 +399,6 @@
 
                 <div class="modal-footer">
                   <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#settingsModal" data-dismiss="modal">Back</button>
-                  <button type="button" class="btn btn-outline-primary" onclick="btn_theme()" data-dismiss="modal">Choose</button>
                 </div>
               </div>
             </div>
@@ -568,11 +567,12 @@
         border: 3px solid #73AD21;
     }
     .btnThemes {
-        width: 45%;
-        height: 30%;
+        width: 55%;
+        height: 50%;
         border-radius: 5%;
         margin-top: 15%;
         margin-left: 5%;
+        margin-bottom: 5%;
     }
     .theme1 {
         background-color: Tomato;

@@ -90,7 +90,8 @@ function onLoad_profile() {
 
                             // notifications
                             getNumOfNewNotifs();
-
+                            var background = localStorage.getItem("style");
+                            document.body.style.backgroundColor = background;
                         }.bind(this));
                     }
                     else {
@@ -122,6 +123,8 @@ function onLoad_profile() {
     //var img = new Image();
     //img.src = "./../css/Assets/spinner.jpg";
     document.getElementById("img_profile").src = "./../css/Assets/user_icon.jpg";
+
+
 }
 
 // to get notifications counter
@@ -502,33 +505,38 @@ function getUserProfile(otheruserid) {
 
 }
 
-window.gotoUserProfile = gotoUserProfile; // just making sure the function is globally available
-
-
 function btn_theme_1() {
     var theme = "Tomato";
     document.body.style.backgroundColor = theme;
+    document.body.style.color = theme;
     localStorage.setItem('style', theme);
-    location.reload();
+    optionsToggle.style.display = "none";
+    document.getElementById('editProfileBtn').style.backgroundColor = theme;
 }
+
 function btn_theme_2() {
     var theme = "Orange";
     document.body.style.backgroundColor = theme;
     localStorage.setItem('style', theme);
-    location.reload();
+    document.body.style.color = theme;
+    optionsToggle.style.display = "none";
+    document.getElementById('editProfileBtn').style.backgroundColor = theme;
 }
 function btn_theme_3() {
     var theme = "DodgerBlue";
     document.body.style.backgroundColor = theme;
     localStorage.setItem('style', theme);
-    location.reload();
+    document.body.style.color = theme;
+    optionsToggle.style.display = "none";
+    document.getElementById('editProfileBtn').style.backgroundColor = theme;
 }
 function btn_theme_4() {
-    var theme = "Gray"
-    localStorage.setItem('style', theme);
+    var theme = "Gray";
     document.body.style.backgroundColor = theme;
-    location.reload();
-
+    localStorage.setItem('style', theme);
+    document.body.style.color = theme;
+    optionsToggle.style.display = "none";
+    document.getElementById('editProfileBtn').style.backgroundColor = theme;
 }
 
 function deleteShowModal(){
@@ -543,7 +551,7 @@ function deleteShowModal(){
 
 function deleteAccount() {
         var userPass = document.getElementById("deleteAccountPass").value;
-    
+
         fetch(urlDeleteAccount, {
             method: "POST",
             headers: {
@@ -574,3 +582,5 @@ function deleteAccount() {
             console.log(err.message + ": No Internet Connection");
         });
 }
+
+window.gotoUserProfile = gotoUserProfile; // just making sure the function is globally available
