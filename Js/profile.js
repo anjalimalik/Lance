@@ -505,29 +505,33 @@ function getUserProfile(otheruserid) {
 
 }
 
-function btn_theme_1() {
-    var theme = "Tomato";
-    document.body.style.backgroundColor = theme;
+function btn_theme_1(number) {
+    alert(number);
+    var theme = "url('../css/Assets/sunrise.jpg')";
+    document.body.style.backgroundImage = theme;
     document.body.style.color = theme;
     localStorage.setItem('style', theme);
     optionsToggle.style.display = "none";
-    document.getElementById('editProfileBtn').style.backgroundColor = theme;
+    document.body.style.backgroundSize = "cover";
+    document.getElementById('editProfileBtn').style.backgroundImage = theme;
 }
 
 function btn_theme_2() {
-    var theme = "Orange";
-    document.body.style.backgroundColor = theme;
-    localStorage.setItem('style', theme);
+    var theme = "url('../css/Assets/Purple.jpg')";
+    document.body.style.backgroundImage = theme;
     document.body.style.color = theme;
+    localStorage.setItem('style', theme);
     optionsToggle.style.display = "none";
+    document.body.style.backgroundSize = "cover";
     document.getElementById('editProfileBtn').style.backgroundColor = theme;
 }
 function btn_theme_3() {
-    var theme = "DodgerBlue";
-    document.body.style.backgroundColor = theme;
-    localStorage.setItem('style', theme);
+    var theme = "url('../css/Assets/Purple.jpg')";
+    document.body.style.backgroundImage = theme;
     document.body.style.color = theme;
+    localStorage.setItem('style', theme);
     optionsToggle.style.display = "none";
+    document.body.style.backgroundSize = "cover";
     document.getElementById('editProfileBtn').style.backgroundColor = theme;
 }
 function btn_theme_4() {
