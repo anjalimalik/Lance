@@ -505,42 +505,32 @@ function getUserProfile(otheruserid) {
 
 }
 
-function btn_theme_1(number) {
-    alert(number);
-    var theme = "url('../css/Assets/sunrise.jpg')";
+function btn_theme_1() {
+    var theme = "url('../css/Assets/Sunrise.jpg')";
+    changeTheme(theme);
+}
+
+function btn_theme_2(theme) {
+    var theme = "url('../css/Assets/Purple.jpg')";
+    changeTheme(theme);
+}
+function btn_theme_3(theme) {
+    var theme = "url('../css/Assets/Moose.jpg')";
+    changeTheme(theme);
+}
+function btn_theme_4(theme) {
+    var theme = "url('../css/Assets/Dark.jpg')";
+    document.getElementById("editProfileBtn").style.color = "white";
+    changeTheme(theme);
+}
+
+function changeTheme(theme) {
     document.body.style.backgroundImage = theme;
     document.body.style.color = theme;
     localStorage.setItem('style', theme);
     optionsToggle.style.display = "none";
     document.body.style.backgroundSize = "cover";
     document.getElementById('editProfileBtn').style.backgroundImage = theme;
-}
-
-function btn_theme_2() {
-    var theme = "url('../css/Assets/Purple.jpg')";
-    document.body.style.backgroundImage = theme;
-    document.body.style.color = theme;
-    localStorage.setItem('style', theme);
-    optionsToggle.style.display = "none";
-    document.body.style.backgroundSize = "cover";
-    document.getElementById('editProfileBtn').style.backgroundColor = theme;
-}
-function btn_theme_3() {
-    var theme = "url('../css/Assets/Purple.jpg')";
-    document.body.style.backgroundImage = theme;
-    document.body.style.color = theme;
-    localStorage.setItem('style', theme);
-    optionsToggle.style.display = "none";
-    document.body.style.backgroundSize = "cover";
-    document.getElementById('editProfileBtn').style.backgroundColor = theme;
-}
-function btn_theme_4() {
-    var theme = "Gray";
-    document.body.style.backgroundColor = theme;
-    localStorage.setItem('style', theme);
-    document.body.style.color = theme;
-    optionsToggle.style.display = "none";
-    document.getElementById('editProfileBtn').style.backgroundColor = theme;
 }
 
 function deleteShowModal(){
