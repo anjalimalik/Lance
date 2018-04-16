@@ -80,10 +80,10 @@
 
       <!-- Search -->
 
-    <form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="text" placeholder="Search" style="position: absolute; transform: translate3d(0px. 38px, 0px); top: 20px; left: 450px; will-change: transform;">
-      <button class="btn btn-secondary my-2 my-sm-0" type="submit" style="position: absolute; transform: translate3d(0px. 38px, 0px); top: 21.5px; left: 710px; will-change: transform;">Search</button>
-    </form>
+      <form class="form-inline my-2 my-lg-0">
+        <input class="form-control mr-sm-2" type="text" placeholder="Search" style="position: absolute; transform: translate3d(0px. 38px, 0px); top: 20px; left: 450px; will-change: transform;">
+        <button class="btn btn-secondary my-2 my-sm-0" type="submit" style="position: absolute; transform: translate3d(0px. 38px, 0px); top: 21.5px; left: 710px; will-change: transform;">Search</button>
+      </form>
 
       <!-- End -->
 
@@ -337,189 +337,278 @@
       <div class="card-body">
         <a href="#" id="profile_links" class="card-link">Link</a>
       </div>
+      <div class="card-footer">
+        <a href="#" id="rating" class="card-link">REVIEWS:</a>
+        <select id="example-reversed" name="rating" autocomplete="off">
+              <option value="Strongly Agree">Strongly Recommend</option>
+              <option value="Agree">Recommend</option>
+              <option value="Neither Agree or Disagree" selected="selected">Neutral</option>
+              <option value="Disagree">Do Not Recommend</option>
+              <option value="Strongly Disagree">Strongly Do Not Recommend</option>
+            </select>
+      </div>
+
+      <br>
+      <br>
+
+      <div class="form-group">
+        <label for="exampleSelect1">Filter Reviews</label>
+        <select class="form-control" id="exampleSelect1">
+    <option>Highest Reviews</option>
+    <option>Lowest Reviews</option>
+    <option>Latest Reviews</option>
+    <option>Oldest Reviews</option>
+  </select>
+      </div>
+
+
+      <br>
+      <br>
+
+
+      <!-- REVIEW TEMPLATE -->
+      <div class="card bg-secondary mb-3" style="max-width: 200rem;">
+        <div class="card-header">Potential Info: Time Stamp, Star Rating, User Profile Pic, Omit Header</div>
+        <div class="card-body">
+          <h4 class="card-title">TITLE OF THE REVIEW</h4>
+
+          <p class="card-text">Style 1 of what could be in the description.</p>
+
+          <blockquote class="blockquote">
+            <p class="mb-0">Style 2 of what can be the description of the review. </p>
+            <footer class="blockquote-footer">Thoughts posted by <cite title="Source Title">Sanjit Sama</cite></footer>
+          </blockquote>
+
+        </div>
+      </div>
+
+      <br>
+
+      <!-- REVIEW TEMPLATE -->
+      <div class="card bg-secondary mb-3" style="max-width: 200rem;">
+        <!--             <div class="card-header">Header</div> -->
+        <div class="card-body">
+          <!--            <h4 class="card-title">Secondary card title</h4>
+          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p> -->
+
+          <legend> *User Pic* Leave a review...</legend>
+
+          <div class="form-group">
+            <label class="col-form-label col-form-label-sm" for="inputSmall">Title</label>
+            <input class="form-control form-control-sm" type="text" placeholder="Give your review a title!" id="inputSmall">
+          </div>
+
+
+          <div class="form-group">
+            <label for="exampleTextarea">Description</label>
+            <grammarly-ghost spellcheck="false">
+
+              <div style="position: absolute; color: transparent; overflow: hidden; white-space: pre-wrap; border-top-left-radius: 0px; border-top-right-radius: 0px; border-bottom-right-radius: 0px; border-bottom-left-radius: 0px; box-sizing: border-box; height: 89px; width: 540px; z-index: 0; padding: 12px 32px; margin: 582px 0px 0px; border: 1px solid transparent; background-image: none; background-size: auto; background-attachment: scroll; background-origin: padding-box; background-clip: padding-box; background-color: rgb(247, 247, 249); top: 0px; left: 0px; background-position: 0% 0%; background-repeat: repeat repeat;"
+                data-id="d3643a56-3051-299d-31fd-d1f0b3f119f6" data-gramm_id="d3643a56-3051-299d-31fd-d1f0b3f119f6" data-gramm="gramm"
+                data-gramm_editor="true" class="gr_ver_2" data-grammarly-reactid=".5" contenteditable="true"><span style="display:inline-block;line-height:21px;color:transparent;overflow:hidden;text-align:left;float:initial;clear:none;box-sizing:border-box;vertical-align:baseline;white-space:pre-wrap;width:100%;margin:0;padding:0;border:0;font:normal normal normal normal 14px/21px &quot;Nunito Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;;font-size:14px;font-family:&quot;Nunito Sans&quot;, -apple-system, BlinkMacSystemFont, &quot;Segoe UI&quot;, Roboto, &quot;Helvetica Neue&quot;, Arial, sans-serif, &quot;Apple Color Emoji&quot;, &quot;Segoe UI Emoji&quot;, &quot;Segoe UI Symbol&quot;;letter-spacing:normal;text-shadow:none;height:87px;"
+                  data-grammarly-reactid=".5.0"></span><br data-grammarly-reactid=".5.1"></div>
+            </grammarly-ghost><textarea class="form-control" id="exampleTextarea" rows="3" data-gramm="true" data-txt_gramm_id="d3643a56-3051-299d-31fd-d1f0b3f119f6"
+              data-gramm_id="d3643a56-3051-299d-31fd-d1f0b3f119f6" spellcheck="false" data-gramm_editor="true" style="z-index: auto; position: relative; line-height: 21px; font-size: 14px; transition: none; background-color: transparent !important; background-position: initial initial !important; background-repeat: initial initial !important;"></textarea>
+            <grammarly-btn>
+              <div style="z-index: 2; opacity: 1; transform: translate(509px, 640px);" class="_9b5ef6-textarea_btn _9b5ef6-show _9b5ef6-field_hovered"
+                data-grammarly-reactid=".0">
+                <div class="_9b5ef6-transform_wrap" data-grammarly-reactid=".0.0">
+                  <div title="Protected by Grammarly" class="_9b5ef6-status" data-grammarly-reactid=".0.0.0">&nbsp;</div>
+                </div>
+              </div>
+            </grammarly-btn>
+          </div>
+        </div>
+
+        <button type="button" class="btn btn-outline-success">Post Review!</button>
+
+      </div>
+
+
 
 
       <!-- Real settings MODAL-->
-          <div class="modal" style="margin-top:150px;" id="settingsModal" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title">SETTINGS</h4>
-                  <button type="button" class="close" data-dismiss="modal" onclick="clearSetModal()" aria-label="Close">
+      <div class="modal" style="margin-top:150px;" id="settingsModal" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">SETTINGS</h4>
+                <button type="button" class="close" data-dismiss="modal" onclick="clearSetModal()" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
-                </div>
-                <div class="modal-body">
+            </div>
+            <div class="modal-body">
 
-                  <form>
-                    <fieldset>
-                      <div class="form-group">
-                          <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#themesModal" data-dismiss="modal">Choose Themes</button>
-                      </div>
-                      <div class="form-group">
-                          <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#setModal" data-dismiss="modal">Change Password</button>
-                      </div>
-                      <div class="form-group">
-                          <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#deleteAccountModal" data-dismiss="modal" onclick="deleteShowModal()">Delete 1ance Account</button>
-                      </div>
+              <form>
+                <fieldset>
+                  <div class="form-group">
+                    <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#themesModal" data-dismiss="modal">Choose Themes</button>
+                  </div>
+                  <div class="form-group">
+                    <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#setModal" data-dismiss="modal">Change Password</button>
+                  </div>
+                  <div class="form-group">
+                    <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#deleteAccountModal" data-dismiss="modal"
+                      onclick="deleteShowModal()">Delete 1ance Account</button>
+                  </div>
 
-                    </fieldset>
-                  </form>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="clearSetModal()">Close</button>
-                </div>
-              </div>
+                </fieldset>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="clearSetModal()">Close</button>
             </div>
           </div>
+        </div>
+      </div>
 
 
-          <!-- Themes MODAL-->
-          <div class="modal" style="margin-top:150px;" id="themesModal" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title">Themes</h4>
-                  <button type="button" class="close" id="closeThemes" data-dismiss="modal" aria-label="Close">
+      <!-- Themes MODAL-->
+      <div class="modal" style="margin-top:150px;" id="themesModal" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Themes</h4>
+                <button type="button" class="close" id="closeThemes" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
           </button>
-                </div>
-                <div class="modal-body">
-
-                  <form>
-                    <fieldset>
-                        <div class="floating-box theme1">
-                            <div style="color: gold;">Theme 1</div>
-                            <input type="button" class="btnThemes" data-dismiss="modal" onclick="btn_theme_1()" value="Select"></input>
-                        </div>
-                        <div class="floating-box theme2">
-                            <div style="color: gold;">Theme 2</div>
-                            <input type="button" class="btnThemes" data-dismiss="modal" onclick="btn_theme_2()" value="Select"></input>
-                        </div>
-                        <div class="floating-box theme3">
-                            <div style="color: gold;">Theme 3</div>
-                            <input type="button" class="btnThemes" data-dismiss="modal" onclick="btn_theme_3()" value="Select"></input>
-                        </div>
-                        <div class="floating-box theme4">
-                            <div style="color: gold;">Theme 4</div>
-                            <input type="button" class="btnThemes" data-dismiss="modal" onclick="btn_theme_4()" value="Select"></input>
-                        </div>
-                    </fieldset>
-                  </form>
-                </div>
-
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#settingsModal" data-dismiss="modal">Back</button>
-                </div>
-              </div>
             </div>
-        </div>
+            <div class="modal-body">
 
-          <!-- Password Change MODAL-->
-          <div class="modal" style="margin-top:150px;" id="setModal" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title">Password Change</h5>
-                  <button type="button" class="close" data-dismiss="modal" onclick="clearSetModal()" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-                </div>
-                <div class="modal-body">
-
-                  <form>
-                    <fieldset id="fieldset_passChange">
-
-                      <div class="form-group">
-                        <label for="in_profile_currentPass">Current Password</label>
-                        <input type="password" class="form-control" id="in_profile_currentPass" placeholder="Password">
-                      </div>
-
-                      <div class="form-group">
-                        <label for="in_profile_newPass">New Password</label>
-                        <input type="password" class="form-control" id="in_profile_newPass" onchange="passMatch()" placeholder="Password">
-                      </div>
-
-                      <div class="form-group">
-                        <label for="in_profile_confirmPass">Confirm Password</label>
-                        <input type="password" class="form-control" id="in_profile_confirmPass" onchange="passMatch()" placeholder="Password">
-                      </div>
-
-
-                    </fieldset>
-                  </form>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#settingsModal" data-dismiss="modal">Back</button>
-                  <button type="button" class="btn btn-outline-primary" onclick="btn_passChange()" data-dismiss="modal">Save</button>
-                </div>
-              </div>
+              <form>
+                <fieldset>
+                  <div class="floating-box theme1">
+                    <div style="color: gold;">Theme 1</div>
+                    <input type="button" class="btnThemes" data-dismiss="modal" onclick="btn_theme_1()" value="Select"></input>
+                  </div>
+                  <div class="floating-box theme2">
+                    <div style="color: gold;">Theme 2</div>
+                    <input type="button" class="btnThemes" data-dismiss="modal" onclick="btn_theme_2()" value="Select"></input>
+                  </div>
+                  <div class="floating-box theme3">
+                    <div style="color: gold;">Theme 3</div>
+                    <input type="button" class="btnThemes" data-dismiss="modal" onclick="btn_theme_3()" value="Select"></input>
+                  </div>
+                  <div class="floating-box theme4">
+                    <div style="color: gold;">Theme 4</div>
+                    <input type="button" class="btnThemes" data-dismiss="modal" onclick="btn_theme_4()" value="Select"></input>
+                  </div>
+                </fieldset>
+              </form>
             </div>
-          </div>
 
-          <!-- Delete Account MODAL-->
-          <div class="modal" style="margin-top:150px;" id="deleteAccountModal" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title">Delete 1ance Account</h4>
-                  <button type="button" class="close" data-dismiss="modal" onclick="clearSetModal()" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-                </div>
-                <div class="modal-body">
-
-                  <form>
-                    <fieldset id="fieldset_passChange">
-
-                        <div class="form-group">
-                            <label id="accountName"></label>
-                        </div>
-                        <div class="form-group">
-                            <input type="text" id="accountEmail"></label>
-                        </div>
-
-                        <div class="form-group">
-                          <label for="in_profile_currentPass">Enter Password</label>
-                          <input type="password" class="form-control" id="deleteAccountPass" placeholder="Password">
-                        </div>
-
-
-
-                    </fieldset>
-                  </form>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#settingsModal" data-dismiss="modal">Back</button>
-                  <button type="button" class="btn btn-outline-primary" onclick="deleteAccount()" data-dismiss="modal">DELETE ACCOUNT</button>
-                </div>
-              </div>
-
+            <div class="modal-footer">
+              <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#settingsModal" data-dismiss="modal">Back</button>
             </div>
           </div>
         </div>
+      </div>
+
+      <!-- Password Change MODAL-->
+      <div class="modal" style="margin-top:150px;" id="setModal" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Password Change</h5>
+              <button type="button" class="close" data-dismiss="modal" onclick="clearSetModal()" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+
+              <form>
+                <fieldset id="fieldset_passChange">
+
+                  <div class="form-group">
+                    <label for="in_profile_currentPass">Current Password</label>
+                    <input type="password" class="form-control" id="in_profile_currentPass" placeholder="Password">
+                  </div>
+
+                  <div class="form-group">
+                    <label for="in_profile_newPass">New Password</label>
+                    <input type="password" class="form-control" id="in_profile_newPass" onchange="passMatch()" placeholder="Password">
+                  </div>
+
+                  <div class="form-group">
+                    <label for="in_profile_confirmPass">Confirm Password</label>
+                    <input type="password" class="form-control" id="in_profile_confirmPass" onchange="passMatch()" placeholder="Password">
+                  </div>
+
+
+                </fieldset>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#settingsModal" data-dismiss="modal">Back</button>
+              <button type="button" class="btn btn-outline-primary" onclick="btn_passChange()" data-dismiss="modal">Save</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Delete Account MODAL-->
+      <div class="modal" style="margin-top:150px;" id="deleteAccountModal" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Delete 1ance Account</h4>
+                <button type="button" class="close" data-dismiss="modal" onclick="clearSetModal()" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+
+              <form>
+                <fieldset id="fieldset_passChange">
+
+                  <div class="form-group">
+                    <label id="accountName"></label>
+                  </div>
+                  <div class="form-group">
+                    <input type="text" id="accountEmail"></label>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="in_profile_currentPass">Enter Password</label>
+                    <input type="password" class="form-control" id="deleteAccountPass" placeholder="Password">
+                  </div>
 
 
 
-      <!-- Bootstrap core JavaScript -->
-      <script src="./../vendor/jquery/jquery.min.js"></script>
-      <script src="./../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+                </fieldset>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#settingsModal" data-dismiss="modal">Back</button>
+              <button type="button" class="btn btn-outline-primary" onclick="deleteAccount()" data-dismiss="modal">DELETE ACCOUNT</button>
+            </div>
+          </div>
 
-      <script src="./../../Js/index.js"></script>
-      <script src="./../../Js/profile.js"></script>
-      <script src="./../../Js/home.js"></script>
+        </div>
+      </div>
+    </div>
 
 
-      <!-- Bootstrap core CSS -->
-      <link href="./../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="./../vendor/jquery/jquery.min.js"></script>
+    <script src="./../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <script src="./../../Js/index.js"></script>
+    <script src="./../../Js/profile.js"></script>
+    <script src="./../../Js/home.js"></script>
 
 
-      <!-- Ratings Bootstrap core JavaScript -->
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-      <script>
-        window.jQuery || document.write('<script src="assets/js/vendor/jquery.min.js"><\/script>')
-      </script>
-      <script src="./../vendor/bootstrap/js/bootstrap.min.js"></script>
+    <!-- Bootstrap core CSS -->
+    <link href="./../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+
+    <!-- Ratings Bootstrap core JavaScript -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script>
+      window.jQuery || document.write('<script src="assets/js/vendor/jquery.min.js"><\/script>')
+    </script>
+    <script src="./../vendor/bootstrap/js/bootstrap.min.js"></script>
   </body>
 
   <style>
@@ -571,34 +660,37 @@
     }
 
     .floating-box {
-        float: left;
-        width: 150px;
-        height: 75px;
-        margin: 10px;
-        border: 3px solid #73AD21;
+      float: left;
+      width: 150px;
+      height: 75px;
+      margin: 10px;
+      border: 3px solid #73AD21;
     }
+
     .btnThemes {
-        width: 55%;
-        height: 50%;
-        border-radius: 5%;
-        margin-top: 15%;
-        margin-left: 5%;
-        margin-bottom: 5%;
+      width: 55%;
+      height: 50%;
+      border-radius: 5%;
+      margin-top: 15%;
+      margin-left: 5%;
+      margin-bottom: 5%;
     }
+
     .theme1 {
-        background-color: Tomato;
+      background-color: Tomato;
     }
+
     .theme2 {
-        background-color: Orange;
+      background-color: Orange;
     }
+
     .theme3 {
-        background-color: DodgerBlue;
+      background-color: DodgerBlue;
     }
+
     .theme4 {
-        background-color: Gray;
+      background-color: Gray;
     }
-
-
   </style>
 
 </html>
