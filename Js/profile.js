@@ -523,6 +523,14 @@ function btn_theme_4(theme) {
     document.getElementById("editProfileBtn").style.color = "white";
     changeTheme(theme);
 }
+function btn_theme_5(theme) {
+    var theme = "url('../css/Assets/Colorful.jpg')";
+    changeTheme(theme);
+}
+function btn_theme_6(theme) {
+    var theme = "url('../css/Assets/Glitter.jpg')";
+    changeTheme(theme);
+}
 
 function changeTheme(theme) {
     document.body.style.backgroundImage = theme;
