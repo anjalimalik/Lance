@@ -340,53 +340,24 @@
 
       <!--- Reviews List -->
       <br>
-      <br>
 
-      <div class="form-group">
-        <label for="exampleSelect1">Filter Reviews</label>
-        <select class="form-control" id="exampleSelect1">
-    <option>Highest Reviews</option>
-    <option>Lowest Reviews</option>
-    <option>Latest Reviews</option>
-    <option>Oldest Reviews</option>
-  </select>
-      </div>
-      <br>
-      <!-- REVIEW TEMPLATE -->
-      <div class="card bg-secondary mb-3" style="max-width: 200rem;">
-        <div class="card-header">Potential Info: Time Stamp, Star Rating, User Profile Pic, Omit Header</div>
-        <div class="card-body">
-          <h4 class="card-title">TITLE OF THE REVIEW</h4>
-
-          <p class="card-text">Style 1 of what could be in the description.</p>
-
-          <blockquote class="blockquote">
-            <p class="mb-0">Style 2 of what can be the description of the review. </p>
-            <footer class="blockquote-footer">Thoughts posted by <cite title="Source Title">Sanjit Sama</cite></footer>
-          </blockquote>
-
-        </div>
+      <div class="card-header text-uppercase" style="height:15%; font-size:25px; text-align: left; font-weight: bold;">Reviews</div>      
+     
+      <div class="form-group" style="margin-bottom:0%;" >
+        <select class="form-control" style="float:right;display:inline-block; width:20%;" id="filterReviews">
+          <option>Highest Reviews</option>
+          <option>Lowest Reviews</option>
+         </select>
+         <label for="filterReviews" style="float:right;font-weight:bold; padding:10px; display:inline-block;">Filter Reviews</label>
       </div>
 
-      <br>
-
-      <!-- REVIEW TEMPLATE -->
-      <div class="card bg-secondary mb-3" style="max-width: 200rem;">
-        <!--             <div class="card-header">Header</div> -->
+       <!-- REVIEW Write a new review -->
+       <div class="card bg-secondary" style="max-width: 200rem; margin-bottom:0%; padding:0;">
         <div class="card-body">
-          <!--            <h4 class="card-title">Secondary card title</h4>
-          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p> -->
-
-          <legend> *User Pic* Leave a review...</legend>
+          <legend id="legendWriteReview">Leave a review...</legend>
 
           <div class="form-group">
-            <label class="col-form-label col-form-label-sm" for="inputSmall">Title</label>
-            <input class="form-control form-control-sm" type="text" placeholder="Give your review a title!" id="inputSmall">
-          </div>
-
-
-          <div class="form-group">
-            <label for="exampleTextarea">Description</label>
+            <label for="exampleTextarea">Write your review here..</label>
             <grammarly-ghost spellcheck="false">
 
               <br data-grammarly-reactid=".5.1"></div>
@@ -402,9 +373,26 @@
           </grammarly-btn>
         </div>
       </div>
+      <form role="form" class="form-horizontal">
+        <input type="button" class="btn btn-outline-danger" style="float:right; display:inline-block; width:50%;" value="Clear"></input>
+        <input type="button" class="btn btn-outline-success" style="float:left; display:inline-block; width:50%;" value="Post Review!"></input>
+      </form>
 
-      <button type="button" class="btn btn-outline-success">Post Review!</button>
+      <!-- REVIEW TEMPLATE for Sample review -->
+      <div class="card bg-secondary mb-3" style="max-width: 200rem;">
+        <div class="card-header">Potential Info: Time Stamp, Star Rating, User Profile Pic, Omit Header</div>
+        <div class="card-body">
+          <h4 class="card-title">TITLE OF THE REVIEW</h4>
 
+          <p class="card-text">Style 1 of what could be in the description.</p>
+
+          <blockquote class="blockquote">
+            <p class="mb-0">Style 2 of what can be the description of the review. </p>
+            <footer class="blockquote-footer">Thoughts posted by <cite title="Source Title">Sanjit Sama</cite></footer>
+          </blockquote>
+
+        </div>
+      </div>
     </div>
     <!--- Reviews List End -->
 
