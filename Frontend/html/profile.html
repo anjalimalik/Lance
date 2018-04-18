@@ -348,15 +348,55 @@
           <option>Highest Reviews</option>
           <option>Lowest Reviews</option>
          </select>
-         <label for="filterReviews" style="float:right;font-weight:bold; padding:10px; display:inline-block;">Filter Reviews</label>
+         <label for="filterReviews" style="float:right;font-weight:bold; padding-top:1.5%; padding-right: 3%; display:inline-block;">Filter Reviews</label>
       </div>
 
        <!-- REVIEW Write a new review -->
        <div class="card bg-secondary" style="max-width: 200rem; margin-bottom:0%; padding:0;">
         <div class="card-body">
-          <legend id="legendWriteReview">Leave a review...</legend>
+          <legend style="font-size:20px;">Start your review by selecting a rating for this user...</legend>
+          
+          <!-- Rating -->
+          <div class="rating" style="width:100%; height:100%;margin:0; text-align:left;" data-vote="0">
+            <div class="star">
+              <span class="full" data-value="1"></span>
+              <span class="half" data-value="0.5"></span>
+              <span class="selected"></span>
+            </div>
 
-          <div class="form-group">
+            <div class="star">
+              <span class="full" data-value="2"></span>
+              <span class="half" data-value="1.5"></span>
+              <span class="selected"></span>
+            </div>
+
+            <div class="star">
+              <span class="full" data-value="3"></span>
+              <span class="half" data-value="2.5"></span>
+              <span class="selected"></span>
+            </div>
+
+            <div class="star">
+              <span class="full" data-value="4"></span>
+              <span class="half" data-value="3.5"></span>
+              <span class="selected"></span>
+            </div>
+
+            <div class="star">
+              <span class="full" data-value="5"></span>
+              <span class="half" data-value="4.5"></span>
+              <span class="selected"></span>
+            </div>
+
+            <div class="score">
+              <span class="score-rating js-score">0</span>
+              <span>/</span>
+              <span class="total">5</span>
+            </div>
+          </div>
+
+          <!-- Review content -->
+          <div class="form-group" style="display:block;">
             <label for="exampleTextarea">Write your review here..</label>
             <grammarly-ghost spellcheck="false">
 
@@ -379,16 +419,15 @@
       </form>
 
       <!-- REVIEW TEMPLATE for Sample review -->
-      <div class="card bg-secondary mb-3" style="max-width: 200rem;">
-        <div class="card-header">Potential Info: Time Stamp, Star Rating, User Profile Pic, Omit Header</div>
+      <div id="review" class="card bg-secondary mb-3" style="max-width: 200rem;">
+        <div class="card-header" id="reviewDate" style="text-align:right;">Date Posted</div>
         <div class="card-body">
-          <h4 class="card-title">TITLE OF THE REVIEW</h4>
+          <h4 class="card-title" id="reviewer">Title</h4>
 
-          <p class="card-text">Style 1 of what could be in the description.</p>
+          <p class="card-text" id="ratingValue">Rating</p>
 
           <blockquote class="blockquote">
-            <p class="mb-0">Style 2 of what can be the description of the review. </p>
-            <footer class="blockquote-footer">Thoughts posted by <cite title="Source Title">Sanjit Sama</cite></footer>
+            <footer class="blockquote-footer" id="reviewContent">Review</footer>
           </blockquote>
 
         </div>

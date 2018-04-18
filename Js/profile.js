@@ -35,8 +35,8 @@ function onLoad_profile() {
         email = email.replace("#", "");
     }
 
-    // average ratings
-    // averageRatings();
+    // give ratings
+    giveRatings();
 
     // get user id
     fetch(urlUserID, {
@@ -365,7 +365,7 @@ function uploadPicture() {
 
 
 /* STAR RATINGS */
-function averageRatings() {
+function giveRatings() {
 
     var starClicked = false;
     $('.star').click(function () {

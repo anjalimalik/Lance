@@ -1,7 +1,7 @@
 /* star ratings */
 .rating {
   text-align: center;
-  margin-top: 120px;
+  /*margin-top: 120px;*/
   position: relative;
   width: 50%;
   float: left;
@@ -9,9 +9,9 @@
 
 .star {
   display: inline-block;
-  margin: 5px;
-  font-size: 30px;
-  color: whitesmoke;
+  margin: 2px;
+  font-size: 25px;
+  color: lightgoldenrodyellow;
   position: relative;
 }
 .star.animate {
@@ -79,11 +79,12 @@
 }
 
 .score {
-  font-family: arial;
-  font-size: 20px;
-  color: green;
-  margin-top: 20px;
-  margin-left: 50px;
+  font-family: 'Gill Sans';
+  display: inline-block;
+  font-size: 15px;
+  color: black;
+  margin-top: 0;
+  margin-left: 5px;
 }
 
 .score-rating {
