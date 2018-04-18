@@ -1,4 +1,4 @@
-/*
+/* DESC INCOMPLETE
 General
 *******
 Email from client - req.body.email
@@ -118,8 +118,6 @@ app.post('/signUp', (req, res) => {
     let query = 'INSERT INTO Users SET ?';
 
     db.query(query, user, (error, response) => {
-        console.log(response);
-
         if (error) {
             res.send(JSON.stringify({
                 "status": 500,
@@ -146,7 +144,6 @@ app.get('/getPosts', (req, res) => {
     let query = 'SELECT * FROM Posts ORDER BY DatePosted DESC';
 
     db.query(query, (error, response) => {
-        console.log(response);
 
         if (error) {
             res.send(JSON.stringify({
@@ -192,7 +189,6 @@ app.post('/login', function (req, res) {
         if (result == null || result == "") {
             return res.status(401).json({ message: "invalid_credentials" });
         }
-        //console.log(result[0].Password);
 
         // valid user, issue them an auth token
         var authToken = uuid();
@@ -291,7 +287,6 @@ app.post('/CreatePost', function (req, res) {
 
             // INSERT INTO POSTS TABLE
             db.query(query2, newPost, function (error, response) {
-                console.log(response);
                 if (error) {
                     res.send(JSON.stringify({
                         "status": 500,
@@ -331,7 +326,6 @@ app.post('/EditProfile', function (req, res) {
     var params = [name, desc, contact, skills, edu, links, email];
 
     db.query(query, params, function (error, response) {
-        console.log(response);
         if (error) {
             res.send(JSON.stringify({
                 "status": 500,
@@ -412,7 +406,6 @@ app.post('/CreateProfile', (req, res) => {
             };
 
             db.query(query2, userProfile, (err, result) => {
-                console.log(result);
                 if (error) {
                     res.send(JSON.stringify({
                         "status": 500,
@@ -485,8 +478,6 @@ app.post('/logout', function (req, res) {
 app.post('/resetPass', function (req, res) {
 
     var email = req.body.email;
-
-    console.log(email);
 
     if(!email) {
         return res.status(401).json({ message: "User not logged in!" });
@@ -582,12 +573,9 @@ app.post('/changePassword', (req, res) => {
     var email = req.body.email;
     var currPassword = req.body.oldPass;
     var newPassword = req.body.newPass;
-    console.log(newPassword);
-
     let sql = "SELECT Password FROM Users WHERE Email = ?";
 
     db.query(sql, email, (error, response) => {
-        console.log(response);
         if (error) {
             res.send(JSON.stringify({
                 "status": 500,
@@ -600,14 +588,12 @@ app.post('/changePassword', (req, res) => {
             // check if old password is the same as the one in database
             var matchCurrPass = decipherPass(email, response[0].Password);
             if (currPassword === matchCurrPass) {
-                console.log("Current password matches");
                 newPassword = createPass(email, newPassword);
                 let query = "UPDATE Users SET Password = ? WHERE Email = ?";
                 let params = [newPassword, email];
 
                 // update password
                 db.query(query, params, (error, response) => {
-                    console.log(response);
                     if (error) {
                         res.send(JSON.stringify({
                             "status": 500,
@@ -656,7 +642,6 @@ app.post('/Report', function (req, res) {
 
     // INSERT INTO REPORTS TABLE
     db.query(query, report, function (error, response) {
-        console.log(response);
         if (error) {
             res.send(JSON.stringify({
                 "status": 500,
@@ -691,7 +676,6 @@ app.post('/getComments', (req, res) => {
     let query = 'SELECT Comment, SenderName FROM Comments WHERE idPosts = ?';
 
     db.query(query, postId, (error, response) => {
-        console.log(response);
 
         if (error) {
             res.send(JSON.stringify({
@@ -729,7 +713,6 @@ app.post('/WriteComment', (req, res) => {
     let query1 = "SELECT FullName FROM Users WHERE idUsers = ?";
 
     db.query(query1, useridCommenter, function (err1, resp1) {
-        console.log(resp1);
         if (err1) {
             res.send(JSON.stringify({
                 "status": 500,
@@ -747,7 +730,6 @@ app.post('/WriteComment', (req, res) => {
             let query2 = "SELECT UserID FROM Posts WHERE idPosts = ?";
 
             db.query(query2, postId, function (err2, resp2) {
-                console.log(resp2);
                 if (err2) {
                     res.send(JSON.stringify({
                         "status": 500,
@@ -773,7 +755,6 @@ app.post('/WriteComment', (req, res) => {
 
                     // INSERT INTO Comments TABLE
                     db.query(query3, newComment, function (err, resp) {
-                        console.log(resp);
                         if (err) {
                             res.send(JSON.stringify({
                                 "status": 500,
@@ -847,7 +828,6 @@ app.post('/ClickInterested', (req, res) => {
 
     // get number of likes
     db.query(query, postId, (error, response) => {
-        console.log(response);
         if (error) {
             res.send(JSON.stringify({
                 "status": 500,
@@ -866,7 +846,6 @@ app.post('/ClickInterested', (req, res) => {
 
             // update numLikes
             db.query(query2, params2, (err, resp) => {
-                console.log(resp);
                 if (err) {
                     res.send(JSON.stringify({
                         "status": 500,
@@ -909,7 +888,6 @@ app.post('/getProfile', function (req, res) {
 
 
     db.query(query, params, function (error, response) {
-        console.log(response);
         if (error) {
             res.send(JSON.stringify({
                 "status": 500,
@@ -942,7 +920,6 @@ function newNotification(str, postid, useridActor) {
     let query1 = "SELECT FullName FROM Users WHERE idUsers = ?";
 
     db.query(query1, useridActor, function (err1, resp1) {
-        console.log(resp1);
         if (err1) {
             console.log("Internal server error");
             return;
@@ -956,7 +933,6 @@ function newNotification(str, postid, useridActor) {
             let query2 = "SELECT UserID, Headline FROM Posts WHERE idPosts = ?";
 
             db.query(query2, postid, function (err2, resp2) {
-                console.log(resp2);
                 if (err2) {
                     console.log("Internal server error");
                     return;
@@ -1004,7 +980,6 @@ function newNotification(str, postid, useridActor) {
 
                     // INSERT INTO Notifications TABLE
                     db.query(query3, newNotification, function (err, resp) {
-                        console.log(resp);
                         if (err) {
                             console.log("Internal server error");
                         }
@@ -1022,7 +997,6 @@ function newNotification(str, postid, useridActor) {
 app.post('/getAllNotifications', function (req, res) {
 
     var id = req.body.id;
-    console.log(id);
 
     if (!id) {
         return res.status(400).json({ message: "Missing information" });
@@ -1032,7 +1006,6 @@ app.post('/getAllNotifications', function (req, res) {
     let query = "SELECT Notification FROM Notifications WHERE idUsers = ? ORDER BY msec DESC";
 
     db.query(query, id, (err, result) => {
-        console.log(result);
         if (err) {
             res.send(JSON.stringify({
                 "status": 500,
@@ -1066,7 +1039,6 @@ app.post('/getNewNotifications', function (req, res) {
     let query1 = "SELECT Notification FROM Notifications WHERE idUsers = ? AND seen = '0' ORDER BY msec DESC";
 
     db.query(query1, id, (err, result) => {
-        console.log(result);
         if (err) {
             res.send(JSON.stringify({
                 "status": 500,
@@ -1115,7 +1087,6 @@ app.post('/getNumNotifications', function (req, res) {
     let query1 = "SELECT COUNT(Notification) AS count FROM Notifications WHERE idUsers = ? AND seen = '0'";
 
     db.query(query1, id, (err, result) => {
-        console.log(result);
         if (err) {
             res.send(JSON.stringify({ "status": 500, "error": err, "response": null, "message": "Internal server error" }));
         }
@@ -1219,7 +1190,6 @@ app.post('/getSortedPosts', (req, res) => {
     }
 
     db.query(query, params, (error, response) => {
-        console.log(response);
 
         if (error) {
             res.send(JSON.stringify({
@@ -1265,7 +1235,6 @@ app.post('/getFilteredPosts', (req, res) => {
     }
 
     db.query(query, params, (error, response) => {
-        console.log(response);
 
         if (error) {
             res.send(JSON.stringify({
@@ -1349,7 +1318,6 @@ app.post('/EditPost', function (req, res) {
 
     // Update post
     db.query(query, params, function (error, response) {
-        console.log(response);
         if (error) {
             res.send(JSON.stringify({
                 "status": 500,
@@ -1381,7 +1349,6 @@ app.post('/runSearch', function (req, res) {
         let query = 'SELECT * FROM Posts ORDER BY DatePosted DESC';
 
         db.query(query, (error, response) => {
-            console.log(response);
 
             if (error) {
                 res.send(JSON.stringify({
@@ -1423,7 +1390,6 @@ app.post('/getUserID', function (req, res) {
 
     // get user id connected to the email
     db.query(query, email, function (error, response) {
-        console.log(response);
         if (error) {
             res.send(JSON.stringify({
                 "status": 500,
@@ -1531,7 +1497,7 @@ app.post('/DeleteUser', function (req, res) {
                                                         res.send(JSON.stringify({ "status": 500, "error": err5, "response": null, "message": "Internal server error" }));
                                                     }
                                                     else {
-                                                        console.log("HERE: DELETED");
+                                                        console.log("User DELETED");
                                                         res.send(JSON.stringify({
                                                             "status": 200,
                                                             "error": null,
@@ -1598,6 +1564,26 @@ app.post('/WriteReview', function (req, res) {
         }
         else {
             res.send(JSON.stringify({ "status": 200, "error": null, "response": response, "message": "Success! New Review added!" }));
+        }
+    });
+});
+
+// get all reviews for that user
+app.post('/GetReviews', function (req, res) {
+    var idUser = req.body.idUser;
+
+    if (!idUser) {
+        return res.status(400).json({ message: "Missing Review Information" });
+    }
+
+    let query = "SELECT * FROM Reviews WHERE idUsers = ?";
+
+    db.query(query, idUser, function (error, response) {
+        if (error) {
+            res.send(JSON.stringify({ "status": 500, "error": error, "response": null, "message": "Internal server error" }));
+        }
+        else {
+            res.send(JSON.stringify({ "status": 200, "error": null, "response": response, "message": "Success! Reviews retrieved!" }));
         }
     });
 });
