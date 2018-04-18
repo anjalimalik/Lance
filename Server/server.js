@@ -1561,14 +1561,19 @@ app.post('/DeleteUser', function (req, res) {
 app.post('/WriteReview', function (req, res) {
     var idUser = req.body.UserID;
     var byUserID = req.body.byUserID;
+    var byUserName = req.body.byUserName;
     var rating = req.body.rating;
 
-    if (!idUser || !byUserID || !rating) {
+    if (!idUser || !byUserID || !rating || !byUserName) {
         return res.status(400).json({ message: "Missing Review Information" });
     }
 
+    var review;
     if (req.body.review == null) {
-        var review = null;
+        review = null;
+    }
+    else {
+        review = req.body.review;
     }
 
     // set date posted
@@ -1578,6 +1583,8 @@ app.post('/WriteReview', function (req, res) {
     let query = "INSERT INTO Reviews SET ?";
 
     var newReview = {
+        Rating: rating,
+        Review: review,
         idUsers: idUser,
         byUserID: byUserID,
         byUserName: byUserName,
