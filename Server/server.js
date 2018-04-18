@@ -1587,3 +1587,24 @@ app.post('/GetReviews', function (req, res) {
         }
     });
 });
+
+// get average rating for the user
+app.post('/GetAverageRating', function (req, res) {
+    var idUser = req.body.idUser;
+
+    if (!idUser) {
+        return res.status(400).json({ message: "Missing Review Information" });
+    }
+
+    let query = "SELECT AVG(Rating) AS AverageRating FROM Reviews WHERE idUsers = ?";
+
+    db.query(query, idUser, function (error, response) {
+        console.log(response);
+        if (error) {
+            res.send(JSON.stringify({ "status": 500, "error": error, "response": null, "message": "Internal server error" }));
+        }
+        else {
+            res.send(JSON.stringify({ "status": 200, "error": null, "response": response, "message": "Success! Average rating for the user retrieved!" }));
+        }
+    });
+});
