@@ -1555,3 +1555,42 @@ app.post('/DeleteUser', function (req, res) {
         }
     });
 });
+
+// reviews
+// write a new review
+app.post('/WriteReview', function (req, res) {
+    var idUser = req.body.UserID;
+    var byUserID = req.body.byUserID;
+    var rating = req.body.rating;
+
+    if (!idUser || !byUserID || !rating) {
+        return res.status(400).json({ message: "Missing Review Information" });
+    }
+
+    if (req.body.review == null) {
+        var review = null;
+    }
+
+    // set date posted
+    var posted = new Date();
+    var time = posted.getTime();
+
+    let query = "INSERT INTO Reviews SET ?";
+
+    var newReview = {
+        idUsers: idUser,
+        byUserID: byUserID,
+        byUserName: byUserName,
+        DateMSEC: time,
+        DatePosted: posted
+    };
+
+    db.query(query, newReview, function (error, response) {
+        if (error) {
+            res.send(JSON.stringify({ "status": 500, "error": error, "response": null, "message": "Internal server error" }));
+        }
+        else {
+            res.send(JSON.stringify({ "status": 200, "error": null, "response": response, "message": "Success! New Review added!" }));
+        }
+    });
+});
