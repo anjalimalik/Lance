@@ -1599,7 +1599,6 @@ app.post('/GetAverageRating', function (req, res) {
     let query = "SELECT AVG(Rating) AS AverageRating FROM Reviews WHERE idUsers = ?";
 
     db.query(query, idUser, function (error, response) {
-        console.log(response);
         if (error) {
             res.send(JSON.stringify({ "status": 500, "error": error, "response": null, "message": "Internal server error" }));
         }
@@ -1608,3 +1607,35 @@ app.post('/GetAverageRating', function (req, res) {
         }
     });
 });
+
+// Get Sorted list of Posts, using either by order - ASCENDING OR DESCENDING or by range - upper/lower bounds (either for money or date posted)
+app.post('/getSortedReviews', (req, res) => {
+    
+        var order = req.body.order; 
+        var idUser = req.body.idUser;
+
+        if (!idUser || !order) {
+            return res.status(400).json({ message: "Missing Information for Sorting Reviews" });
+        }
+
+        let query = "";
+        if (order === "ASC") {
+            query = 'SELECT * FROM Reviews WHERE idUsers = ? ORDER BY Rating ASC;';
+        }
+        else {
+            query = 'SELECT * FROM Reviews WHERE idUsers = ? ORDER BY Rating DESC;';
+        }
+    
+        db.query(query, idUser, (error, response) => {
+            console.log(response);
+            if (error) {
+                res.send(JSON.stringify({ "status": 500,"error": error,"message": "Internal server error","response": null}));
+            }
+    
+            else {
+                res.send(JSON.stringify({"status": 200,"error": null,"response": response,"message": "Success! Sorted reviews retrived."}));
+            }
+        });
+    });
+
+
