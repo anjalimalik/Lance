@@ -94,8 +94,6 @@ function onLoad_profile() {
                             populate_profile(email);
                             document.getElementById("editProfileBtn").style.display = "block";
 
-                            // write review 
-                            document.getElementById('writeReviewLegend').innerHTML = "";
                             // get reviews for this user
                             $('.review.card.bg-secondary.mb-3').remove();
                             getReviews(uID);
@@ -135,8 +133,6 @@ function onLoad_profile() {
     //var img = new Image();
     //img.src = "./../css/Assets/spinner.jpg";
     document.getElementById("img_profile").src = "./../css/Assets/user_icon.jpg";
-
-
 }
 
 // to get notifications counter
@@ -467,11 +463,13 @@ function setFullStarState(target) {
 /* Star ratings end */
 
 function gotoUserProfile(otheruserid, from) {
+
     // no need to add id string if own's profile
     if (otheruserid == uID) {
         goToProfile();
         return;
     }
+
     if (from == 0) {
         window.location.href = "profile.html?email=".concat(email, "&id=", otheruserid);
     }
@@ -517,6 +515,11 @@ function getUserProfile(userid) {
                 userProfileID = json[0].idUsers;
                 otheruseremail = json[0].Email;
                 populate_profile(otheruseremail);
+
+                // make write review visible
+                document.getElementById('writeNewReview').style.display = "block";
+                document.getElementById('writeReviewLegend').innerHTML = "Start your review by selecting a rating score for " + otherusername + "...";
+                document.getElementById('formWriteReview').style.display = "block";
 
                 // get reviews
                 $('.review.card.bg-secondary.mb-3').remove();
@@ -722,7 +725,7 @@ function getReviews(userid) {
                     else {
                         noneP.innerHTML = "No one has reviewed you yet!";
                     }
-                    
+
                     noneP.style = "text-align:center;";
                     cardBodyDiv.appendChild(noneP);
                 }
@@ -827,16 +830,16 @@ function createReviewCard(reviewID, rating, review, byUserName, datePosted, byUs
     var i = 1;
     var r = parseInt(rating);
     var colorArray = ["#e6b800", "#ff9900", "#ff6600", "#ff5050", "#cc0000"]; // array for colors based on how high the rating is
-    while(r >= i) {
+    while (r >= i) {
         starID = "star".concat(i, reviewID);
-        document.getElementById(starID).style.color = colorArray[(r-1)];
+        document.getElementById(starID).style.color = colorArray[(r - 1)];
         i = i + 1;
     }
     // if half a star
     if (r !== parseFloat(rating)) {
         starID = "star".concat(i, reviewID);
         document.getElementById(starID).className = "fa fa-star-half-o";
-        document.getElementById(starID).style.color = colorArray[(r-1)];
+        document.getElementById(starID).style.color = colorArray[(r - 1)];
     }
     /* Rating end */
 
