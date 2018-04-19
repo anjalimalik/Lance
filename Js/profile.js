@@ -62,7 +62,7 @@ function onLoad_profile() {
                 uID = data.response[0].idUsers;
 
                 // if visiting another user's profile, get their profile
-                if (otheruserid){
+                if (otheruserid) {
                     getUserProfile(otheruserid);
                     return;
                 }
@@ -439,22 +439,22 @@ function giveRatings() {
 
 function updateStarState(target) {
     $(target).parent().prevAll().addClass('animate');
-    $(target).parent().prevAll().children().addClass('star-colour');
+    $(target).parent().prevAll().children().addClass('star-color');
 
     $(target).parent().nextAll().removeClass('animate');
-    $(target).parent().nextAll().children().removeClass('star-colour');
+    $(target).parent().nextAll().children().removeClass('star-color');
 }
 
 function setHalfStarState(target) {
-    $(target).addClass('star-colour');
-    $(target).siblings('.full').removeClass('star-colour');
+    $(target).addClass('star-color');
+    $(target).siblings('.full').removeClass('star-color');
     updateStarState(target)
 }
 
 function setFullStarState(target) {
-    $(target).addClass('star-colour');
+    $(target).addClass('star-color');
     $(target).parent().addClass('animate');
-    $(target).siblings('.half').addClass('star-colour');
+    $(target).siblings('.half').addClass('star-color');
 
     updateStarState(target)
 }
@@ -520,41 +520,48 @@ function getUserProfile(otheruserid) {
 
 function btn_theme_1() {
     var theme = "url('../css/Assets/Sunrise.jpg')";
-    changeTheme(theme);
+    var textcolor = '#cc6600';
+    changeTheme(theme, textcolor);
 }
 
 function btn_theme_2(theme) {
     var theme = "url('../css/Assets/Purple.jpg')";
-    changeTheme(theme);
+    var textcolor = '##3333cc';
+    changeTheme(theme, textcolor);
 }
 function btn_theme_3(theme) {
     var theme = "url('../css/Assets/Moose.jpg')";
-    changeTheme(theme);
+    var textcolor = '#006699';
+    changeTheme(theme, textcolor);
 }
 function btn_theme_4(theme) {
     var theme = "url('../css/Assets/Dark.jpg')";
     document.getElementById("editProfileBtn").style.color = "white";
-    changeTheme(theme);
+    var textcolor = '#00284d';
+    changeTheme(theme, textcolor);
 }
 function btn_theme_5(theme) {
     var theme = "url('../css/Assets/Colorful.jpg')";
-    changeTheme(theme);
+    var textcolor = '#6600cc';
+    changeTheme(theme, textcolor);
 }
 function btn_theme_6(theme) {
     var theme = "url('../css/Assets/Glitter.jpg')";
-    changeTheme(theme);
+    var textcolor = '#000099';
+    changeTheme(theme, textcolor);
 }
 
-function changeTheme(theme) {
+function changeTheme(theme, textcolor) {
     document.body.style.backgroundImage = theme;
     document.body.style.color = theme;
     localStorage.setItem('style', theme);
     optionsToggle.style.display = "none";
     document.body.style.backgroundSize = "cover";
     document.getElementById('editProfileBtn').style.backgroundImage = theme;
+    document.getElementById('bodyProfile').style.color = textcolor;
 }
 
-function deleteShowModal(){
+function deleteShowModal() {
     var str = name.concat(", confirm your password below to remove 1ance account");
     document.getElementById("accountName").innerHTML = str;
     document.getElementById("accountName").setAttribute("style", "font-size:120%; color:red;");
@@ -565,37 +572,37 @@ function deleteShowModal(){
 
 
 function deleteAccount() {
-        var userPass = document.getElementById("deleteAccountPass").value;
+    var userPass = document.getElementById("deleteAccountPass").value;
 
-        fetch(urlDeleteAccount, {
-            method: "POST",
-            headers: {
-                'Accept': 'application/json',
-                'content-type': 'application/json'
-            },
-            body: JSON.stringify({
-                "userid": uID,
-                "password": userPass
-            })
-        }).then(function (res) {
-            console.log("Inside res function");
-            if (res.ok) {
-                res.json().then(function (data) {
-                    alert("Your account has been Deleted, you will be redirected to the Login Page");
-                    window.location.href = "./index.html";
-                    console.log("Inside res.ok");
-                }.bind(this));
-            }
-            else {
-                alert("Error: Delete User Account unsuccessful!");
-                res.json().then(function (data) {
-                    console.log(data.message);
-                }.bind(this));
-            }
-        }).catch(function (err) {
-            alert("Error: No internet connection!");
-            console.log(err.message + ": No Internet Connection");
-        });
+    fetch(urlDeleteAccount, {
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+            "userid": uID,
+            "password": userPass
+        })
+    }).then(function (res) {
+        console.log("Inside res function");
+        if (res.ok) {
+            res.json().then(function (data) {
+                alert("Your account has been Deleted, you will be redirected to the Login Page");
+                window.location.href = "./index.html";
+                console.log("Inside res.ok");
+            }.bind(this));
+        }
+        else {
+            alert("Error: Delete User Account unsuccessful!");
+            res.json().then(function (data) {
+                console.log(data.message);
+            }.bind(this));
+        }
+    }).catch(function (err) {
+        alert("Error: No internet connection!");
+        console.log(err.message + ": No Internet Connection");
+    });
 }
 
 window.gotoUserProfile = gotoUserProfile; // just making sure the function is globally available
@@ -603,7 +610,7 @@ window.gotoUserProfile = gotoUserProfile; // just making sure the function is gl
 // method to write new review
 function writeReview() {
     if (ratingSelected == 0) {
-        alert ("Please provide a rating score for this user.");
+        alert("Please provide a rating score for this user.");
         reloadProfile();
         return;
     }
@@ -652,10 +659,10 @@ function writeReview() {
         alert("Error: No internet connection!");
         console.log(err.message + ": No Internet Connection");
     });
-} 
+}
 
 // method to simply reload the page without losing query strings
-function reloadProfile () {
+function reloadProfile() {
     var url = window.location.href;
     window.location.href = url;
 }
