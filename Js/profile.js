@@ -440,7 +440,6 @@ function giveRatings() {
             setFullStarState(this)
         }
     })
-
 }
 
 function updateStarState(target) {
@@ -674,9 +673,8 @@ function writeReview() {
                 }
                 else {
                     confirm("Writing new review successful!");
-                    $('.review.card.bg-secondary').remove();
-                    getReviews(otheruserid);
-                    //reloadProfile();
+                    
+                    reloadProfile();
                 }
             }.bind(this));
         }
@@ -942,6 +940,61 @@ function getAverageRating(userid) {
         }
         else {
             alert("Error: Getting AverageRating for this user unsuccessful!");
+            res.json().then(function (data) {
+                console.log(data.message);
+            }.bind(this));
+        }
+    }).catch(function (err) {
+        alert("Error: No internet connection!");
+        console.log(err.message + ": No Internet Connection");
+    });
+}
+
+// method to filter reviews in asc or desc order of ratings
+function filterReviews() {
+    // get the order
+    var filter = "";
+    if ((document.getElementById("filterReviews")).value == "Highest Reviews") {
+        filter = "DESC";
+    }
+    else {
+        filter = "ASC";
+    }
+
+    // ID for own profile or some other user?
+    var userid;
+    if (otheruserid) {
+        userid = otheruserid;
+    }
+    else {
+        userid = uID;
+    }
+
+    // fetch filtered reviews
+    fetch(urlGetSortedReviews, {
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+            "idUser": userid,
+            "order": filter
+        })
+    }).then(function (res) {
+        if (res.ok) {
+            res.json().then(function (data) {
+                $('.review.card.bg-secondary').remove(); // remove old cards
+                // create new review cards
+                var numReviews = Object.keys(data.response).length;
+                var json = data.response;
+                for (i = 0; i < numReviews; i++) {
+                    createReviewCard(json[i].idReviews, json[i].Rating, json[i].Review, json[i].byUserName, json[i].DatePosted, json[i].byUserID);
+                }
+            }.bind(this));
+        }
+        else {
+            alert("Error: Getting filtered reviews for this user unsuccessful!");
             res.json().then(function (data) {
                 console.log(data.message);
             }.bind(this));

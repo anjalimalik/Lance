@@ -304,9 +304,10 @@
       <div class="card-header text-uppercase" style="height:15%; font-size:25px; text-align: left; font-weight: bold;">Reviews</div>
 
       <div id="filterReviewsDiv" class="form-group" style="margin-bottom:0%;">
-        <select class="form-control" style="float:right;display:inline-block; width:20%;" id="filterReviews">
-          <option>Highest Reviews</option>
-          <option>Lowest Reviews</option>
+        <select class="form-control" style="float:right;display:inline-block; width:20%;" id="filterReviews" onchange="filterReviews()">
+            <option>Select</option>
+            <option>Highest Reviews</option>
+            <option>Lowest Reviews</option>
          </select>
         <label for="filterReviews" style="float:right;font-weight:bold; padding-top:1.5%; padding-right: 3%; display:inline-block;">Filter Reviews</label>
       </div>
@@ -379,7 +380,7 @@
         <input type="button" class="btn btn-outline-success" style="float:left; display:inline-block; width:50%;" value="Post Review!"
           id="postReview" onclick="writeReview()"></input>
       </form>
-      
+
 
       <!-- Reviews List - added in JS -->
       <div id="reviewsList">
