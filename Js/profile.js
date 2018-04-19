@@ -100,6 +100,7 @@ function onLoad_profile() {
 
                             // notifications
                             getNumOfNewNotifs();
+
                             var background = localStorage.getItem("style");
                             document.body.style.backgroundColor = background;
                         }.bind(this));
@@ -525,6 +526,9 @@ function getUserProfile(userid) {
                 $('.review.card.bg-secondary.mb-3').remove();
                 getReviews(userid);
 
+                // number of notifications
+                getNumOfNewNotifs();
+
             }.bind(this));
         }
         else {
@@ -853,6 +857,81 @@ function createReviewCard(reviewID, rating, review, byUserName, datePosted, byUs
     reviewContent.setAttribute('id', 'reviewContent');
     reviewContent.innerHTML = review;
     blockquote.appendChild(reviewContent);
+}
+
+function getAverageRating(userid) {
+    fetch(urlGetAverageRating, {
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+            "idUser": userid
+        })
+    }).then(function (res) {
+        if (res.ok) {
+            res.json().then(function (data) {
+                console.log(data);
+                var numReviews = Object.keys(data.response).length;
+                var rating = data.response[0].AverageRating;
+
+                var avgRating = document.getElementById('avgRating');
+                /* Stars */
+                var starP1 = document.createElement('span');
+                starP1.setAttribute('class', 'fa fa-star');
+                starP1.setAttribute('id', "avgStar1");
+                avgRating.appendChild(starP1);
+            
+                var starP2 = document.createElement('span');
+                starP2.setAttribute('class', 'fa fa-star');
+                starP2.setAttribute('id', "avgStar2");
+                avgRating.appendChild(starP2);
+            
+                var starP3 = document.createElement('span');
+                starP3.setAttribute('class', 'fa fa-star');
+                starP3.setAttribute('id', "avgStar3");
+                avgRating.appendChild(starP3);
+            
+                var starP4 = document.createElement('span');
+                starP4.setAttribute('class', 'fa fa-star');
+                starP4.setAttribute('id', "avgStar4");
+                avgRating.appendChild(starP4);
+            
+                var starP5 = document.createElement('span');
+                starP5.setAttribute('class', 'fa fa-star');
+                starP5.setAttribute('id', "avgStar5");
+                avgRating.appendChild(starP5);
+            
+                // fill color in the stars using rating
+                var i = 1;
+                var r = parseInt(rating);
+                var starID;
+                var colorArray = ["#e6b800", "#ff9900", "#ff6600", "#ff5050", "#cc0000"]; // array for colors based on how high the rating is
+                while (r >= i) {
+                    starID = "avgStar".concat(i);
+                    document.getElementById(starID).style.color = colorArray[(r - 1)];
+                    i = i + 1;
+                }
+                // if half a star
+                if (r !== parseFloat(rating)) {
+                    starID = "avgStar".concat(i);
+                    document.getElementById(starID).className = "fa fa-star-half-o";
+                    document.getElementById(starID).style.color = colorArray[(r - 1)];
+                }
+
+            }.bind(this));
+        }
+        else {
+            alert("Error: Getting AverageRating for this user unsuccessful!");
+            res.json().then(function (data) {
+                console.log(data.message);
+            }.bind(this));
+        }
+    }).catch(function (err) {
+        alert("Error: No internet connection!");
+        console.log(err.message + ": No Internet Connection");
+    });
 }
 
 
