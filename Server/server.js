@@ -479,7 +479,7 @@ app.post('/resetPass', function (req, res) {
 
     var email = req.body.email;
 
-    if(!email) {
+    if (!email) {
         return res.status(401).json({ message: "User not logged in!" });
     }
 
@@ -490,35 +490,35 @@ app.post('/resetPass', function (req, res) {
     var requestParams = [PIN, email];
 
     var transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: '1ance.profilehelp@gmail.com',
-        pass: '1ancedev'
-      }
+        service: 'gmail',
+        auth: {
+            user: '1ance.profilehelp@gmail.com',
+            pass: '1ancedev'
+        }
     });
 
     mess_text = "Hello,\n\tEnter this PIN: " + PIN + " to change your password.\nThis PIN is valid for 24 hours.\n\nThank you for using 1ance";
 
     var mailOptions = {
-      from: '1ance.profile@gmail.com',
-      to: email,
-      subject: 'Reset Password',
-      text: mess_text
+        from: '1ance.profile@gmail.com',
+        to: email,
+        subject: 'Reset Password',
+        text: mess_text
     };
 
-    transporter.sendMail(mailOptions, function(error, info){
-      if (error) {
-        return res.status(500).json({ message: "Internal server error" });
-      } else {
+    transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+            return res.status(500).json({ message: "Internal server error" });
+        } else {
 
-        db.query(dbQuery, requestParams, function (err, result) {
-            if (err) {
-                return res.status(500).json({ message: "Internal server error" });
-            } else {
-                return res.status(200).json({ message: "Success" });
-            }
-        });
-      }
+            db.query(dbQuery, requestParams, function (err, result) {
+                if (err) {
+                    return res.status(500).json({ message: "Internal server error" });
+                } else {
+                    return res.status(200).json({ message: "Success" });
+                }
+            });
+        }
     });
 });
 
@@ -528,15 +528,15 @@ app.post('/verifyPIN', function (req, res) {
     var pass = req.body.password;
     var PIN = req.body.PIN;
 
-    if(!email) {
+    if (!email) {
         return res.status(401).json({ message: "Missing information" });
     }
 
-    if(!pass) {
+    if (!pass) {
         return res.status(401).json({ message: "Missing information" });
     }
 
-    if(!PIN) {
+    if (!PIN) {
         return res.status(401).json({ message: "Missing information" });
     }
 
@@ -803,7 +803,7 @@ app.post('/ClosePost', (req, res) => {
                 }
 
                 else {
-                    res.send(JSON.stringify({"status": 200,"error": null,"response": resp,"message": "Success! Post closed/deleted."}));
+                    res.send(JSON.stringify({ "status": 200, "error": null, "response": resp, "message": "Success! Post closed/deleted." }));
                 }
             });
         }
@@ -1522,7 +1522,7 @@ app.post('/DeleteUser', function (req, res) {
     });
 });
 
-// reviews
+/* Reviews */
 // write a new review
 app.post('/WriteReview', function (req, res) {
     var idUser = req.body.UserID;
@@ -1546,24 +1546,38 @@ app.post('/WriteReview', function (req, res) {
     var posted = new Date();
     var time = posted.getTime();
 
-    let query = "INSERT INTO Reviews SET ?";
-
-    var newReview = {
-        Rating: rating,
-        Review: review,
-        idUsers: idUser,
-        byUserID: byUserID,
-        byUserName: byUserName,
-        DateMSEC: time,
-        DatePosted: posted
-    };
-
-    db.query(query, newReview, function (error, response) {
-        if (error) {
-            res.send(JSON.stringify({ "status": 500, "error": error, "response": null, "message": "Internal server error" }));
+    let query1 = "SELECT * FROM Reviews WHERE idUsers = ? AND byUserID = ?;"
+    var params = [idUser, byUserID];
+    db.query(query1, params, function (error1, response1) {
+        if (error1) {
+            res.send(JSON.stringify({ "status": 500, "error": error1, "response": null, "message": "Internal server error" }));
         }
         else {
-            res.send(JSON.stringify({ "status": 200, "error": null, "response": response, "message": "Success! New Review added!" }));
+            if (response1 != null) {
+                res.send(JSON.stringify({ "status": 200, "error": null, "response": null, "message": "You have already posted a review previously for this user!" }));
+            }
+            else {
+                let query2 = "INSERT INTO Reviews SET ?";
+
+                var newReview = {
+                    Rating: rating,
+                    Review: review,
+                    idUsers: idUser,
+                    byUserID: byUserID,
+                    byUserName: byUserName,
+                    DateMSEC: time,
+                    DatePosted: posted
+                };
+
+                db.query(query2, newReview, function (error2, response2) {
+                    if (error2) {
+                        res.send(JSON.stringify({ "status": 500, "error": error2, "response": null, "message": "Internal server error" }));
+                    }
+                    else {
+                        res.send(JSON.stringify({ "status": 200, "error": null, "response": response2, "message": "Success! New Review added!" }));
+                    }
+                });
+            }
         }
     });
 });
@@ -1610,32 +1624,31 @@ app.post('/GetAverageRating', function (req, res) {
 
 // Get Sorted list of Posts, using either by order - ASCENDING OR DESCENDING or by range - upper/lower bounds (either for money or date posted)
 app.post('/getSortedReviews', (req, res) => {
-    
-        var order = req.body.order; 
-        var idUser = req.body.idUser;
 
-        if (!idUser || !order) {
-            return res.status(400).json({ message: "Missing Information for Sorting Reviews" });
+    var order = req.body.order;
+    var idUser = req.body.idUser;
+
+    if (!idUser || !order) {
+        return res.status(400).json({ message: "Missing Information for Sorting Reviews" });
+    }
+
+    let query = "";
+    if (order === "ASC") {
+        query = 'SELECT * FROM Reviews WHERE idUsers = ? ORDER BY Rating ASC;';
+    }
+    else {
+        query = 'SELECT * FROM Reviews WHERE idUsers = ? ORDER BY Rating DESC;';
+    }
+
+    db.query(query, idUser, (error, response) => {
+        if (error) {
+            res.send(JSON.stringify({ "status": 500, "error": error, "message": "Internal server error", "response": null }));
         }
 
-        let query = "";
-        if (order === "ASC") {
-            query = 'SELECT * FROM Reviews WHERE idUsers = ? ORDER BY Rating ASC;';
-        }
         else {
-            query = 'SELECT * FROM Reviews WHERE idUsers = ? ORDER BY Rating DESC;';
+            res.send(JSON.stringify({ "status": 200, "error": null, "response": response, "message": "Success! Sorted reviews retrived." }));
         }
-    
-        db.query(query, idUser, (error, response) => {
-            console.log(response);
-            if (error) {
-                res.send(JSON.stringify({ "status": 500,"error": error,"message": "Internal server error","response": null}));
-            }
-    
-            else {
-                res.send(JSON.stringify({"status": 200,"error": null,"response": response,"message": "Success! Sorted reviews retrived."}));
-            }
-        });
     });
+});
 
 

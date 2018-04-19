@@ -7,6 +7,7 @@ var urlNumNewNotifs = "http://localhost:5500/getNumNotifications";
 var urlDeleteAccount = "http://localhost:5500/DeleteUser";
 
 var uID = "";
+var ratingSelected = 0;
 
 function onLoad_profile() {
 
@@ -391,7 +392,8 @@ function giveRatings() {
 
         $(this).closest('.rating').data('vote', $(this).data('value'));
         //calculateAverage()
-        console.log(parseInt($(this).data('value')));
+        console.log(parseFloat($(this).data('value')));
+        ratingSelected = (parseFloat($(this).data('value')));
 
     })
 
@@ -406,7 +408,8 @@ function giveRatings() {
         $(this).closest('.rating').data('vote', $(this).data('value'));
         //calculateAverage()
 
-        console.log(parseInt($(this).data('value')));
+        console.log(parseFloat($(this).data('value')));
+        ratingSelected = (parseFloat($(this).data('value')));
     })
 
     $('.half').hover(function () {
@@ -421,6 +424,7 @@ function giveRatings() {
             setFullStarState(this)
         }
     })
+
 }
 
 function updateStarState(target) {
@@ -444,7 +448,6 @@ function setFullStarState(target) {
 
     updateStarState(target)
 }
-
 /* Star ratings end */
 
 function gotoUserProfile(otheruserid) {
@@ -586,3 +589,48 @@ function deleteAccount() {
 }
 
 window.gotoUserProfile = gotoUserProfile; // just making sure the function is globally available
+
+function writeReview() {
+
+    if (ratingSelected == 0) {
+        alert ("Please provide a rating score for this user.");
+        return;
+    }
+
+    var review = document.getElementById("reviewWritten").value;
+
+    fetch(urlDeleteAccount, {
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+            "userid": uID,
+            "password": userPass
+        })
+    }).then(function (res) {
+        console.log("Inside res function");
+        if (res.ok) {
+            res.json().then(function (data) {
+                alert("Your account has been Deleted, you will be redirected to the Login Page");
+                window.location.href = "./index.html";
+                console.log("Inside res.ok");
+            }.bind(this));
+        }
+        else {
+            alert("Error: Delete User Account unsuccessful!");
+            res.json().then(function (data) {
+                console.log(data.message);
+            }.bind(this));
+        }
+    }).catch(function (err) {
+        alert("Error: No internet connection!");
+        console.log(err.message + ": No Internet Connection");
+    });
+} 
+
+function clearNewReview () {
+    var url = window.location.href;
+    window.location.href = url;
+}
