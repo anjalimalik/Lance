@@ -464,8 +464,13 @@ function setFullStarState(target) {
 }
 /* Star ratings end */
 
-function gotoUserProfile(otheruserid) {
-    window.location.href = "profile.html?email=".concat(emailAdd, "&id=", otheruserid);
+function gotoUserProfile(otheruserid, from) {
+    if (from == 0) {
+        window.location.href = "profile.html?email=".concat(email, "&id=", otheruserid);
+    }
+    else {
+        window.location.href = "profile.html?email=".concat(emailAdd, "&id=", otheruserid);
+    }
 }
 
 function getUserProfile(userid) {
@@ -508,7 +513,7 @@ function getUserProfile(userid) {
 
                 // get reviews
                 $('.review.card.bg-secondary.mb-3').remove();
-                getReviews(userID);
+                getReviews(userid);
 
             }.bind(this));
         }
@@ -687,11 +692,34 @@ function getReviews(userid) {
         if (res.ok) {
             res.json().then(function (data) {
                 console.log(data);
-                var numPost = Object.keys(data.response).length;
+                var numReviews = Object.keys(data.response).length;
                 var json = data.response;
 
-                for (i = 0; i < numPost; i++) {
-                    createReviewCard(json[i].Rating, json[i].Review, json[i].byUserName, json[i].DatePosted, json[i].byUserID);
+                // check if any reviews are available
+                if (numReviews == 0) {
+                    var rlist = document.getElementById('reviewsList');
+                    /* review div */
+                    var reviewDiv = document.createElement('div');
+                    reviewDiv.setAttribute('class', 'review card bg-secondary');
+                    reviewDiv.style = "margin: 5%;";
+                    rlist.appendChild(reviewDiv);
+
+                    /* Card Body div */
+                    var cardBodyDiv = document.createElement('div');
+                    cardBodyDiv.setAttribute('class', 'card-body');
+                    reviewDiv.appendChild(cardBodyDiv);
+
+                    /* No reviews available */
+                    var noneP = document.createElement('p');
+                    noneP.setAttribute('class', 'card-text');
+                    noneP.innerHTML = otherusername + " has not been reviewed yet! Add your review?";
+                    noneP.style = "text-align:center;";
+                    cardBodyDiv.appendChild(noneP);
+                }
+                else {
+                    for (i = 0; i < numReviews; i++) {
+                        createReviewCard(json[i].Rating, json[i].Review, json[i].byUserName, json[i].DatePosted, json[i].byUserID);
+                    }
                 }
             }.bind(this));
         }
@@ -740,7 +768,7 @@ function createReviewCard(rating, review, byUserName, datePosted, byUserID) {
     titleH4.setAttribute('class', 'card-title text-capitalize');
     titleH4.setAttribute('id', 'reviewer');
     var str = "";
-    str = str.concat("<b style=\"color:black; font-weight:bold\"><a href='#' onclick=\"gotoUserProfile(", byUserID, ")\">", byUserName, "</a></b>");
+    str = str.concat("<b style=\"color:black; font-weight:bold\"><a href='#' onclick=\"gotoUserProfile(", byUserID, ",", 0, ")\">", byUserName, "</a></b>");
     titleH4.innerHTML = str;
     cardBodyDiv.appendChild(titleH4);
 
