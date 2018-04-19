@@ -725,7 +725,7 @@ function getReviews(userid) {
                     /* No reviews available */
                     var noneP = document.createElement('p');
                     noneP.setAttribute('class', 'card-text');
-                    document.getElementById("filterReviewsDiv").style.display = "none"; // hide filter reviews
+                    document.getElementById("sortReviewsDiv").style.display = "none"; // hide sort reviews
                     if (otherusername) {
                         noneP.innerHTML = otherusername + " has not been reviewed yet! Add your review?";
                     }
@@ -737,7 +737,7 @@ function getReviews(userid) {
                     cardBodyDiv.appendChild(noneP);
                 }
                 else {
-                    document.getElementById("filterReviewsDiv").style.display = "block"; // show filter reviews
+                    document.getElementById("sortReviewsDiv").style.display = "block"; // show sort reviews
                     for (i = 0; i < numReviews; i++) {
                         createReviewCard(json[i].idReviews, json[i].Rating, json[i].Review, json[i].byUserName, json[i].DatePosted, json[i].byUserID);
                     }
@@ -950,15 +950,26 @@ function getAverageRating(userid) {
     });
 }
 
-// method to filter reviews in asc or desc order of ratings
-function filterReviews() {
+// method to sort reviews in asc or desc order of ratings
+function sortReviews() {
     // get the order
-    var filter = "";
-    if ((document.getElementById("filterReviews")).value == "Highest Reviews") {
-        filter = "DESC";
+    var sort = "";
+    var basedOn = "";
+    if ((document.getElementById("sortReviews")).value == "Highest Reviews") {
+        sort = "DESC";
+        basedOn = "Rating";
     }
-    else {
-        filter = "ASC";
+    else if ((document.getElementById("sortReviews")).value == "Lowest Reviews"){
+        sort = "ASC";
+        basedOn = "Rating";
+    }
+    else if ((document.getElementById("sortReviews")).value == "Latest Reviews"){
+        sort = "DESC";
+        basedOn = "DatePosted";
+    }
+    else if ((document.getElementById("sortReviews")).value == "Oldest Reviews"){
+        sort = "ASC";
+        basedOn = "DatePosted";
     }
 
     // ID for own profile or some other user?
@@ -970,7 +981,7 @@ function filterReviews() {
         userid = uID;
     }
 
-    // fetch filtered reviews
+    // fetch sorted reviews
     fetch(urlGetSortedReviews, {
         method: "POST",
         headers: {
@@ -979,7 +990,8 @@ function filterReviews() {
         },
         body: JSON.stringify({
             "idUser": userid,
-            "order": filter
+            "order": sort,
+            "basedOn": basedOn
         })
     }).then(function (res) {
         if (res.ok) {
@@ -994,7 +1006,7 @@ function filterReviews() {
             }.bind(this));
         }
         else {
-            alert("Error: Getting filtered reviews for this user unsuccessful!");
+            alert("Error: Getting sorted reviews for this user unsuccessful!");
             res.json().then(function (data) {
                 console.log(data.message);
             }.bind(this));

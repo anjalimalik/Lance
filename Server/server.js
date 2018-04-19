@@ -1632,17 +1632,27 @@ app.post('/getSortedReviews', (req, res) => {
     var basedOn = req.body.basedOn;
     var idUser = req.body.idUser;
 
-    if (!idUser || !order) {
+    if (!idUser || !order || !basedOn) {
         return res.status(400).json({ message: "Missing Information for Sorting Reviews" });
     }
 
     let query = "";
-    let params = [idUser, basedOn];
-    if (order === "ASC") {
-        query = 'SELECT * FROM Reviews WHERE idUsers = ? ORDER BY ? ASC;';
+    let params = [idUser];
+    if (basedOn == "Rating") {
+        if (order === "ASC") {
+            query = 'SELECT * FROM Reviews WHERE idUsers = ? ORDER BY Rating ASC;';
+        }
+        else {
+            query = 'SELECT * FROM Reviews WHERE idUsers = ? ORDER BY Rating DESC;';
+        }
     }
     else {
-        query = 'SELECT * FROM Reviews WHERE idUsers = ? ORDER BY ? DESC;';
+        if (order === "ASC") {
+            query = 'SELECT * FROM Reviews WHERE idUsers = ? ORDER BY DateMSEC ASC;';
+        }
+        else {
+            query = 'SELECT * FROM Reviews WHERE idUsers = ? ORDER BY DateMSEC DESC;';
+        }
     }
 
     db.query(query, params, (error, response) => {
