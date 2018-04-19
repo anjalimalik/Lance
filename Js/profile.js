@@ -94,8 +94,11 @@ function onLoad_profile() {
                             populate_profile(email);
                             document.getElementById("editProfileBtn").style.display = "block";
 
+                            // average rating
+                            getAverageRating(uID);
+
                             // get reviews for this user
-                            $('.review.card.bg-secondary.mb-3').remove();
+                            $('.review.card.bg-secondary').remove();
                             getReviews(uID);
 
                             // notifications
@@ -480,7 +483,6 @@ function gotoUserProfile(otheruserid, from) {
 }
 
 function getUserProfile(userid) {
-
     // if the user is same as the one logged in, show edit and upload buttons.
     if (userid == uID) {
         document.getElementById("editProfileBtn").style.display = "block";
@@ -517,18 +519,20 @@ function getUserProfile(userid) {
                 otheruseremail = json[0].Email;
                 populate_profile(otheruseremail);
 
+                // average rating
+                getAverageRating(userid);
+
                 // make write review visible
                 document.getElementById('writeNewReview').style.display = "block";
                 document.getElementById('writeReviewLegend').innerHTML = "Start your review by selecting a rating score for " + otherusername + "...";
                 document.getElementById('formWriteReview').style.display = "block";
 
                 // get reviews
-                $('.review.card.bg-secondary.mb-3').remove();
+                $('.review.card.bg-secondary').remove();
                 getReviews(userid);
 
                 // number of notifications
                 getNumOfNewNotifs();
-
             }.bind(this));
         }
         else {
@@ -670,9 +674,9 @@ function writeReview() {
                 }
                 else {
                     confirm("Writing new review successful!");
-                    $('.review.card.bg-secondary.mb-3').remove();
+                    $('.review.card.bg-secondary').remove();
                     getReviews(otheruserid);
-                    reloadProfile();
+                    //reloadProfile();
                 }
             }.bind(this));
         }
@@ -859,6 +863,7 @@ function createReviewCard(reviewID, rating, review, byUserName, datePosted, byUs
     blockquote.appendChild(reviewContent);
 }
 
+// function to get average rating
 function getAverageRating(userid) {
     fetch(urlGetAverageRating, {
         method: "POST",
@@ -876,33 +881,44 @@ function getAverageRating(userid) {
                 var numReviews = Object.keys(data.response).length;
                 var rating = data.response[0].AverageRating;
 
-                var avgRating = document.getElementById('avgRating');
+                var profileNameDiv = document.getElementById('profile_name');
+                
+                var avgRating = document.createElement('p');
+                avgRating.style = "float:right; margin:0;";
+                profileNameDiv.appendChild(avgRating);
+
+                if (rating == null) {
+                    avgRating.style = "font-size:15px; color: #a6a6a6; padding-top:1.5%; float:right;";
+                    avgRating.innerHTML = "No reviews";
+                    return;
+                }
+
                 /* Stars */
                 var starP1 = document.createElement('span');
                 starP1.setAttribute('class', 'fa fa-star');
                 starP1.setAttribute('id', "avgStar1");
                 avgRating.appendChild(starP1);
-            
+
                 var starP2 = document.createElement('span');
                 starP2.setAttribute('class', 'fa fa-star');
                 starP2.setAttribute('id', "avgStar2");
                 avgRating.appendChild(starP2);
-            
+
                 var starP3 = document.createElement('span');
                 starP3.setAttribute('class', 'fa fa-star');
                 starP3.setAttribute('id', "avgStar3");
                 avgRating.appendChild(starP3);
-            
+
                 var starP4 = document.createElement('span');
                 starP4.setAttribute('class', 'fa fa-star');
                 starP4.setAttribute('id', "avgStar4");
                 avgRating.appendChild(starP4);
-            
+
                 var starP5 = document.createElement('span');
                 starP5.setAttribute('class', 'fa fa-star');
                 starP5.setAttribute('id', "avgStar5");
                 avgRating.appendChild(starP5);
-            
+
                 // fill color in the stars using rating
                 var i = 1;
                 var r = parseInt(rating);
@@ -933,7 +949,6 @@ function getAverageRating(userid) {
         console.log(err.message + ": No Internet Connection");
     });
 }
-
 
 // method to simply reload the page without losing query strings
 function reloadProfile() {
