@@ -1629,6 +1629,7 @@ app.post('/getAverageRating', function (req, res) {
 app.post('/getSortedReviews', (req, res) => {
 
     var order = req.body.order;
+    var basedOn = req.body.basedOn;
     var idUser = req.body.idUser;
 
     if (!idUser || !order) {
@@ -1636,14 +1637,15 @@ app.post('/getSortedReviews', (req, res) => {
     }
 
     let query = "";
+    let params = [idUser, basedOn];
     if (order === "ASC") {
-        query = 'SELECT * FROM Reviews WHERE idUsers = ? ORDER BY Rating ASC;';
+        query = 'SELECT * FROM Reviews WHERE idUsers = ? ORDER BY ? ASC;';
     }
     else {
-        query = 'SELECT * FROM Reviews WHERE idUsers = ? ORDER BY Rating DESC;';
+        query = 'SELECT * FROM Reviews WHERE idUsers = ? ORDER BY ? DESC;';
     }
 
-    db.query(query, idUser, (error, response) => {
+    db.query(query, params, (error, response) => {
         if (error) {
             res.send(JSON.stringify({ "status": 500, "error": error, "message": "Internal server error", "response": null }));
         }
