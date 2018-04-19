@@ -1530,10 +1530,12 @@ app.post('/WriteReview', function (req, res) {
     var byUserName = req.body.byUserName;
     var rating = req.body.rating;
 
+    // Check if necessary information if given
     if (!idUser || !byUserID || !rating || !byUserName) {
         return res.status(400).json({ message: "Missing Review Information" });
     }
 
+    // Reviews are not required
     var review;
     if (req.body.review == null) {
         review = null;
@@ -1546,6 +1548,7 @@ app.post('/WriteReview', function (req, res) {
     var posted = new Date();
     var time = posted.getTime();
 
+    // first check if the user has already posted a review for this user
     let query1 = "SELECT * FROM Reviews WHERE idUsers = ? AND byUserID = ?;"
     var params = [idUser, byUserID];
     db.query(query1, params, function (error1, response1) {
@@ -1553,10 +1556,10 @@ app.post('/WriteReview', function (req, res) {
             res.send(JSON.stringify({ "status": 500, "error": error1, "response": null, "message": "Internal server error" }));
         }
         else {
-            if (response1 != null) {
-                res.send(JSON.stringify({ "status": 200, "error": null, "response": null, "message": "You have already posted a review previously for this user!" }));
+            if (Object.keys(response1).length != 0) { // if they have already posted a review
+                res.send(JSON.stringify({ "status": 200, "error": null, "response": null, "message": "You have already posted a review for this user!" }));
             }
-            else {
+            else { // if not, add a new review
                 let query2 = "INSERT INTO Reviews SET ?";
 
                 var newReview = {
@@ -1583,14 +1586,14 @@ app.post('/WriteReview', function (req, res) {
 });
 
 // get all reviews for that user
-app.post('/GetReviews', function (req, res) {
+app.post('/getReviews', function (req, res) {
     var idUser = req.body.idUser;
 
     if (!idUser) {
         return res.status(400).json({ message: "Missing Review Information" });
     }
 
-    let query = "SELECT * FROM Reviews WHERE idUsers = ?";
+    let query = "SELECT * FROM Reviews WHERE idUsers = ? AND Review IS NOT NULL";
 
     db.query(query, idUser, function (error, response) {
         if (error) {
@@ -1603,7 +1606,7 @@ app.post('/GetReviews', function (req, res) {
 });
 
 // get average rating for the user
-app.post('/GetAverageRating', function (req, res) {
+app.post('/getAverageRating', function (req, res) {
     var idUser = req.body.idUser;
 
     if (!idUser) {

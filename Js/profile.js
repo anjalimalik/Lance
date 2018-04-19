@@ -5,9 +5,15 @@ var urlUpload = "http://localhost:5500/api/upload";
 var urlUserID = "http://localhost:5500/getUserID";
 var urlNumNewNotifs = "http://localhost:5500/getNumNotifications";
 var urlDeleteAccount = "http://localhost:5500/DeleteUser";
+var urlWriteReview = "http://localhost:5500/WriteReview";
+var urlGetReviews = "http://localhost:5500/getReviews";
+var urlGetSortedReviews = "http://localhost:5500/getSortedReviews";
+var urlGetAverageRating = "http://localhost:5500/getAverageRating";
 
 var uID = "";
 var ratingSelected = 0;
+var otheruserid = null;
+var otherusername = null;
 
 function onLoad_profile() {
 
@@ -17,7 +23,6 @@ function onLoad_profile() {
     // get email
     var url = window.location.href;
     var str = url.split("?email=");
-    var otheruserid = null;
 
     email = str[1];
     if (email === null) {
@@ -215,7 +220,12 @@ function imageIsLoaded(e) {
 }
 
 function populate_profile(useremail) {
-    document.getElementById("profile_name").innerHTML = name;
+    if (otherusername != null) {
+        document.getElementById("profile_name").innerHTML = otherusername;
+    }
+    else {
+        document.getElementById("profile_name").innerHTML = name;
+    }
     document.getElementById("profile_email").innerHTML = useremail;
     document.getElementById("profile_edu").innerHTML = edu;
     document.getElementById("profile_contact").innerHTML = contact;
@@ -482,7 +492,7 @@ function getUserProfile(otheruserid) {
         if (res.ok) {
             res.json().then(function (data) {
                 var json = data.response;
-                name = json[0].FullName;
+                otherusername = json[0].FullName;
                 edu = json[0].Education;
                 links = json[0].Links;
                 contact = json[0].ContactInfo;
@@ -590,36 +600,50 @@ function deleteAccount() {
 
 window.gotoUserProfile = gotoUserProfile; // just making sure the function is globally available
 
+// method to write new review
 function writeReview() {
-
     if (ratingSelected == 0) {
         alert ("Please provide a rating score for this user.");
+        reloadProfile();
         return;
     }
 
     var review = document.getElementById("reviewWritten").value;
 
-    fetch(urlDeleteAccount, {
+    console.log(uID);
+    console.log(otheruserid);
+    console.log(name);
+    fetch(urlWriteReview, {
         method: "POST",
         headers: {
             'Accept': 'application/json',
             'content-type': 'application/json'
         },
         body: JSON.stringify({
-            "userid": uID,
-            "password": userPass
+            "byUserID": uID,
+            "UserID": otheruserid,
+            "byUserName": otherusername,
+            "rating": ratingSelected,
+            "review": review
         })
     }).then(function (res) {
         console.log("Inside res function");
         if (res.ok) {
             res.json().then(function (data) {
-                alert("Your account has been Deleted, you will be redirected to the Login Page");
-                window.location.href = "./index.html";
-                console.log("Inside res.ok");
+                var json = data.response;
+                if (json == null) {
+                    confirm("Unsuccessful: You have already posted a review for this user!");
+                    reloadProfile();
+                    return;
+                }
+                else {
+                    confirm("Writing new review successful!");
+                    reloadProfile();
+                }
             }.bind(this));
         }
         else {
-            alert("Error: Delete User Account unsuccessful!");
+            alert("Error: Writing new review unsuccessful!");
             res.json().then(function (data) {
                 console.log(data.message);
             }.bind(this));
@@ -630,7 +654,8 @@ function writeReview() {
     });
 } 
 
-function clearNewReview () {
+// method to simply reload the page without losing query strings
+function reloadProfile () {
     var url = window.location.href;
     window.location.href = url;
 }
