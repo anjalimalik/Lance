@@ -727,6 +727,7 @@ function getReviews(userid) {
                     /* No reviews available */
                     var noneP = document.createElement('p');
                     noneP.setAttribute('class', 'card-text');
+                    document.getElementById("filterReviewsDiv").style.display = "none"; // hide filter reviews
                     if (otherusername) {
                         noneP.innerHTML = otherusername + " has not been reviewed yet! Add your review?";
                     }
@@ -738,6 +739,7 @@ function getReviews(userid) {
                     cardBodyDiv.appendChild(noneP);
                 }
                 else {
+                    document.getElementById("filterReviewsDiv").style.display = "block"; // show filter reviews
                     for (i = 0; i < numReviews; i++) {
                         createReviewCard(json[i].idReviews, json[i].Rating, json[i].Review, json[i].byUserName, json[i].DatePosted, json[i].byUserID);
                     }
