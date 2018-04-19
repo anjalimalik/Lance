@@ -354,7 +354,7 @@
       <!-- REVIEW Write a new review -->
       <div class="card bg-secondary" style="max-width: 200rem; margin-bottom:0%; padding:0;">
         <div class="card-body">
-          <legend style="font-size:20px;">Start your review by selecting a rating for this user...</legend>
+          <legend id="writeReviewLegend" style="font-size:20px;">Start your review by selecting a rating score for this user...</legend>
 
           <!-- Rating -->
           <div class="rating" style="width:100%; height:100%;margin:0; text-align:left;" data-vote="0">
@@ -420,20 +420,8 @@
           id="postReview" onclick="writeReview()"></input>
       </form>
 
-      <!-- REVIEW TEMPLATE for Sample review -->
+      <!-- Reviews List - added in JS -->
       <div id="reviewsList">
-        <div id="review" class="card bg-secondary mb-3" style="max-width: 200rem;">
-          <div class="card-header" id="reviewDate" style="text-align:right;">Date Posted</div>
-          <div class="card-body">
-            <h4 class="card-title" id="reviewer">Title</h4>
-
-            <p class="card-text" id="ratingValue">Rating</p>
-
-            <blockquote class="blockquote">
-              <footer class="blockquote-footer" id="reviewContent">Review</footer>
-            </blockquote>
-          </div>
-        </div>
       </div>
       <!--- Reviews List End -->
 

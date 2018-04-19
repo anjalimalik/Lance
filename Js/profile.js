@@ -94,6 +94,8 @@ function onLoad_profile() {
                             populate_profile(email);
                             document.getElementById("editProfileBtn").style.display = "block";
 
+                            // write review 
+                            document.getElementById('writeReviewLegend').innerHTML = "";
                             // get reviews for this user
                             $('.review.card.bg-secondary.mb-3').remove();
                             getReviews(uID);
@@ -465,6 +467,11 @@ function setFullStarState(target) {
 /* Star ratings end */
 
 function gotoUserProfile(otheruserid, from) {
+    // no need to add id string if own's profile
+    if (otheruserid == uID) {
+        goToProfile();
+        return;
+    }
     if (from == 0) {
         window.location.href = "profile.html?email=".concat(email, "&id=", otheruserid);
     }
@@ -631,9 +638,6 @@ function writeReview() {
 
     var review = document.getElementById("reviewWritten").value;
 
-    console.log(uID);
-    console.log(otheruserid);
-    console.log(name);
     fetch(urlWriteReview, {
         method: "POST",
         headers: {
@@ -643,7 +647,7 @@ function writeReview() {
         body: JSON.stringify({
             "byUserID": uID,
             "UserID": otheruserid,
-            "byUserName": otherusername,
+            "byUserName": name,
             "rating": ratingSelected,
             "review": review
         })
@@ -712,7 +716,13 @@ function getReviews(userid) {
                     /* No reviews available */
                     var noneP = document.createElement('p');
                     noneP.setAttribute('class', 'card-text');
-                    noneP.innerHTML = otherusername + " has not been reviewed yet! Add your review?";
+                    if (otherusername) {
+                        noneP.innerHTML = otherusername + " has not been reviewed yet! Add your review?";
+                    }
+                    else {
+                        noneP.innerHTML = "No one has reviewed you yet!";
+                    }
+                    
                     noneP.style = "text-align:center;";
                     cardBodyDiv.appendChild(noneP);
                 }
@@ -780,6 +790,7 @@ function createReviewCard(reviewID, rating, review, byUserName, datePosted, byUs
 
     /* Rating */
     var ratingP = document.createElement('p');
+    ratingP.style = "color: grey;";
     cardBodyDiv.appendChild(ratingP);
     /* Stars */
     var starP1 = document.createElement('span');
@@ -814,18 +825,19 @@ function createReviewCard(reviewID, rating, review, byUserName, datePosted, byUs
 
     // fill color in the stars using rating
     var i = 1;
-    while(parseInt(rating) > i) {
+    var r = parseInt(rating);
+    var colorArray = ["#e6b800", "#ff9900", "#ff6600", "#ff5050", "#cc0000"]; // array for colors based on how high the rating is
+    while(r >= i) {
         starID = "star".concat(i, reviewID);
-        document.getElementById(starID).style = "color:gold;";
+        document.getElementById(starID).style.color = colorArray[(r-1)];
         i = i + 1;
     }
     // if half a star
-    if (parseInt(rating) !== parseFloat(rating)) {
+    if (r !== parseFloat(rating)) {
         starID = "star".concat(i, reviewID);
         document.getElementById(starID).className = "fa fa-star-half-o";
-        document.getElementById(starID).style = "color:gold;";
+        document.getElementById(starID).style.color = colorArray[(r-1)];
     }
-    
     /* Rating end */
 
     /* Review blockquote */
