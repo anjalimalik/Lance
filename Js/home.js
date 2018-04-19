@@ -72,7 +72,7 @@ function getAllPosts() {
                 var json = data.response;
 
                 for (i = 0; i < numPost; i++) {
-                    createCard(json[i].UserName, json[i].Content, json[i].Headline, json[i].PostingType, json[i].money, json[i].idPosts, json[i].DatePosted, json[i].numLikes, json[i].Category, json[i].Attributes, json[i].UserID);
+                    createPostCard(json[i].UserName, json[i].Content, json[i].Headline, json[i].PostingType, json[i].money, json[i].idPosts, json[i].DatePosted, json[i].numLikes, json[i].Category, json[i].Attributes, json[i].UserID);
                 }
             });
 
@@ -84,7 +84,7 @@ function getAllPosts() {
 }
 
 // CREATE A NEW CARD FOR EVERY POST FROM SERVER (/getPosts)
-function createCard(user, content, headline, postingType, price, postID, date, likes, category, attributes, userid) {
+function createPostCard(user, content, headline, postingType, price, postID, date, likes, category, attributes, userid) {
 
     /* Adding the cards from information from the database */
     var ul = document.getElementById('news_card_list');
@@ -688,7 +688,7 @@ function getSortedPosts(json) {
     if (json) {
         var num = Object.keys(json).length;
         for (i = 0; i < num; i++) {
-            createCard(json[i].UserName, json[i].Content, json[i].Headline, json[i].PostingType, json[i].money, json[i].idPosts, json[i].DatePosted, json[i].numLikes, json[i].Category, json[i].Attributes, json[i].UserID);
+            createPostCard(json[i].UserName, json[i].Content, json[i].Headline, json[i].PostingType, json[i].money, json[i].idPosts, json[i].DatePosted, json[i].numLikes, json[i].Category, json[i].Attributes, json[i].UserID);
         }
     }
 }
@@ -1325,7 +1325,7 @@ function runSearch() {
                 ul.innerHTML = "";
 
                 for (i = 0; i < numPost; i++) {
-                    createCard(json[i].UserName, json[i].Content, json[i].Headline, json[i].PostingType, json[i].money, json[i].idPosts, json[i].DatePosted, json[i].numLikes, json[i].Category, json[i].Attributes, json[i].UserID);
+                    createPostCard(json[i].UserName, json[i].Content, json[i].Headline, json[i].PostingType, json[i].money, json[i].idPosts, json[i].DatePosted, json[i].numLikes, json[i].Category, json[i].Attributes, json[i].UserID);
                 }
             });
         }

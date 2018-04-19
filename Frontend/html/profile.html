@@ -341,21 +341,21 @@
       <!--- Reviews List -->
       <br>
 
-      <div class="card-header text-uppercase" style="height:15%; font-size:25px; text-align: left; font-weight: bold;">Reviews</div>      
-     
-      <div class="form-group" style="margin-bottom:0%;" >
+      <div class="card-header text-uppercase" style="height:15%; font-size:25px; text-align: left; font-weight: bold;">Reviews</div>
+
+      <div class="form-group" style="margin-bottom:0%;">
         <select class="form-control" style="float:right;display:inline-block; width:20%;" id="filterReviews">
           <option>Highest Reviews</option>
           <option>Lowest Reviews</option>
          </select>
-         <label for="filterReviews" style="float:right;font-weight:bold; padding-top:1.5%; padding-right: 3%; display:inline-block;">Filter Reviews</label>
+        <label for="filterReviews" style="float:right;font-weight:bold; padding-top:1.5%; padding-right: 3%; display:inline-block;">Filter Reviews</label>
       </div>
 
-       <!-- REVIEW Write a new review -->
-       <div class="card bg-secondary" style="max-width: 200rem; margin-bottom:0%; padding:0;">
+      <!-- REVIEW Write a new review -->
+      <div class="card bg-secondary" style="max-width: 200rem; margin-bottom:0%; padding:0;">
         <div class="card-body">
           <legend style="font-size:20px;">Start your review by selecting a rating for this user...</legend>
-          
+
           <!-- Rating -->
           <div class="rating" style="width:100%; height:100%;margin:0; text-align:left;" data-vote="0">
             <div class="star">
@@ -414,195 +414,197 @@
         </div>
       </div>
       <form role="form" class="form-horizontal">
-        <input type="button" class="btn btn-outline-danger" style="float:right; display:inline-block; width:50%;" value="Clear" id="clearReview" onclick="reloadProfile()"></input>
-        <input type="button" class="btn btn-outline-success" style="float:left; display:inline-block; width:50%;" value="Post Review!" id="postReview" onclick="writeReview()"></input>
+        <input type="button" class="btn btn-outline-danger" style="float:right; display:inline-block; width:50%;" value="Clear" id="clearReview"
+          onclick="reloadProfile()"></input>
+        <input type="button" class="btn btn-outline-success" style="float:left; display:inline-block; width:50%;" value="Post Review!"
+          id="postReview" onclick="writeReview()"></input>
       </form>
 
       <!-- REVIEW TEMPLATE for Sample review -->
-      <div id="review" class="card bg-secondary mb-3" style="max-width: 200rem;">
-        <div class="card-header" id="reviewDate" style="text-align:right;">Date Posted</div>
-        <div class="card-body">
-          <h4 class="card-title" id="reviewer">Title</h4>
+      <div id="reviewsList">
+        <div id="review" class="card bg-secondary mb-3" style="max-width: 200rem;">
+          <div class="card-header" id="reviewDate" style="text-align:right;">Date Posted</div>
+          <div class="card-body">
+            <h4 class="card-title" id="reviewer">Title</h4>
 
-          <p class="card-text" id="ratingValue">Rating</p>
+            <p class="card-text" id="ratingValue">Rating</p>
 
-          <blockquote class="blockquote">
-            <footer class="blockquote-footer" id="reviewContent">Review</footer>
-          </blockquote>
-
+            <blockquote class="blockquote">
+              <footer class="blockquote-footer" id="reviewContent">Review</footer>
+            </blockquote>
+          </div>
         </div>
       </div>
-    </div>
-    <!--- Reviews List End -->
+      <!--- Reviews List End -->
 
 
-    <!-- Real settings MODAL-->
-    <div class="modal" style="margin-top:150px;" id="settingsModal" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">SETTINGS</h4>
-              <button type="button" class="close" data-dismiss="modal" onclick="clearSetModal()" aria-label="Close">
+      <!-- Real settings MODAL-->
+      <div class="modal" style="margin-top:150px;" id="settingsModal" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">SETTINGS</h4>
+                <button type="button" class="close" data-dismiss="modal" onclick="clearSetModal()" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
-          </div>
-          <div class="modal-body">
+            </div>
+            <div class="modal-body">
 
-            <form>
-              <fieldset>
-                <div class="form-group">
-                  <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#themesModal" data-dismiss="modal">Choose Themes</button>
-                </div>
-                <div class="form-group">
-                  <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#setModal" data-dismiss="modal">Change Password</button>
-                </div>
-                <div class="form-group">
-                  <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#deleteAccountModal" data-dismiss="modal"
-                    onclick="deleteShowModal()">Delete 1ance Account</button>
-                </div>
+              <form>
+                <fieldset>
+                  <div class="form-group">
+                    <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#themesModal" data-dismiss="modal">Choose Themes</button>
+                  </div>
+                  <div class="form-group">
+                    <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#setModal" data-dismiss="modal">Change Password</button>
+                  </div>
+                  <div class="form-group">
+                    <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#deleteAccountModal" data-dismiss="modal"
+                      onclick="deleteShowModal()">Delete 1ance Account</button>
+                  </div>
 
-              </fieldset>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="clearSetModal()">Close</button>
+                </fieldset>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="clearSetModal()">Close</button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
 
-    <!-- Themes MODAL-->
-    <div class="modal" style="margin-top:150px;" id="themesModal" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Themes</h4>
-              <button type="button" class="close" id="closeThemes" data-dismiss="modal" aria-label="Close">
+      <!-- Themes MODAL-->
+      <div class="modal" style="margin-top:150px;" id="themesModal" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Themes</h4>
+                <button type="button" class="close" id="closeThemes" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
           </button>
-          </div>
-          <div class="modal-body">
+            </div>
+            <div class="modal-body">
 
-            <form>
-              <fieldset>
-                <div class="floating-box theme1">
-                  <div style="color: white;">Sunrise</div>
-                  <input type="button" class="btnThemes" data-dismiss="modal" onclick="btn_theme_1()" value="Select"></input>
-                </div>
-                <div class="floating-box theme2">
-                  <div style="color: white;">Purple</div>
-                  <input type="button" class="btnThemes" data-dismiss="modal" onclick="btn_theme_2()" value="Select"></input>
-                </div>
-                <div class="floating-box theme3">
-                  <div style="color: white;">Moose</div>
-                  <input type="button" class="btnThemes" data-dismiss="modal" onclick="btn_theme_3()" value="Select"></input>
-                </div>
-                <div class="floating-box theme4">
-                  <div style="color: white;">Dark</div>
-                  <input type="button" class="btnThemes" data-dismiss="modal" onclick="btn_theme_4()" value="Select"></input>
-                </div>
-                <div class="floating-box theme5">
-                  <div style="color: white;">Colorful</div>
-                  <input type="button" class="btnThemes" data-dismiss="modal" onclick="btn_theme_5()" value="Select"></input>
-                </div>
-                <div class="floating-box theme6">
-                  <div style="color: white;">Glitter</div>
-                  <input type="button" class="btnThemes" data-dismiss="modal" onclick="btn_theme_6()" value="Select"></input>
-                </div>
-              </fieldset>
-            </form>
-          </div>
+              <form>
+                <fieldset>
+                  <div class="floating-box theme1">
+                    <div style="color: white;">Sunrise</div>
+                    <input type="button" class="btnThemes" data-dismiss="modal" onclick="btn_theme_1()" value="Select"></input>
+                  </div>
+                  <div class="floating-box theme2">
+                    <div style="color: white;">Purple</div>
+                    <input type="button" class="btnThemes" data-dismiss="modal" onclick="btn_theme_2()" value="Select"></input>
+                  </div>
+                  <div class="floating-box theme3">
+                    <div style="color: white;">Moose</div>
+                    <input type="button" class="btnThemes" data-dismiss="modal" onclick="btn_theme_3()" value="Select"></input>
+                  </div>
+                  <div class="floating-box theme4">
+                    <div style="color: white;">Dark</div>
+                    <input type="button" class="btnThemes" data-dismiss="modal" onclick="btn_theme_4()" value="Select"></input>
+                  </div>
+                  <div class="floating-box theme5">
+                    <div style="color: white;">Colorful</div>
+                    <input type="button" class="btnThemes" data-dismiss="modal" onclick="btn_theme_5()" value="Select"></input>
+                  </div>
+                  <div class="floating-box theme6">
+                    <div style="color: white;">Glitter</div>
+                    <input type="button" class="btnThemes" data-dismiss="modal" onclick="btn_theme_6()" value="Select"></input>
+                  </div>
+                </fieldset>
+              </form>
+            </div>
 
-          <div class="modal-footer">
-            <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#settingsModal" data-dismiss="modal">Back</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Password Change MODAL-->
-    <div class="modal" style="margin-top:150px;" id="setModal" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Password Change</h5>
-            <button type="button" class="close" data-dismiss="modal" onclick="clearSetModal()" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-
-            <form>
-              <fieldset id="fieldset_passChange">
-
-                <div class="form-group">
-                  <label for="in_profile_currentPass">Current Password</label>
-                  <input type="password" class="form-control" id="in_profile_currentPass" placeholder="Password">
-                </div>
-
-                <div class="form-group">
-                  <label for="in_profile_newPass">New Password</label>
-                  <input type="password" class="form-control" id="in_profile_newPass" onchange="passMatch()" placeholder="Password">
-                </div>
-
-                <div class="form-group">
-                  <label for="in_profile_confirmPass">Confirm Password</label>
-                  <input type="password" class="form-control" id="in_profile_confirmPass" onchange="passMatch()" placeholder="Password">
-                </div>
-
-
-              </fieldset>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#settingsModal" data-dismiss="modal">Back</button>
-            <button type="button" class="btn btn-outline-primary" onclick="btn_passChange()" data-dismiss="modal">Save</button>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#settingsModal" data-dismiss="modal">Back</button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- Delete Account MODAL-->
-    <div class="modal" style="margin-top:150px;" id="deleteAccountModal" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Delete 1ance Account</h4>
+      <!-- Password Change MODAL-->
+      <div class="modal" style="margin-top:150px;" id="setModal" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Password Change</h5>
               <button type="button" class="close" data-dismiss="modal" onclick="clearSetModal()" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
-          </div>
-          <div class="modal-body">
+            </div>
+            <div class="modal-body">
 
-            <form>
-              <fieldset id="fieldset_passChange">
+              <form>
+                <fieldset id="fieldset_passChange">
 
-                <div class="form-group">
-                  <label id="accountName"></label>
-                </div>
-                <div class="form-group">
-                  <input type="text" id="accountEmail"></label>
-                </div>
+                  <div class="form-group">
+                    <label for="in_profile_currentPass">Current Password</label>
+                    <input type="password" class="form-control" id="in_profile_currentPass" placeholder="Password">
+                  </div>
 
-                <div class="form-group">
-                  <label for="in_profile_currentPass">Enter Password</label>
-                  <input type="password" class="form-control" id="deleteAccountPass" placeholder="Password">
-                </div>
+                  <div class="form-group">
+                    <label for="in_profile_newPass">New Password</label>
+                    <input type="password" class="form-control" id="in_profile_newPass" onchange="passMatch()" placeholder="Password">
+                  </div>
+
+                  <div class="form-group">
+                    <label for="in_profile_confirmPass">Confirm Password</label>
+                    <input type="password" class="form-control" id="in_profile_confirmPass" onchange="passMatch()" placeholder="Password">
+                  </div>
 
 
-
-              </fieldset>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#settingsModal" data-dismiss="modal">Back</button>
-            <button type="button" class="btn btn-outline-primary" onclick="deleteAccount()" data-dismiss="modal">DELETE ACCOUNT</button>
+                </fieldset>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#settingsModal" data-dismiss="modal">Back</button>
+              <button type="button" class="btn btn-outline-primary" onclick="btn_passChange()" data-dismiss="modal">Save</button>
+            </div>
           </div>
         </div>
-
       </div>
-    </div>
+
+      <!-- Delete Account MODAL-->
+      <div class="modal" style="margin-top:150px;" id="deleteAccountModal" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Delete 1ance Account</h4>
+                <button type="button" class="close" data-dismiss="modal" onclick="clearSetModal()" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+
+              <form>
+                <fieldset id="fieldset_passChange">
+
+                  <div class="form-group">
+                    <label id="accountName"></label>
+                  </div>
+                  <div class="form-group">
+                    <input type="text" id="accountEmail"></label>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="in_profile_currentPass">Enter Password</label>
+                    <input type="password" class="form-control" id="deleteAccountPass" placeholder="Password">
+                  </div>
+
+
+
+                </fieldset>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#settingsModal" data-dismiss="modal">Back</button>
+              <button type="button" class="btn btn-outline-primary" onclick="deleteAccount()" data-dismiss="modal">DELETE ACCOUNT</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
     </div>
 
 

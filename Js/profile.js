@@ -94,6 +94,10 @@ function onLoad_profile() {
                             populate_profile(email);
                             document.getElementById("editProfileBtn").style.display = "block";
 
+                            // get reviews for this user
+                            $('.review.card.bg-secondary.mb-3').remove();
+                            getReviews(uID);
+
                             // notifications
                             getNumOfNewNotifs();
                             var background = localStorage.getItem("style");
@@ -464,10 +468,10 @@ function gotoUserProfile(otheruserid) {
     window.location.href = "profile.html?email=".concat(emailAdd, "&id=", otheruserid);
 }
 
-function getUserProfile(otheruserid) {
+function getUserProfile(userid) {
 
     // if the user is same as the one logged in, show edit and upload buttons.
-    if (otheruserid == uID) {
+    if (userid == uID) {
         document.getElementById("editProfileBtn").style.display = "block";
     }
     else {
@@ -483,7 +487,7 @@ function getUserProfile(otheruserid) {
             'content-type': 'application/json'
         },
         body: JSON.stringify({
-            "id": otheruserid,
+            "id": userid,
             "email": null
         })
 
@@ -501,6 +505,11 @@ function getUserProfile(otheruserid) {
                 userProfileID = json[0].idUsers;
                 otheruseremail = json[0].Email;
                 populate_profile(otheruseremail);
+
+                // get reviews
+                $('.review.card.bg-secondary.mb-3').remove();
+                getReviews(userID);
+
             }.bind(this));
         }
         else {
@@ -645,6 +654,8 @@ function writeReview() {
                 }
                 else {
                     confirm("Writing new review successful!");
+                    $('.review.card.bg-secondary.mb-3').remove();
+                    getReviews(otheruserid);
                     reloadProfile();
                 }
             }.bind(this));
@@ -660,6 +671,98 @@ function writeReview() {
         console.log(err.message + ": No Internet Connection");
     });
 }
+
+// get reviews for this user
+function getReviews(userid) {
+    fetch(urlGetReviews, {
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+            "idUser": userid
+        })
+    }).then(function (res) {
+        if (res.ok) {
+            res.json().then(function (data) {
+                console.log(data);
+                var numPost = Object.keys(data.response).length;
+                var json = data.response;
+
+                for (i = 0; i < numPost; i++) {
+                    createReviewCard(json[i].Rating, json[i].Review, json[i].byUserName, json[i].DatePosted, json[i].byUserID);
+                }
+            }.bind(this));
+        }
+        else {
+            alert("Error: Getting reviews for this user unsuccessful!");
+            res.json().then(function (data) {
+                console.log(data.message);
+            }.bind(this));
+        }
+    }).catch(function (err) {
+        alert("Error: No internet connection!");
+        console.log(err.message + ": No Internet Connection");
+    });
+}
+
+// This method creates new card under profile for each review retrieved 
+function createReviewCard(rating, review, byUserName, datePosted, byUserID) {
+
+    var rlist = document.getElementById('reviewsList');
+
+    /* review div */
+    var reviewDiv = document.createElement('div');
+    reviewDiv.setAttribute('class', 'review card bg-secondary');
+    reviewDiv.setAttribute('id', 'review');
+    //reviewDiv.style = "max-width: 200rem;";
+    reviewDiv.style = "margin:0%;";
+    rlist.appendChild(reviewDiv);
+
+    /* date posted */
+    var reviewDateDiv = document.createElement('div');
+    reviewDateDiv.setAttribute('class', 'card-header');
+    reviewDateDiv.setAttribute('id', 'reviewDate');
+    var d = new Date(datePosted);
+    datePosted = d.toDateString();
+    reviewDateDiv.innerHTML = datePosted;
+    reviewDateDiv.style = "text-align:right;";
+    reviewDiv.appendChild(reviewDateDiv);
+
+    /* Card Body div */
+    var cardBodyDiv = document.createElement('div');
+    cardBodyDiv.setAttribute('class', 'card-body');
+    reviewDiv.appendChild(cardBodyDiv);
+
+    /* Title h4 */
+    var titleH4 = document.createElement('h4');
+    titleH4.setAttribute('class', 'card-title text-capitalize');
+    titleH4.setAttribute('id', 'reviewer');
+    var str = "";
+    str = str.concat("<b style=\"color:black; font-weight:bold\"><a href='#' onclick=\"gotoUserProfile(", byUserID, ")\">", byUserName, "</a></b>");
+    titleH4.innerHTML = str;
+    cardBodyDiv.appendChild(titleH4);
+
+    /* Rating p */
+    var ratingP = document.createElement('p');
+    ratingP.setAttribute('class', 'card-text');
+    ratingP.setAttribute('id', 'ratingValue');
+    ratingP.innerHTML = rating;
+    cardBodyDiv.appendChild(ratingP);
+
+    /* Review blockquote */
+    var blockquote = document.createElement('blockquote');
+    blockquote.setAttribute('class', 'blockquote');
+    cardBodyDiv.appendChild(blockquote);
+
+    var reviewContent = document.createElement('footer');
+    reviewContent.setAttribute('class', 'blockquote-footer');
+    reviewContent.setAttribute('id', 'reviewContent');
+    reviewContent.innerHTML = review;
+    blockquote.appendChild(reviewContent);
+}
+
 
 // method to simply reload the page without losing query strings
 function reloadProfile() {

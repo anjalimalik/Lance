@@ -1593,7 +1593,7 @@ app.post('/getReviews', function (req, res) {
         return res.status(400).json({ message: "Missing Review Information" });
     }
 
-    let query = "SELECT * FROM Reviews WHERE idUsers = ? AND Review IS NOT NULL";
+    let query = "SELECT * FROM Reviews WHERE idUsers = ?";
 
     db.query(query, idUser, function (error, response) {
         if (error) {
