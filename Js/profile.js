@@ -718,7 +718,7 @@ function getReviews(userid) {
                 }
                 else {
                     for (i = 0; i < numReviews; i++) {
-                        createReviewCard(json[i].Rating, json[i].Review, json[i].byUserName, json[i].DatePosted, json[i].byUserID);
+                        createReviewCard(json[i].idReviews, json[i].Rating, json[i].Review, json[i].byUserName, json[i].DatePosted, json[i].byUserID);
                     }
                 }
             }.bind(this));
@@ -736,7 +736,7 @@ function getReviews(userid) {
 }
 
 // This method creates new card under profile for each review retrieved 
-function createReviewCard(rating, review, byUserName, datePosted, byUserID) {
+function createReviewCard(reviewID, rating, review, byUserName, datePosted, byUserID) {
 
     var rlist = document.getElementById('reviewsList');
 
@@ -748,15 +748,11 @@ function createReviewCard(rating, review, byUserName, datePosted, byUserID) {
     reviewDiv.style = "margin:0%;";
     rlist.appendChild(reviewDiv);
 
-    /* date posted */
-    var reviewDateDiv = document.createElement('div');
-    reviewDateDiv.setAttribute('class', 'card-header');
-    reviewDateDiv.setAttribute('id', 'reviewDate');
-    var d = new Date(datePosted);
-    datePosted = d.toDateString();
-    reviewDateDiv.innerHTML = datePosted;
-    reviewDateDiv.style = "text-align:right;";
-    reviewDiv.appendChild(reviewDateDiv);
+    /* header */
+    var headerDiv = document.createElement('div');
+    headerDiv.setAttribute('class', 'card-header');
+    headerDiv.style = "background-color:rgba(0,0,0,0.1); padding:0%; padding-top:1%;";
+    reviewDiv.appendChild(headerDiv);
 
     /* Card Body div */
     var cardBodyDiv = document.createElement('div');
@@ -772,12 +768,65 @@ function createReviewCard(rating, review, byUserName, datePosted, byUserID) {
     titleH4.innerHTML = str;
     cardBodyDiv.appendChild(titleH4);
 
-    /* Rating p */
+    /* date posted */
+    var reviewDate = document.createElement('p');
+    reviewDate.setAttribute('class', 'card-text');
+    reviewDate.setAttribute('id', 'reviewDate');
+    var d = new Date(datePosted);
+    datePosted = d.toDateString();
+    reviewDate.innerHTML = datePosted;
+    reviewDate.style = "display:inline-block; float:right; font-size:12px;";
+    titleH4.appendChild(reviewDate);
+
+    /* Rating */
     var ratingP = document.createElement('p');
-    ratingP.setAttribute('class', 'card-text');
-    ratingP.setAttribute('id', 'ratingValue');
-    ratingP.innerHTML = rating;
     cardBodyDiv.appendChild(ratingP);
+    /* Stars */
+    var starP1 = document.createElement('span');
+    starP1.setAttribute('class', 'fa fa-star');
+    var starID = "star1".concat(reviewID);
+    starP1.setAttribute('id', starID);
+    ratingP.appendChild(starP1);
+
+    var starP2 = document.createElement('span');
+    starP2.setAttribute('class', 'fa fa-star');
+    starID = "star2".concat(reviewID);
+    starP2.setAttribute('id', starID);
+    ratingP.appendChild(starP2);
+
+    var starP3 = document.createElement('span');
+    starP3.setAttribute('class', 'fa fa-star');
+    starID = "star3".concat(reviewID);
+    starP3.setAttribute('id', starID);
+    ratingP.appendChild(starP3);
+
+    var starP4 = document.createElement('span');
+    starP4.setAttribute('class', 'fa fa-star');
+    starID = "star4".concat(reviewID);
+    starP4.setAttribute('id', starID);
+    ratingP.appendChild(starP4);
+
+    var starP5 = document.createElement('span');
+    starP5.setAttribute('class', 'fa fa-star');
+    starID = "star5".concat(reviewID);
+    starP5.setAttribute('id', starID);
+    ratingP.appendChild(starP5);
+
+    // fill color in the stars using rating
+    var i = 1;
+    while(parseInt(rating) > i) {
+        starID = "star".concat(i, reviewID);
+        document.getElementById(starID).style = "color:gold;";
+        i = i + 1;
+    }
+    // if half a star
+    if (parseInt(rating) !== parseFloat(rating)) {
+        starID = "star".concat(i, reviewID);
+        document.getElementById(starID).className = "fa fa-star-half-o";
+        document.getElementById(starID).style = "color:gold;";
+    }
+    
+    /* Rating end */
 
     /* Review blockquote */
     var blockquote = document.createElement('blockquote');
