@@ -56,14 +56,15 @@
 
         <!-- Search for user-->
         <li class="nav-item" style="margin-right:0;">
-          <input type="text" style="height: 44px;  font-size: 20px; padding: 5%;" id="searchUserBar" placeholder="Enter user email or name...">
-            </li>
+          <input type="text" style="height: 44px; width: 300px; font-size: 15px; padding: 5%;" id="searchUserBar" placeholder="Enter user email or name...">
+        </li>
         <li class="nav-item">
-            <input type="button" class="btn btn-primary" onclick="runSearchForUsers()" style="font-size: 13px; border: 1px solid grey;" value="Search User"></input>
-          </li>
+          <input type="button" class="btn btn-primary" onclick="runSearchForUsers()" style="font-size: 13px; border: 1px solid grey;"
+            value="Search User"></input>
+        </li>
 
         <!-- Notifications -->
-        <li class="nav-item dropdown show" >
+        <li class="nav-item dropdown show">
           <a href="#" id="notifications_btn" onclick="displayNotifications()" class="notifications navbar-brand nav-link dropdown-toggle"
             data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="margin-left: 275%;">
             <img src="../css/Assets/notifications.png" width="20" height="20" alt="Notifications"></img>
@@ -310,7 +311,7 @@
         <!-- Search using keyword-->
         <div class="nav-item" style=" margin:0% 0% 5% 0%;">
           <input type="text" style="height: 25%; width: 70%; font-size: 15px; padding:4% 4% 4% 4%;" id="searchPostBar" placeholder="Enter keyword to search...">
-          <input type=button class="btn btn-primary" onclick="runSearchForPosts()()" value="Search" style="width: 30%; margin:-2% 0% 0% -2%; padding:4% 0% 4% 0%;"></input>
+          <input type=button class="btn btn-outline-primary" onclick="runSearchForPosts()()" value="Search" style="background-color: lightgrey; width: 30%; margin:-2% 0% 0% -2%; padding:4% 0% 4% 0%;"></input>
         </div>
 
         <!-- Price -->
@@ -368,7 +369,7 @@
           </div>
 
           <!-- Filter -->
-          <input type="button" value="Filter" id="btnFilter" class="btn btn-outline-primary" style="position: relative; margin-left: 160px; width: 120px; height: 40px; text-align: center;"
+          <input type="button" value="Filter" id="btnFilter" class="btn btn-outline-primary" style="background-color: lightgrey; position: relative; margin-left: 160px; width: 120px; height: 40px; text-align: center;"
             onclick="filterWRange()"></input>
         </div>
       </div>
@@ -389,7 +390,6 @@
 <!-- End New Post -->
 
 <style>
-
   #btnOffer {
     position: relative;
     display: inline;
@@ -426,7 +426,6 @@
    ::-webkit-input-placeholder {
     /* Chrome/Opera/Safari */
     font-size: 15px;
-    font-family: sans-serif;
   }
 </style>
 

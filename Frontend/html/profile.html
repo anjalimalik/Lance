@@ -36,36 +36,44 @@
         <li class="nav-item active">
           <a class="nav-link" href="#" onclick="goToHome()">Home <span class="sr-only">(current)</span></a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#" onclick="goToProfile('0')">Profile</a>
+        </li>
         <li class="nav-item active">
           <a class="nav-link" href="./about.html">About</a>
         </li>
 
-        <!-- Notifications -->
+        <!-- Search for user-->
+        <li class="nav-item" style="margin-right:0;">
+          <input type="text" style="height: 44px; width: 300px; font-size: 15px; padding: 5%;" id="searchUserBar" placeholder="Enter user email or name...">
+        </li>
+        <li class="nav-item">
+          <input type="button" class="btn btn-primary" onclick="runSearchForUsers()" style="font-size: 13px; border: 1px solid grey;"
+            value="Search User"></input>
+        </li>
 
+        <!-- Notifications -->
         <li class="nav-item dropdown show">
           <a href="#" id="notifications_btn" onclick="displayNotifications()" class="notifications navbar-brand nav-link dropdown-toggle"
-            data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="margin-left: 250px; margin-top:-5px;">
+            data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="margin-left: 275%;">
             <img src="../css/Assets/notifications.png" width="20" height="20" alt="Notifications"></img>
             <span id="counter" class="notification-counter" style="display:none;">0</span>
           </a>
-          <div id="notificationsToggle" class="dropdown-menu show" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 38px, 0px); top: 0px; margin-left: 200px; left: 355px; will-change: transform;">
-            <ul id="notif">
-
-            </ul>
-            <!-- <a class="dropdown-item" href="#">View all Notifications</a>-->
+          <div id="notificationsToggle" class="dropdown-menu show" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 45px, 0px); top: 0px; will-change: transform;">
+            <div id="notif">
+            </div>
           </div>
         </li>
-
+        <!-- End Notifications -->
 
         <!-- Options -->
 
-        <li class="nav-item dropdown show">
+        <li class="nav-item dropdown show" style="margin-left: 20%;">
           <a href="#" id="options_btn" onclick="displayOptions()" class="navbar-brand nav-link dropdown-toggle" data-toggle="dropdown"
-            role="button" aria-haspopup="true" aria-expanded="false" style="margin-left: 350px; margin-top:-5px;">
+            role="button" aria-haspopup="true" aria-expanded="false">
             <img src="../css/Assets/options.png" width="25" height="25" alt="Options"></img>
             <span class="caret"></span></a>
-          <div id="optionsToggle" class="dropdown-menu show" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 38px, 0px); top: 0px; left: 750px; will-change: transform;">
-            <!--<a class="dropdown-item" href="#">Log Out</a>-->
+          <div id="optionsToggle" class="dropdown-menu show" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 45px, 0px); top: 0px; will-change: transform;">
             <a class="dropdown-item btn btn-success btn-sm" style="font-size: 12px;" href="#" onclick="goToProfile('0')">View Profile</a>
             <div class="dropdown-divider"></div>
             <a href="#" class="dropdown-item btn btn-success btn-sm" style="margin-left: 0px; font-size: 12px;" onclick="btn_logout(email)">Logout</a>
@@ -87,8 +95,6 @@
         <button class="btn btn-secondary my-2 my-sm-0" type="submit" style="position: absolute; transform: translate3d(0px. 38px, 0px); top: 21.5px; left: 710px; will-change: transform;">Search</button>
       </form>
       -->
-
-
       <!-- End -->
 
     </div>
@@ -605,18 +611,6 @@
       font-weight: bold;
     }
 
-    #options_btn {
-      position: absolute;
-      left: 415px;
-      width: 92px;
-    }
-
-    #notifications_btn {
-      position: absolute;
-      left: 465px;
-      width: 136px;
-    }
-
     .notifications {
       position: relative;
     }
@@ -673,6 +667,11 @@
 
     .theme6 {
       background-image: url("../css/Assets/Glitter.jpg");
+    }
+
+     ::-webkit-input-placeholder {
+      /* Chrome/Opera/Safari */
+      font-size: 15px;
     }
   </style>
 
