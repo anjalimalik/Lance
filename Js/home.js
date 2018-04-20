@@ -1377,7 +1377,9 @@ function runSearchForUsers() {
         if (res.ok) {
 
             res.json().then(function (data) {
-                console.log(data.response);
+
+                // Create dropdown-items to select from 
+                // links should direct to the user profiles
                 var json = data.response;
                 var length = Object.keys(json).length;
                 var userSearchDiv = document.getElementById("usersearch");
@@ -1390,7 +1392,7 @@ function runSearchForUsers() {
                         var click = "gotoUserProfile(".concat(json[i].idUsers, ",", '1', ")");
                         lnk.setAttribute('onclick', click);
                         lnk.innerHTML = (json[i].FullName).concat("  (", json[i].Email, ")");
-                        lnk.style = "border-bottom: 1px solid #ccc; font-weight: bold; color:#333399;";
+                        lnk.style = "border-bottom: 1px solid #ccc;";
                         userSearchDiv.appendChild(lnk);
                     }
                 }
@@ -1401,12 +1403,17 @@ function runSearchForUsers() {
                     lnk.style = "border-bottom: 1px solid #ccc; font-weight: bold; margin-left:0;";
                     userSearchDiv.appendChild(lnk);
                 }
-                if (document.getElementById("searchUserToggle").style.display == "none") {
-                    document.getElementById("searchUserToggle").style.display = "block";
-                }
-                else {
-                    document.getElementById("searchUserToggle").style.display = "none";
-                }
+
+                // show the dropdown
+                document.getElementById("searchUserToggle").style.display = "block";
+
+                // if clicked anywhere else, hide the dropdown list
+                $(document).on('click', function(e) {
+                    if (e.target.id !== 'searchUserToggle') {
+                        $('#searchUserToggle').hide();
+                    }
+            
+                })
             });
         }
         else {
@@ -1502,6 +1509,14 @@ function getNotifications() {
                     listNotifs.style = "border-bottom: 1px solid #ccc; text-align:center; color:#333399; font-weight: bold;";
                     document.getElementById("notif").appendChild(listNotifs);
                 }
+
+                // if clicked anywhere else, hide the dropdown list
+                $(document).on('click', function(e) {
+                    if (e.target.id !== 'notificationsToggle') {
+                        $('#notificationsToggle').hide();
+                    }
+            
+                })
 
             }.bind(this));
         }

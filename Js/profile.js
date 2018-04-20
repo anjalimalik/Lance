@@ -193,6 +193,14 @@ function displayOptions() {
     } else {
         x.style.display = "none";
     }
+
+    // if clicked anywhere else, hide the dropdown list
+    $(document).on('click', function(e) {
+        if (e.target.id !== 'optionsToggle') {
+            $('#optionsToggle').hide();
+        }
+
+    })
 }
 
 function displayNotifications() {
@@ -204,6 +212,14 @@ function displayNotifications() {
     } else {
         x.style.display = "none";
     }
+
+    // if clicked anywhere else, hide the dropdown list
+    $(document).on('click', function(e) {
+        if (e.target.id !== 'notificationsToggle') {
+            $('#notificationsToggle').hide();
+        }
+
+    })
 
     // function to get notifications
     getNotifications();
