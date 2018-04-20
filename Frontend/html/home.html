@@ -54,14 +54,22 @@
           <a class="nav-link" href="about.html">About</a>
         </li>
 
+        <!-- Search for user-->
+        <li class="nav-item" style="margin-right:0;">
+          <input type="text" style="height: 44px;  font-size: 20px; padding: 5%;" id="searchUserBar" placeholder="Enter user email or name...">
+            </li>
+        <li class="nav-item">
+            <input type="button" class="btn btn-primary" onclick="runSearch()" style="font-size: 13px; border: 1px solid grey;" value="Search User"></input>
+          </li>
+
         <!-- Notifications -->
-        <li class="nav-item dropdown show" style="margin-left: 5%">
+        <li class="nav-item dropdown show" >
           <a href="#" id="notifications_btn" onclick="displayNotifications()" class="notifications navbar-brand nav-link dropdown-toggle"
-            data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+            data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="margin-left: 275%;">
             <img src="../css/Assets/notifications.png" width="20" height="20" alt="Notifications"></img>
             <span id="counter" class="notification-counter" style = "display: none;">0</span>
           </a>
-          <div id="notificationsToggle" class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 38px, 0px);top: 0px; will-change: transform;">
+          <div id="notificationsToggle" class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 45px, 0px); top: 0px; will-change: transform;">
             <div id="notif">
 
             </div>
@@ -71,12 +79,12 @@
         <!-- End Notifications -->
 
         <!-- Options -->
-        <li class="nav-item dropdown show" style="margin-left: 10%">
+        <li class="nav-item dropdown show" style="margin-left: 20%;">
           <a href="#" id="options_btn" onclick="displayOptions()" class="navbar-brand nav-link dropdown-toggle" data-toggle="dropdown"
             role="button" aria-haspopup="true" aria-expanded="false">
             <img src="../css/Assets/options.png" width="25" height="25" alt="Options"></img>
             <span class="caret"></span></a>
-          <div id="optionsToggle" class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 38px, 0px); top: 0px; will-change: transform;">
+          <div id="optionsToggle" class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 45px, 0px); top: 0px; will-change: transform;">
             <a class="dropdown-item btn btn-success btn-sm" style="font-size: 12px;" href="#" onclick="goToProfile()">View Profile</a>
             <div class="dropdown-divider"></div>
             <a href="#" class="dropdown-item btn btn-success btn-sm" style="font-size: 12px;" onclick="btn_logout(emailAdd)">Logout</a>
@@ -301,9 +309,9 @@
 
         <!-- Search using keyword-->
         <div class="nav-item" style=" margin:0% 0% 5% 0%;">
-            <input type="text" style="display: inline-block; height: 25%; width: 70%; font-size: 15px; padding:4% 4% 4% 4%;" id="searchBar" placeholder="Enter keyword to search...">
-            <input type=button class="btn btn-primary" onclick="runSearch()" value="Search" style="display: inline-block; width: 30%; margin:-2% 0% 0% -2%; padding:4% 0% 4% 0%;"></input>
-          </div>
+          <input type="text" style="height: 25%; width: 70%; font-size: 15px; padding:4% 4% 4% 4%;" id="searchBar" placeholder="Enter keyword to search...">
+          <input type=button class="btn btn-primary" onclick="runSearch()" value="Search" style="width: 30%; margin:-2% 0% 0% -2%; padding:4% 0% 4% 0%;"></input>
+        </div>
 
         <!-- Price -->
         <h5 style="position: relative; left: 110px;"> Price </h5>
@@ -381,17 +389,6 @@
 <!-- End New Post -->
 
 <style>
-  #options_btn {
-    position: absolute;
-    left: 415px;
-    width: 92px;
-  }
-
-  #notifications_btn {
-    position: absolute;
-    left: 465px;
-    width: 136px;
-  }
 
   #btnOffer {
     position: relative;
@@ -426,8 +423,8 @@
     font: 11px Verdana;
   }
 
-  ::-webkit-input-placeholder { /* Chrome/Opera/Safari */
-    
+   ::-webkit-input-placeholder {
+    /* Chrome/Opera/Safari */
     font-size: 15px;
     font-family: sans-serif;
   }
