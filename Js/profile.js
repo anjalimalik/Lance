@@ -224,7 +224,7 @@ function displayOptions() {
     }
 }
 
-function displayNotifications() {
+function displayNotifications(em) {
     document.getElementById("optionsToggle").style.display = "none";
     var x = document.getElementById("notificationsToggle");
 
@@ -235,7 +235,7 @@ function displayNotifications() {
     }
 
     // function to get notifications
-    getNotifications();
+    getNotifications(em);
     document.getElementById('counter').style.display = "none";// remove counter
     document.getElementById('counter').innerHTML = 0;
 }

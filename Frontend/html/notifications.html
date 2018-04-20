@@ -30,26 +30,30 @@
     <div class="collapse navbar-collapse" id="navbarColor01">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item active">
-          <a class="nav-link" href="#" onclick="goToHome()">Home <span class="sr-only">(current)</span></a>
+          <a class="nav-link" href="#" onclick="backToHome()">Home <span class="sr-only">(current)</span></a>
         </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="#" onclick="backToProfile()">Profile</a>
+        </li>
+
         <li class="nav-item">
           <a class="nav-link" href="./about.html">About</a>
         </li>
-        
+
         <!-- Options -->
-
-        <li class="nav-item dropdown show">
-          <a href="#" id="options_btn" onclick="displayOptions()" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button"
-            aria-haspopup="true" aria-expanded="false" style="margin-left: 305px;">Options <span class="caret"></span></a>
-          <div id="optionsToggle" class="dropdown-menu show" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 38px, 0px); top: 0px; left: 705px; will-change: transform;">
-            <a href="#" class="dropdown-item btn btn-success btn-sm" style="margin-left: 0px; font-size: 12px;" onclick="btn_logout()">Logout</a>
-
-            <div class="dropdown-divider"></div>
-            <button type="button" class="dropdown-item btn btn-success btn-sm" style="margin-left: 0px; font-size: 12px;" data-toggle="modal"
-              data-target="#settingsModal">Settings</button>
-          </div>
-        </li>
-
+        <li class="nav-item dropdown show" style="margin-left: 180%;">
+            <a href="#" id="options_btn" onclick="document.getElementById('options_btn').style.display='block';" class="navbar-brand nav-link dropdown-toggle" data-toggle="dropdown"
+              role="button" aria-haspopup="true" aria-expanded="false">
+              <img src="../css/Assets/options.png" width="25" height="25" alt="Options"></img>
+              <span class="caret"></span></a>
+            <div id="optionsToggle" class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 45px, 0px); top: 0px; will-change: transform;">
+              <a class="dropdown-item btn btn-success btn-sm" style="font-size: 12px;" href="#" onclick="backToProfile()">View Profile</a>
+              <div class="dropdown-divider"></div>
+              <a href="#" class="dropdown-item btn btn-success btn-sm" style="font-size: 12px;" onclick="btn_logout(em)">Logout</a>
+            </div>
+          </li>
+          <!-- End Options -->
         <!-- End -->
       </ul>
 
@@ -87,6 +91,7 @@
     <script src="./../vendor/jquery/jquery.min.js"></script>
     <script src="./../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
+    <script src="./../../Js/index.js"></script>
     <script src="./../../Js/notificationsPage.js"></script>
 
 

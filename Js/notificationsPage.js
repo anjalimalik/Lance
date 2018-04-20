@@ -1,19 +1,30 @@
 var urlAllNotifications = "http://localhost:5500/getAllNotifications";
 
+var em = ""; // email
+var id = ""; // user id
+
 // onload
 function onLoad_Notifications() {
 
     // get user id
     var url = window.location.href;
-    var str = url.split("?");
+    var str = url.split("?email=");
 
-    var id = str[1];
-    if (id === null) {
+    em = str[1];
+    if (em === null) {
         alert("You have to be logged in first!");
         window.location.href = "index.html";
     }
-    else if (id.includes("#")) {
-        id = id.replace("#", "");
+    else if (em.includes("&")) {
+        str = em.split("&id=");
+        em = str[0];
+        id = str[1];
+        if (id.includes("#")) {
+            id = id.replace("#", "");
+        }
+    }
+    else if (em.includes("#")) {
+        em = em.replace("#", "");
     }
 
     getAllNotifications(id);
@@ -90,4 +101,12 @@ function getAllNotifications(id) {
         alert("Error: No internet connection!");
         console.log(err.message + ": No Internet Connection");
     });
+}
+
+function backToHome() {
+
+}
+
+function backToProfile() {
+    
 }

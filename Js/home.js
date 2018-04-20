@@ -1494,7 +1494,7 @@ function closeEditPostModal() {
 }
 
 // get notifications in dropdown list
-function getNotifications() {
+function getNotifications(em) {
 
     fetch(urlNewNotifications, {
         method: "POST",
@@ -1531,7 +1531,7 @@ function getNotifications() {
                     var listNotifs = document.createElement("a");
                     listNotifs.setAttribute('class', 'notifClass dropdown-item');
                     listNotifs.innerHTML = "See All";
-                    var notificationsPage = "./notifications.html?".concat(uID);
+                    var notificationsPage = "./notifications.html?email=".concat(em, "&id=", uID);
                     listNotifs.setAttribute('href', notificationsPage);
                     listNotifs.style = "border-bottom: 1px solid #ccc; text-align:center; color:#333399; font-weight: bold;";
                     document.getElementById("notif").appendChild(listNotifs);
@@ -1548,7 +1548,7 @@ function getNotifications() {
                     var listNotifs = document.createElement("a");
                     listNotifs.setAttribute('class', 'notifClass dropdown-item');
                     listNotifs.innerHTML = "See All";
-                    var notificationsPage = "./notifications.html?".concat(uID);
+                    var notificationsPage = "./notifications.html?email=".concat(em, "&id=", uID);
                     listNotifs.setAttribute('href', notificationsPage);
                     listNotifs.style = "border-bottom: 1px solid #ccc; text-align:center; color:#333399; font-weight: bold;";
                     document.getElementById("notif").appendChild(listNotifs);
