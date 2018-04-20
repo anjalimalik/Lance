@@ -46,8 +46,6 @@ function onLoad_profile() {
     // give ratings
     giveRatings();
 
-    
-
     documentReadyProfile();  // activate event listeners 
 
     
@@ -121,8 +119,6 @@ function onLoad_profile() {
                             // notifications
                             getNumOfNewNotifs();
 
-                            var background = localStorage.getItem("style");
-                            document.body.style.backgroundColor = background;
                         }.bind(this));
                     }
                     else {
