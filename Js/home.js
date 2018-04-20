@@ -1302,7 +1302,13 @@ function expandCreatePModal(category, edit) {
 function runSearchForPosts() {
 
     key = document.getElementById("searchPostBar").value;
-    
+
+    // if key is empty
+    if (!key) {
+        alert("Keyword for searching posts cannot be empty!");
+        return;
+    }
+
     fetch(urlSearch, {
         method: "POST",
         headers: {
@@ -1311,19 +1317,20 @@ function runSearchForPosts() {
         },
         body: JSON.stringify({
             "key": key,
+            "search" : "post"
         })
 
     }).then(function (res) {
         if (res.ok) {
-            
+
             res.json().then(function (data) {
-                
+
                 var numPost = Object.keys(data.response).length;
                 var json = data.response;
-
                 /*
                 var ul = document.getElementById('news_card_list');
                 ul.innerHTML = "";*/
+                $('.card_list_el').remove();
 
                 for (i = 0; i < numPost; i++) {
                     createPostCard(json[i].UserName, json[i].Content, json[i].Headline, json[i].PostingType, json[i].money, json[i].idPosts, json[i].DatePosted, json[i].numLikes, json[i].Category, json[i].Attributes, json[i].UserID);
@@ -1341,6 +1348,48 @@ function runSearchForPosts() {
         console.log(err.message + ": No Internet Connection");
     });
 }
+
+// Perform search on posts using keywords
+function runSearchForUsers() {
+
+    key = document.getElementById("searchUserBar").value;
+
+    // if key is empty
+    if (!key) {
+        alert("Keyword for searching users cannot be empty!");
+        return;
+    }
+
+    fetch(urlSearch, {
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+            "key": key,
+            "search": "user"
+        })
+
+    }).then(function (res) {
+        if (res.ok) {
+
+            res.json().then(function (data) {
+                console.log(data.response);
+            });
+        }
+        else {
+            alert("Error: couldn't run search");
+            res.json().then(function (data) {
+                console.log(data.message);
+            }.bind(this));
+        }
+    }).catch(function (err) {
+        alert("Error: No internet connection!");
+        console.log(err.message + ": No Internet Connection");
+    });
+}
+
 
 // close new post modal and remove previous enteries
 function closeNewPostModal() {

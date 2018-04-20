@@ -1337,49 +1337,37 @@ app.post('/EditPost', function (req, res) {
     });
 });
 
-//Run Search
+// Run Search for Posts or Users
 app.post('/runSearch', function (req, res) {
 
+    var search = req.body.search;
     var key = req.body.key;
+
+    if (!key || !search) {
+        return res.status(400).json({ message: "Missing Information for Searching" });
+    }
 
     key = "%" + key + "%";
 
-    if (key == "") {
-
-        let query = 'SELECT * FROM Posts ORDER BY DatePosted DESC';
-
-        db.query(query, (error, response) => {
-
-            if (error) {
-                res.send(JSON.stringify({
-                    "status": 500,
-                    "error": error,
-                    "message": "Internal server error",
-                    "response": null
-                }));
-            }
-
-            else {
-                res.send(JSON.stringify({
-                    "status": 200,
-                    "error": null,
-                    "response": response,
-                    "message": "Success! All posts retrived."
-                }));
-            }
-        });
+    var dbQuery = "";
+    if (search == "post") {
+        dbQuery = "SELECT * FROM Posts WHERE Headline LIKE ? OR Content LIKE ?";
     }
-
-    var dbQuery = "SELECT * FROM Posts WHERE Headline LIKE ? OR Content LIKE ?";
+    else if (search == "user") {
+        dbQuery = "SELECT idUsers, FullName FROM Users WHERE FullName LIKE ? OR Email LIKE ?";
+    }
+    else {
+        return res.status(400).json({ message: "Invalid Search Type" });
+    }
     var requestParams = [key, key];
 
     db.query(dbQuery, requestParams, function (err, result) {
 
         if (err) {
-            return res.status(500).json({ message: "Internal server error" });
+            res.send(JSON.stringify({"status": 500, "error": err, "response": null, "message": "Internal server error" }));
         }
 
-        return res.status(200).json({ response: result });
+        res.send(JSON.stringify({"status": 200, "error": null, "response": result, "message": "Success! Matching Posts/Users retrieved!" }));
     });
 });
 
