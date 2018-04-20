@@ -1364,10 +1364,10 @@ app.post('/runSearch', function (req, res) {
     db.query(dbQuery, requestParams, function (err, result) {
 
         if (err) {
-            res.send(JSON.stringify({"status": 500, "error": err, "response": null, "message": "Internal server error" }));
+            res.send(JSON.stringify({ "status": 500, "error": err, "response": null, "message": "Internal server error" }));
         }
 
-        res.send(JSON.stringify({"status": 200, "error": null, "response": result, "message": "Success! Matching Posts/Users retrieved!" }));
+        res.send(JSON.stringify({ "status": 200, "error": null, "response": result, "message": "Success! Matching Posts/Users retrieved!" }));
     });
 });
 
@@ -1654,4 +1654,28 @@ app.post('/getSortedReviews', (req, res) => {
     });
 });
 
+
+// Theme for the user
+app.post('/setTheme', function (req, res) {
+
+    var id = req.body.id;
+    var theme = req.body.theme;
+
+    if (!id || !theme) {
+        return res.status(400).json({ message: "Missing information for setting theme" });
+    }
+
+    // set theme in Users table
+    let query = "UPDATE Users SET Theme = ? WHERE idUsers = ?";
+    let params = [theme, id];
+
+    db.query(query, params, (err, result) => {
+        if (err) {
+            res.send(JSON.stringify({ "status": 500, "error": err, "response": null, "message": "Internal server error" }));
+        }
+        else {
+            res.send(JSON.stringify({"status": 200,"error": null, "response": result, "message": "Success! Theme set for this user!" }));
+        }
+    });
+});
 
