@@ -9,16 +9,16 @@ var urlFilterPosts = "http://localhost:5500/getFilteredPosts"
 var urlCreatePost = "http://localhost:5500/CreatePost"
 var urlCatAttributes = "http://localhost:5500/getCatAttributes";
 var urlEditPost = "http://localhost:5500/EditPost";
-var urlUserID = "http://localhost:5500/getUserID";
-var urlAllNotifications = "http://localhost:5500/getAllNotifications"
+var urlUserDetails = "http://localhost:5500/getUserDetails";
 var urlNewNotifications = "http://localhost:5500/getNewNotifications";
 var urlOwnerIDofPost = "http://localhost:5500/getOwnerIDofPost";
 var urlSearch = "http://localhost:5500/runSearch";
 
-var emailAdd;
+var emailAdd = null;
 var uID = "";
 var numNotifs = 0;
 var OwnerIDofPost = 0;
+var th = "";
 
 function onLoad_home() {
     var url = window.location.href;
@@ -26,13 +26,16 @@ function onLoad_home() {
     emailAdd = str[1];
     console.log(emailAdd);
 
-    if (emailAdd == null) {
+    if (emailAdd == null || emailAdd == "" || emailAdd == "undefined" || !emailAdd.includes("@purdue.edu")) {
         alert("You have to be logged in first!");
         window.location.href = "index.html";
     } else if (emailAdd.includes("#")) {
         emailAdd = emailAdd.replace("#", "");
     }
-    fetch(urlUserID, {
+
+    documentReadyHome();  // event listeners 
+
+    fetch(urlUserDetails, {
         method: "POST",
         headers: {
             'Accept': 'application/json',
@@ -49,6 +52,10 @@ function onLoad_home() {
                 uID = data.response[0].idUsers;
                 getNumOfNewNotifs(); // get num of notifs
                 getAllPosts();
+
+                // get theme
+                th = data.response[0].Theme;
+                getTheme(th, '1');
             }.bind(this));
         }
         else {
@@ -81,6 +88,39 @@ function getAllPosts() {
 
             console.log(data.message);
         });
+}
+
+function documentReadyHome() {
+    // Execute a function when the user releases a key on the keyboard
+    document.getElementById("searchUserBar1").addEventListener("keyup", function (event) {
+        // Number 13 is the "Enter" key on the keyboard
+        if (event.keyCode === 13) {
+            // Trigger the button element with a click
+            document.getElementById("userSearchBtn1").click();
+        }
+    });
+
+    document.getElementById("searchPostBar").addEventListener("keyup", function (event) {
+        if (event.keyCode === 13) {
+            document.getElementById("postSearchBtn").click();
+        }
+    });
+
+    // if clicked anywhere else, hide the dropdown list
+    $(document).on('click', function (e) {
+        if (e.target.id !== 'optionsToggle') {
+            $('#optionsToggle').hide();
+        }
+
+    });
+
+    // if clicked anywhere else, hide the dropdown list
+    $(document).on('click', function (e) {
+        if (e.target.id !== 'notificationsToggle') {
+            $('#notificationsToggle').hide();
+        }
+
+    });
 }
 
 // CREATE A NEW CARD FOR EVERY POST FROM SERVER (/getPosts)
@@ -135,7 +175,7 @@ function createPostCard(user, content, headline, postingType, price, postID, dat
     /* Offer/Request */
     var ReqOff = document.createElement("p");
     var str = postingType.concat(" by ", "<b style=\"", "color:#333399; font-weight:bold\">", "<a href='#' onclick=\"gotoUserProfile(", userid, ",", 1, ")\">", user, "</a></b>");
-    ReqOff.style = "font-family:monaco;font-size:14px;color:#666699;float:left;";
+    ReqOff.style = "font-family:monaco;font-size:14px;float:left;";
     ReqOff.innerHTML = str;
     divHeader.appendChild(ReqOff);
 
@@ -1317,7 +1357,7 @@ function runSearchForPosts() {
         },
         body: JSON.stringify({
             "key": key,
-            "search" : "post"
+            "search": "post"
         })
 
     }).then(function (res) {
@@ -1350,9 +1390,16 @@ function runSearchForPosts() {
 }
 
 // Perform search on posts using keywords
-function runSearchForUsers() {
+function runSearchForUsers(from) {
+    $('.searchClass.dropdown-item').remove();
+    $('.searchClass.dropdown-item.half-rule').remove();
 
-    key = document.getElementById("searchUserBar").value;
+    if (from == '0') {
+        key = document.getElementById("searchUserBar2").value;
+    }
+    else {
+        key = document.getElementById("searchUserBar1").value;
+    }
 
     // if key is empty
     if (!key) {
@@ -1375,7 +1422,43 @@ function runSearchForUsers() {
         if (res.ok) {
 
             res.json().then(function (data) {
-                console.log(data.response);
+
+                // Create dropdown-items to select from 
+                // links should direct to the user profiles
+                var json = data.response;
+                var length = Object.keys(json).length;
+                var userSearchDiv = document.getElementById("usersearch");
+
+                if (length != 0) {
+                    for (i = 0; i < length; i++) {
+                        var lnk = document.createElement("a");
+                        lnk.setAttribute('class', 'searchClass dropdown-item');
+                        lnk.setAttribute('href', '#');
+                        var click = "gotoUserProfile(".concat(json[i].idUsers, ",", from, ")");
+                        lnk.setAttribute('onclick', click);
+                        lnk.innerHTML = (json[i].FullName).concat("  (", json[i].Email, ")");
+                        lnk.style = "border-bottom: 1px solid #ccc; font-weight: bold; overflow: scroll;";
+                        userSearchDiv.appendChild(lnk);
+                    }
+                }
+                else if (length == 0) {
+                    var lnk = document.createElement("a");
+                    lnk.setAttribute('class', 'searchClass dropdown-item half-rule');
+                    lnk.innerHTML = "No matching users found!";
+                    lnk.style = "border-bottom: 1px solid #ccc; font-weight: bold; margin-left:0;";
+                    userSearchDiv.appendChild(lnk);
+                }
+
+                // show the dropdown
+                document.getElementById("searchUserToggle").style.display = "block";
+
+                // if clicked anywhere else, hide the dropdown list
+                $(document).on('click', function (e) {
+                    if (e.target.id !== 'searchUserToggle') {
+                        $('#searchUserToggle').hide();
+                    }
+
+                })
             });
         }
         else {
@@ -1416,7 +1499,7 @@ function closeEditPostModal() {
 }
 
 // get notifications in dropdown list
-function getNotifications() {
+function getNotifications(em) {
 
     fetch(urlNewNotifications, {
         method: "POST",
@@ -1453,6 +1536,8 @@ function getNotifications() {
                     var listNotifs = document.createElement("a");
                     listNotifs.setAttribute('class', 'notifClass dropdown-item');
                     listNotifs.innerHTML = "See All";
+                    var notificationsPage = "./notifications.html?email=".concat(em, "&id=", uID, "&th=", th);
+                    listNotifs.setAttribute('href', notificationsPage);
                     listNotifs.style = "border-bottom: 1px solid #ccc; text-align:center; color:#333399; font-weight: bold;";
                     document.getElementById("notif").appendChild(listNotifs);
                 }
@@ -1468,9 +1553,19 @@ function getNotifications() {
                     var listNotifs = document.createElement("a");
                     listNotifs.setAttribute('class', 'notifClass dropdown-item');
                     listNotifs.innerHTML = "See All";
+                    var notificationsPage = "./notifications.html?email=".concat(em, "&id=", uID, "&th=", th);
+                    listNotifs.setAttribute('href', notificationsPage);
                     listNotifs.style = "border-bottom: 1px solid #ccc; text-align:center; color:#333399; font-weight: bold;";
                     document.getElementById("notif").appendChild(listNotifs);
                 }
+
+                // if clicked anywhere else, hide the dropdown list
+                $(document).on('click', function (e) {
+                    if (e.target.id !== 'notificationsToggle') {
+                        $('#notificationsToggle').hide();
+                    }
+
+                })
 
             }.bind(this));
         }
@@ -1484,7 +1579,6 @@ function getNotifications() {
         alert("Error: No internet connection!");
         console.log(err.message + ": No Internet Connection");
     });
-
 }
 
 // redirect to profile

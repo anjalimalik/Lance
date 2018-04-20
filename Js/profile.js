@@ -2,18 +2,20 @@ var email, pass, name, edu, skills, desc, contact, links, pic, docs, userProfile
 var urlChangePass = "http://localhost:5500/changePassword"
 var urlGetProfile = "http://localhost:5500/getProfile"
 var urlUpload = "http://localhost:5500/api/upload";
-var urlUserID = "http://localhost:5500/getUserID";
+var urlUserDetails = "http://localhost:5500/getUserDetails";
 var urlNumNewNotifs = "http://localhost:5500/getNumNotifications";
 var urlDeleteAccount = "http://localhost:5500/DeleteUser";
 var urlWriteReview = "http://localhost:5500/WriteReview";
 var urlGetReviews = "http://localhost:5500/getReviews";
 var urlGetSortedReviews = "http://localhost:5500/getSortedReviews";
 var urlGetAverageRating = "http://localhost:5500/getAverageRating";
+var urlSetTheme = "http://localhost:5500/setTheme";
 
 var uID = "";
 var ratingSelected = 0;
 var otheruserid = null;
 var otherusername = null;
+var th = "";
 
 function onLoad_profile() {
 
@@ -44,8 +46,10 @@ function onLoad_profile() {
     // give ratings
     giveRatings();
 
-    // get user id
-    fetch(urlUserID, {
+    documentReadyProfile();  // activate event listeners 
+
+    // get user id and theme
+    fetch(urlUserDetails, {
         method: "POST",
         headers: {
             'Accept': 'application/json',
@@ -60,6 +64,10 @@ function onLoad_profile() {
             res.json().then(function (data) {
                 console.log("Inside res.ok. User ID retrieved");
                 uID = data.response[0].idUsers;
+
+                // get theme
+                th = data.response[0].Theme;
+                getTheme(th, '0');
 
                 // if visiting another user's profile, get their profile
                 if (otheruserid) {
@@ -139,6 +147,33 @@ function onLoad_profile() {
     document.getElementById("img_profile").src = "./../css/Assets/user_icon.jpg";
 }
 
+function documentReadyProfile() {
+    // Execute a function when the user releases a key on the keyboard
+    document.getElementById("searchUserBar2").addEventListener("keyup", function (event) {
+        // Number 13 is the "Enter" key on the keyboard
+        if (event.keyCode === 13) {
+            // Trigger the button element with a click
+            document.getElementById("userSearchBtn2").click();
+        }
+    });
+
+    // if clicked anywhere else, hide the dropdown list
+    $(document).on('click', function (e) {
+        if (e.target.id !== 'optionsToggle') {
+            $('#optionsToggle').hide();
+        }
+
+    });
+
+    // if clicked anywhere else, hide the dropdown list
+    $(document).on('click', function (e) {
+        if (e.target.id !== 'notificationsToggle') {
+            $('#notificationsToggle').hide();
+        }
+
+    });
+}
+
 // to get notifications counter
 function getNumOfNewNotifs() {
 
@@ -195,7 +230,7 @@ function displayOptions() {
     }
 }
 
-function displayNotifications() {
+function displayNotifications(em) {
     document.getElementById("optionsToggle").style.display = "none";
     var x = document.getElementById("notificationsToggle");
 
@@ -206,7 +241,7 @@ function displayNotifications() {
     }
 
     // function to get notifications
-    getNotifications();
+    getNotifications(em);
     document.getElementById('counter').style.display = "none";// remove counter
     document.getElementById('counter').innerHTML = 0;
 }
@@ -465,19 +500,19 @@ function setFullStarState(target) {
 }
 /* Star ratings end */
 
-function gotoUserProfile(otheruserid, from) {
+function gotoUserProfile(id, from) {
 
     // no need to add id string if own's profile
-    if (otheruserid == uID) {
-        goToProfile('0');
+    if (id == uID) {
+        goToProfile(from);
         return;
     }
 
-    if (from == 0) {
-        window.location.href = "profile.html?email=".concat(email, "&id=", otheruserid);
+    if (from == '0') {
+        window.location.href = "profile.html?email=".concat(email, "&id=", id);
     }
     else {
-        window.location.href = "profile.html?email=".concat(emailAdd, "&id=", otheruserid);
+        window.location.href = "profile.html?email=".concat(emailAdd, "&id=", id);
     }
 }
 
@@ -549,47 +584,130 @@ function getUserProfile(userid) {
 
 }
 
-function btn_theme_1() {
-    var theme = "url('../css/Assets/Sunrise.jpg')";
-    var textcolor = '#cc6600';
-    changeTheme(theme, textcolor);
+function selectTheme(selected) {
+
+    // theme selection
+    switch (selected) {
+        case "sunrise":
+            var theme = "url('../css/Assets/Sunrise.jpg')";
+            var textcolor = '#cc6600';
+            break;
+        case "purple":
+            var theme = "url('../css/Assets/Purple.jpg')";
+            var textcolor = '#3333cc';
+            break;
+        case "moose":
+            var theme = "url('../css/Assets/Moose.jpg')";
+            var textcolor = '#006699';
+            break;
+        case "dark":
+            var theme = "url('../css/Assets/Dark.jpg')";
+            document.getElementById("editProfileBtn").style.color = "white";
+            var textcolor = '#00284d';
+            break;
+        case "colorful":
+            var theme = "url('../css/Assets/Colorful.jpg')";
+            var textcolor = '#6600cc';
+            break;
+        case "glitter":
+            var theme = "url('../css/Assets/Glitter.jpg')";
+            var textcolor = '#000099';
+            break;
+        default:
+            var theme = null;
+    }
+
+    fetch(urlSetTheme, {
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+            "id": uID,
+            "theme": selected
+        })
+    }).then(function (res) {
+        if (res.ok) {
+            res.json().then(function (data) {
+                th = selected;
+                if (theme) {
+                    getTheme(selected, '0');
+                }
+                else {
+                    reloadProfile();
+                }
+            }.bind(this));
+        }
+        else {
+            alert("Error: Setting theme unsuccessful!");
+            res.json().then(function (data) {
+                console.log(data.message);
+            }.bind(this));
+        }
+    }).catch(function (err) {
+        alert("Error: No internet connection!");
+        console.log(err.message + ": No Internet Connection");
+    });
+
 }
 
-function btn_theme_2(theme) {
-    var theme = "url('../css/Assets/Purple.jpg')";
-    var textcolor = '##3333cc';
-    changeTheme(theme, textcolor);
-}
-function btn_theme_3(theme) {
-    var theme = "url('../css/Assets/Moose.jpg')";
-    var textcolor = '#006699';
-    changeTheme(theme, textcolor);
-}
-function btn_theme_4(theme) {
-    var theme = "url('../css/Assets/Dark.jpg')";
-    document.getElementById("editProfileBtn").style.color = "white";
-    var textcolor = '#00284d';
-    changeTheme(theme, textcolor);
-}
-function btn_theme_5(theme) {
-    var theme = "url('../css/Assets/Colorful.jpg')";
-    var textcolor = '#6600cc';
-    changeTheme(theme, textcolor);
-}
-function btn_theme_6(theme) {
-    var theme = "url('../css/Assets/Glitter.jpg')";
-    var textcolor = '#000099';
-    changeTheme(theme, textcolor);
+function getTheme(key, from) {
+    // check for null
+    if (!key || key == "default") {
+        // do nothing
+        // default
+        return;
+    }
+
+    if (from === '0') { // only when on profile.html
+        document.getElementById("editProfileBtn").style.color = "white";
+    }
+
+    // select attributes
+    switch (key) {
+        case "sunrise":
+            var theme = "url('../css/Assets/Sunrise.jpg')";
+            var textcolor = '#cc6600';
+            break;
+        case "purple":
+            var theme = "url('../css/Assets/Purple.jpg')";
+            var textcolor = '##3333cc';
+            break;
+        case "moose":
+            var theme = "url('../css/Assets/Moose.jpg')";
+            var textcolor = '#006699';
+            break;
+        case "dark":
+            var theme = "url('../css/Assets/Dark.jpg')";
+            
+            var textcolor = '#00284d';
+            break;
+        case "colorful":
+            var theme = "url('../css/Assets/Colorful.jpg')";
+            var textcolor = '#6600cc';
+            break;
+        case "glitter":
+            var theme = "url('../css/Assets/Glitter.jpg')";
+            var textcolor = '#000099';
+            break;
+    }
+
+    changeTheme(theme, textcolor, from);
 }
 
-function changeTheme(theme, textcolor) {
+function changeTheme(theme, textcolor, from) {
     document.body.style.backgroundImage = theme;
     document.body.style.color = theme;
     localStorage.setItem('style', theme);
-    optionsToggle.style.display = "none";
     document.body.style.backgroundSize = "cover";
-    document.getElementById('editProfileBtn').style.backgroundImage = theme;
-    document.getElementById('bodyProfile').style.color = textcolor;
+    if (from === '0') {
+        document.getElementById('editProfileBtn').style.backgroundImage = theme;
+        document.getElementById('bodyProfile').style.color = textcolor;
+    }
+    else {
+        document.getElementById('bodyHome').style.color = textcolor;
+    }
 }
 
 function deleteShowModal() {
@@ -673,7 +791,7 @@ function writeReview() {
                 }
                 else {
                     confirm("Writing new review successful!");
-                    
+
                     reloadProfile();
                 }
             }.bind(this));
@@ -882,7 +1000,7 @@ function getAverageRating(userid) {
                 var rating = data.response[0].AverageRating;
 
                 var profileNameDiv = document.getElementById('profile_name');
-                
+
                 var avgRating = document.createElement('p');
                 avgRating.style = "float:right; margin:0;";
                 profileNameDiv.appendChild(avgRating);
@@ -959,15 +1077,15 @@ function sortReviews() {
         sort = "DESC";
         basedOn = "Rating";
     }
-    else if ((document.getElementById("sortReviews")).value == "Lowest Reviews"){
+    else if ((document.getElementById("sortReviews")).value == "Lowest Reviews") {
         sort = "ASC";
         basedOn = "Rating";
     }
-    else if ((document.getElementById("sortReviews")).value == "Latest Reviews"){
+    else if ((document.getElementById("sortReviews")).value == "Latest Reviews") {
         sort = "DESC";
         basedOn = "DatePosted";
     }
-    else if ((document.getElementById("sortReviews")).value == "Oldest Reviews"){
+    else if ((document.getElementById("sortReviews")).value == "Oldest Reviews") {
         sort = "ASC";
         basedOn = "DatePosted";
     }

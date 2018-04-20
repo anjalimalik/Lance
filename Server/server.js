@@ -1003,7 +1003,7 @@ app.post('/getAllNotifications', function (req, res) {
     }
 
     // get data from Notifications using the user id
-    let query = "SELECT Notification FROM Notifications WHERE idUsers = ? ORDER BY msec DESC";
+    let query = "SELECT * FROM Notifications WHERE idUsers = ? ORDER BY msec DESC";
 
     db.query(query, id, (err, result) => {
         if (err) {
@@ -1351,10 +1351,10 @@ app.post('/runSearch', function (req, res) {
 
     var dbQuery = "";
     if (search == "post") {
-        dbQuery = "SELECT * FROM Posts WHERE Headline LIKE ? OR Content LIKE ?";
+        dbQuery = "SELECT * FROM Posts WHERE Headline LIKE ? OR Content LIKE ? ORDER BY DatePosted DESC";
     }
     else if (search == "user") {
-        dbQuery = "SELECT idUsers, FullName FROM Users WHERE FullName LIKE ? OR Email LIKE ?";
+        dbQuery = "SELECT idUsers, FullName, Email FROM Users WHERE FullName LIKE ? OR Email LIKE ? ORDER BY FullName ASC";
     }
     else {
         return res.status(400).json({ message: "Invalid Search Type" });
@@ -1364,17 +1364,17 @@ app.post('/runSearch', function (req, res) {
     db.query(dbQuery, requestParams, function (err, result) {
 
         if (err) {
-            res.send(JSON.stringify({"status": 500, "error": err, "response": null, "message": "Internal server error" }));
+            res.send(JSON.stringify({ "status": 500, "error": err, "response": null, "message": "Internal server error" }));
         }
 
-        res.send(JSON.stringify({"status": 200, "error": null, "response": result, "message": "Success! Matching Posts/Users retrieved!" }));
+        res.send(JSON.stringify({ "status": 200, "error": null, "response": result, "message": "Success! Matching Posts/Users retrieved!" }));
     });
 });
 
-// Get user id from email
-app.post('/getUserID', function (req, res) {
+// Get user id and theme from email
+app.post('/getUserDetails', function (req, res) {
     var email = req.body.email;
-    let query = "SELECT idUsers FROM Users WHERE Email = ?";
+    let query = "SELECT idUsers, Theme FROM Users WHERE Email = ?";
 
     // get user id connected to the email
     db.query(query, email, function (error, response) {
@@ -1654,4 +1654,28 @@ app.post('/getSortedReviews', (req, res) => {
     });
 });
 
+
+// Theme for the user
+app.post('/setTheme', function (req, res) {
+
+    var id = req.body.id;
+    var theme = req.body.theme;
+
+    if (!id || !theme) {
+        return res.status(400).json({ message: "Missing information for setting theme" });
+    }
+
+    // set theme in Users table
+    let query = "UPDATE Users SET Theme = ? WHERE idUsers = ?";
+    let params = [theme, id];
+
+    db.query(query, params, (err, result) => {
+        if (err) {
+            res.send(JSON.stringify({ "status": 500, "error": err, "response": null, "message": "Internal server error" }));
+        }
+        else {
+            res.send(JSON.stringify({"status": 200,"error": null, "response": result, "message": "Success! Theme set for this user!" }));
+        }
+    });
+});
 

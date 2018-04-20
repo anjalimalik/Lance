@@ -18,11 +18,10 @@
 
 </head>
 
-<body onload="onLoad_profile()">
-
+<body id="bodyNotifications" style="background-size:100% 100%;" onload="onLoad_Notifications()">
 
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-    <a class="navbar-brand" href="#" onclick="goToHome()">Lance</a>
+    <a class="navbar-brand" href="#" onclick="backToHome()">Lance</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01"
       aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
@@ -31,306 +30,65 @@
     <div class="collapse navbar-collapse" id="navbarColor01">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item active">
-          <a class="nav-link" href="#" onclick="goToHome()">Home <span class="sr-only">(current)</span></a>
+          <a class="nav-link" href="#" onclick="backToHome()">Home <span class="sr-only">(current)</span></a>
         </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="#" onclick="backToProfile()">Profile</a>
+        </li>
+
         <li class="nav-item">
           <a class="nav-link" href="./about.html">About</a>
         </li>
 
-        <!-- Notifications -->
-
-        <li class="nav-item dropdown show">
-          <a href="#" id="notifications_btn" onclick="displayNotifications()" class="nav-link dropdown-toggle" data-toggle="dropdown"
-            role="button" aria-haspopup="true" aria-expanded="false" style="margin-left: 150px;">Notifications <span class="caret"></span></a>
-          <div id="notificationsToggle" class="dropdown-menu show" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 38px, 0px); top: 0px; left: 255px; will-change: transform;">
-            <ul id="notif">
-
-            </ul>
-            <!-- <a class="dropdown-item" href="#">View all Notifications</a>-->
-          </div>
-        </li>
-
-
         <!-- Options -->
-
-        <li class="nav-item dropdown show">
-          <a href="#" id="options_btn" onclick="displayOptions()" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button"
-            aria-haspopup="true" aria-expanded="false" style="margin-left: 305px;">Options <span class="caret"></span></a>
-          <div id="optionsToggle" class="dropdown-menu show" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 38px, 0px); top: 0px; left: 705px; will-change: transform;">
-            <!--<a class="dropdown-item" href="#">Log Out</a>-->
-            <a href="#" class="dropdown-item btn btn-success btn-sm" style="margin-left: 0px; font-size: 12px;" onclick="btn_logout()">Logout</a>
-
+        <li class="nav-item dropdown show" style="margin-left: 180%;">
+          <a href="#" id="options_btn" onclick="document.getElementById('options_btn').style.display='block';" class="navbar-brand nav-link dropdown-toggle"
+            data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+              <img src="../css/Assets/options.png" width="25" height="25" alt="Options"></img>
+              <span class="caret"></span></a>
+          <div id="optionsToggle" class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 45px, 0px); top: 0px; will-change: transform;">
+            <a class="dropdown-item btn btn-success btn-sm" style="font-size: 12px;" href="#" onclick="backToProfile()">View Profile</a>
             <div class="dropdown-divider"></div>
-            <button type="button" class="dropdown-item btn btn-success btn-sm" style="margin-left: 0px; font-size: 12px;" data-toggle="modal"
-              data-target="#settingsModal">Settings</button>
+            <a href="#" class="dropdown-item btn btn-success btn-sm" style="font-size: 12px;" onclick="btn_logout(em)">Logout</a>
           </div>
         </li>
-
+        <!-- End Options -->
         <!-- End -->
-
       </ul>
-
-      <!-- Search -->
-
-    <form class="form-inline my-2 my-lg-0">
-      <input class="form-control mr-sm-2" type="text" placeholder="Search" style="position: absolute; transform: translate3d(0px. 38px, 0px); top: 20px; left: 450px; will-change: transform;">
-      <button class="btn btn-secondary my-2 my-sm-0" type="submit" style="position: absolute; transform: translate3d(0px. 38px, 0px); top: 21.5px; left: 710px; will-change: transform;">Search</button>
-    </form>
-
-      <!-- End -->
-
     </div>
   </nav>
 
   <body>
     <!-- Page Content -->
 
-    <div class="alert alert-primary" role="alert">
-  <a href="#" class="alert-link">This is a primary alert with an example link</a>.
-</div>
-<div class="alert alert-secondary" role="alert">
-  <a href="#" class="alert-link">This is a secondary alert with an example link</a>.
-</div>
-<div class="alert alert-success" role="alert">
-  <a href="#" class="alert-link">This is a success alert with an example link</a>.
-</div>
-<div class="alert alert-danger" role="alert">
-  <a href="#" class="alert-link">This is a danger alert with an example link</a>.
-</div>
-<div class="alert alert-warning" role="alert">
-  <a href="#" class="alert-link">This is a warning alert with an example link</a>.
-</div>
-<div class="alert alert-info" role="alert">
-  <a href="#" class="alert-link">This is a info alert with an example link</a>.
-</div>
-<div class="alert alert-light" role="alert">
-  <a href="#" class="alert-link">This is a light alert with an example link</a>.
-</div>
-<div class="alert alert-dark" role="alert">
-  <a href="#" class="alert-link">This is a dark alert with an example link</a>.
-</div>
+    <!-- START OF CARD LIST -->
+    <div style="background-color: white; width: 55%; margin:0 auto;">
+      <!-- List Items added in JS -->
+      <ul id="nList" class="list-group"> 
+      </ul>
+    </div>
+    <!-- END OF CARD LIST -->
 
 
 
-          <!-- Real settings MODAL-->
-          <div class="modal" style="margin-top:150px;" id="settingsModal" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title">SETTINGS</h4>
-                  <button type="button" class="close" data-dismiss="modal" onclick="clearSetModal()" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-                </div>
-                <div class="modal-body">
+    <!-- Bootstrap core JavaScript -->
+    <script src="./../vendor/jquery/jquery.min.js"></script>
+    <script src="./../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
-                  <form>
-                    <fieldset>
-                      <div class="form-group">
-                          <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#themesModal" data-dismiss="modal">Choose Themes</button>
-                      </div>
-                      <div class="form-group">
-                          <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#setModal" data-dismiss="modal">Change Password</button>
-                      </div>
-                      <div class="form-group">
-                          <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#deleteAccountModal" data-dismiss="modal">Delete 1ance Account</button>
-                      </div>
-
-                    </fieldset>
-                  </form>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="clearSetModal()">Close</button>
-                </div>
-              </div>
-            </div>
-          </div>
+    <script src="./../../Js/index.js"></script>
+    <script src="./../../Js/notificationsPage.js"></script>
 
 
-          <!-- Themes MODAL-->
-          <div class="modal" style="margin-top:150px;" id="themesModal" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title">Themes</h4>
-                  <button type="button" class="close" data-dismiss="modal" onclick="themesModal()" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-                </div>
-                <div class="modal-body">
+    <!-- Bootstrap core CSS -->
+    <link href="./../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
-                  <form>
-                    <fieldset id="fieldset_passChange">
-
-                        <div class="form-group">
-                          <label for="in_profile_currentPass">Enter Theme</label>
-                          <input type="password" class="form-control" id="deleteAccountPass" placeholder="Theme name... wip">
-                        </div>
-
-
-
-                    </fieldset>
-                  </form>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#settingsModal" data-dismiss="modal">Back</button>
-                  <button type="button" class="btn btn-outline-primary" onclick="btn_theme()" data-dismiss="modal">Choose</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-
-          <!-- Password Change MODAL-->
-          <div class="modal" style="margin-top:150px;" id="setModal" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title">Password Change</h5>
-                  <button type="button" class="close" data-dismiss="modal" onclick="clearSetModal()" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-                </div>
-                <div class="modal-body">
-
-                  <form>
-                    <fieldset id="fieldset_passChange">
-
-                      <div class="form-group">
-                        <label for="in_profile_currentPass">Current Password</label>
-                        <input type="password" class="form-control" id="in_profile_currentPass" placeholder="Password">
-                      </div>
-
-                      <div class="form-group">
-                        <label for="in_profile_newPass">New Password</label>
-                        <input type="password" class="form-control" id="in_profile_newPass" onchange="passMatch()" placeholder="Password">
-                      </div>
-
-                      <div class="form-group">
-                        <label for="in_profile_confirmPass">Confirm Password</label>
-                        <input type="password" class="form-control" id="in_profile_confirmPass" onchange="passMatch()" placeholder="Password">
-                      </div>
-
-
-                    </fieldset>
-                  </form>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#settingsModal" data-dismiss="modal">Back</button>
-                  <button type="button" class="btn btn-outline-primary" onclick="btn_passChange()" data-dismiss="modal">Save</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-
-          <!-- Delete Account MODAL-->
-          <div class="modal" style="margin-top:150px;" id="deleteAccountModal" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title">Delete 1ance Account</h4>
-                  <button type="button" class="close" data-dismiss="modal" onclick="clearSetModal()" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-                </div>
-                <div class="modal-body">
-
-                  <form>
-                    <fieldset id="fieldset_passChange">
-
-                        <div class="form-group">
-                          <label for="in_profile_currentPass">Enter Password</label>
-                          <input type="password" class="form-control" id="deleteAccountPass" placeholder="Password">
-                        </div>
-
-
-
-                    </fieldset>
-                  </form>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#settingsModal" data-dismiss="modal">Back</button>
-                  <button type="button" class="btn btn-outline-primary" onclick="btn_delete_account()" data-dismiss="modal">Confirm</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-
-
-
-
-              <!--Colors must be selected that we rotate through all types of the colors through each skill
-          <span class="badge badge-pill badge-primary">CS180</span>
-          <span class="badge badge-pill badge-secondary">Java</span>
-          <span class="badge badge-pill badge-success">C</span>
-          <span class="badge badge-pill badge-danger">HTML</span>
-          <span class="badge badge-pill badge-warning">Bootstrap</span>
-          <span class="badge badge-pill badge-info">SQL</span>
-          <span class="badge badge-pill badge-light">Public Speaking</span>
-          <span class="badge badge-pill badge-dark">Teamwork</span>
-
-          //-->
-            </tr>
-
-          </tbody>
-        </table>
-
-
-        <!-- Bootstrap core JavaScript -->
-        <script src="./../vendor/jquery/jquery.min.js"></script>
-        <script src="./../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-        <script src="./../../Js/index.js"></script>
-        <script src="./../../Js/profile.js"></script>
-        <script src="./../../Js/home.js"></script>
-
-
-        <!-- Bootstrap core CSS -->
-        <link href="./../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-
-
-        <!-- Ratings Bootstrap core JavaScript -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-        <script>
-          window.jQuery || document.write('<script src="assets/js/vendor/jquery.min.js"><\/script>')
-        </script>
-        <script src="./../vendor/bootstrap/js/bootstrap.min.js"></script>
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
   </body>
 
   <style>
-    .img_profile_container {
-      border-top: 1px solid #CCCCCC;
-      border-right: 3px solid #CCCCCC;
-      border-bottom: 3px solid #CCCCCC;
-      border-left: 1px solid #CCCCCC;
-      border-radius: 5px;
-      background-color: #EEEEEE;
-      color: #333333;
-      padding: 2px;
-      width: 120px;
-      height: 30px;
-    }
 
-    .txt_uploadImg {
-      font-size: 15px;
-      font-weight: bold;
-    }
-
-    #btn_upload_hidden {}
-
-    #options_btn {
-      position: absolute;
-      left: 415px;
-      width: 92px;
-    }
-
-    #notifications_btn {
-      position: absolute;
-      left: 465px;
-      width: 136px;
-    }
   </style>
 
 </html>
