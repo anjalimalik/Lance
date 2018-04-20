@@ -32,6 +32,9 @@ function onLoad_home() {
     } else if (emailAdd.includes("#")) {
         emailAdd = emailAdd.replace("#", "");
     }
+
+    documentReadyClicksHome();  // event listeners 
+
     fetch(urlUserID, {
         method: "POST",
         headers: {
@@ -83,13 +86,19 @@ function getAllPosts() {
         });
 }
 
-function documentReadyClicks() {
+function documentReadyClicksHome() {
     // Execute a function when the user releases a key on the keyboard
     document.getElementById("searchUserBar1").addEventListener("keyup", function (event) {
         // Number 13 is the "Enter" key on the keyboard
         if (event.keyCode === 13) {
             // Trigger the button element with a click
-            document.getElementById("userSearchBtn").click();
+            document.getElementById("userSearchBtn1").click();
+        }
+    });
+
+    document.getElementById("searchPostBar").addEventListener("keyup", function (event) {
+        if (event.keyCode === 13) {
+            document.getElementById("postSearchBtn").click();
         }
     });
 }

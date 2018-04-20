@@ -44,6 +44,8 @@ function onLoad_profile() {
     // give ratings
     giveRatings();
 
+    documentReadyClicksProfile();  // event listeners 
+
     // get user id
     fetch(urlUserID, {
         method: "POST",
@@ -137,6 +139,17 @@ function onLoad_profile() {
     //var img = new Image();
     //img.src = "./../css/Assets/spinner.jpg";
     document.getElementById("img_profile").src = "./../css/Assets/user_icon.jpg";
+}
+
+function documentReadyClicksProfile() {
+    // Execute a function when the user releases a key on the keyboard
+    document.getElementById("searchUserBar2").addEventListener("keyup", function (event) {
+        // Number 13 is the "Enter" key on the keyboard
+        if (event.keyCode === 13) {
+            // Trigger the button element with a click
+            document.getElementById("userSearchBtn2").click();
+        }
+    });
 }
 
 // to get notifications counter
