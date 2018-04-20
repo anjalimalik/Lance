@@ -817,6 +817,8 @@ function getSortedPosts(json) {
 
 // FILTER POSTS
 function filterPosts(category, type) {
+
+    document.getElementById("categoryDD1").value = category;
     
     fetch(urlFilterPosts, {
         method: "POST",
@@ -1039,6 +1041,8 @@ function createPost(postID) {
 function expandCreatePModal(category, edit) {
     // remove elements if clicked on a category again
     $('.catDiv').remove();
+
+    document.getElementById("categoryDD2").innerHTML = category;
 
     if (edit) {
         var pickedCategory = "pickedEditCategory";
