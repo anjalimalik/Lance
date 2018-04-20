@@ -14,7 +14,7 @@ var urlNewNotifications = "http://localhost:5500/getNewNotifications";
 var urlOwnerIDofPost = "http://localhost:5500/getOwnerIDofPost";
 var urlSearch = "http://localhost:5500/runSearch";
 
-var emailAdd;
+var emailAdd = null;
 var uID = "";
 var numNotifs = 0;
 var OwnerIDofPost = 0;
@@ -26,7 +26,7 @@ function onLoad_home() {
     emailAdd = str[1];
     console.log(emailAdd);
 
-    if (emailAdd == null) {
+    if (emailAdd == null || emailAdd == "" || emailAdd == "undefined" || !emailAdd.includes("@purdue.edu")) {
         alert("You have to be logged in first!");
         window.location.href = "index.html";
     } else if (emailAdd.includes("#")) {
