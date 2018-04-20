@@ -48,12 +48,14 @@ function onLoad_profile() {
 
     documentReadyProfile();  // activate event listeners 
 
+    
     // get user id and theme
     fetch(urlUserDetails, {
         method: "POST",
         headers: {
             'Accept': 'application/json',
-            'content-type': 'application/json'
+            'content-type': 'application/json',
+            'Authorization': ('Bearer ' + JSON.parse(localStorage.token))
         },
         body: JSON.stringify({
             "email": email
@@ -61,6 +63,7 @@ function onLoad_profile() {
 
     }).then(function (res) {
         if (res.ok) {
+            resetTokenProfile();
             res.json().then(function (data) {
                 console.log("Inside res.ok. User ID retrieved");
                 uID = data.response[0].idUsers;
@@ -75,12 +78,14 @@ function onLoad_profile() {
                     return;
                 }
 
+                
                 // get profile
                 fetch(urlGetProfile, {
                     method: "POST",
                     headers: {
                         'Accept': 'application/json',
-                        'content-type': 'application/json'
+                        'content-type': 'application/json',
+                        'Authorization': ('Bearer ' + JSON.parse(localStorage.token))
                     },
                     body: JSON.stringify({
                         "email": null,
@@ -90,7 +95,9 @@ function onLoad_profile() {
                 }).then(function (res) {
                     console.log("Inside res function");
                     if (res.ok) {
+                        resetTokenProfile();
                         res.json().then(function (data) {
+                            
                             var json = data.response;
                             name = json[0].FullName;
                             edu = json[0].Education;
@@ -112,12 +119,13 @@ function onLoad_profile() {
                             // notifications
                             getNumOfNewNotifs();
 
-                            var background = localStorage.getItem("style");
-                            document.body.style.backgroundColor = background;
                         }.bind(this));
                     }
                     else {
                         alert("Error: get profile unsuccessful!");
+                        if (res.status == '403') {
+                            window.location.href = "./inactive.html";
+                        }
                         res.json().then(function (data) {
                             console.log(data.message);
                         }.bind(this));
@@ -133,6 +141,9 @@ function onLoad_profile() {
         }
         else {
             console.log("Error: Cannot get UserID");
+            if (res.status == '403') {
+                window.location.href = "./inactive.html";
+            }
             res.json().then(function (data) {
                 console.log(data.message);
             }.bind(this));
@@ -174,14 +185,50 @@ function documentReadyProfile() {
     });
 }
 
-// to get notifications counter
-function getNumOfNewNotifs() {
 
-    fetch(urlNumNewNotifs, {
+function resetTokenProfile() {
+    fetch("http://localhost:5500/resetToken", {
         method: "POST",
         headers: {
             'Accept': 'application/json',
             'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+            "email": email
+        })
+
+    }).then(function (res) {
+        console.log("Inside res function");
+        if (res.ok) {
+            res.json().then(function (data) {
+                localStorage.setItem('token', JSON.stringify(data.token));
+            }.bind(this));
+        }
+        else {
+            if (res.status == '403') {
+                window.location.href = "./inactive.html";
+            }
+            res.json().then(function (data) {
+                console.log(data.message);
+            }.bind(this));
+            return;
+        }
+    }).catch(function (err) {
+        alert("Error: No internet connection!");
+        console.log(err.message + ": No Internet Connection");
+        return;
+    });
+}
+
+// to get notifications counter
+function getNumOfNewNotifs() {
+    
+    fetch(urlNumNewNotifs, {
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'content-type': 'application/json',
+            'Authorization': ('Bearer ' + JSON.parse(localStorage.token))
         },
         body: JSON.stringify({
             "id": uID
@@ -190,6 +237,7 @@ function getNumOfNewNotifs() {
     }).then(function (res) {
         console.log("Inside res function");
         if (res.ok) {
+            resetTokenProfile();
             res.json().then(function (data) {
                 var json = data.response;
                 var num = parseInt(json[0].count);
@@ -202,6 +250,9 @@ function getNumOfNewNotifs() {
         }
         else {
             alert("Error: Get number of notifications unsuccessful!");
+            if (res.status == '403') {
+                window.location.href = "./inactive.html";
+            }
             res.json().then(function (data) {
                 console.log(data.message);
             }.bind(this));
@@ -209,6 +260,9 @@ function getNumOfNewNotifs() {
         }
     }).catch(function (err) {
         alert("Error: No internet connection!");
+        if (res.status == '403') {
+            window.location.href = "./inactive.html";
+        }
         console.log(err.message + ": No Internet Connection");
         return;
     });
@@ -362,11 +416,13 @@ function btn_passChange() {
         return;
     }
 
+    
     fetch(urlChangePass, {
         method: "POST",
         headers: {
             'Accept': 'application/json',
-            'content-type': 'application/json'
+            'content-type': 'application/json',
+            'Authorization': ('Bearer ' + JSON.parse(localStorage.token))
         },
         body: JSON.stringify({
             "email": email,
@@ -377,6 +433,7 @@ function btn_passChange() {
     }).then(function (res) {
         console.log("Inside res function");
         if (res.ok) {
+            resetTokenProfile();
             res.json().then(function (data) {
                 alert(data.message);
                 console.log("Inside res.ok");
@@ -384,6 +441,9 @@ function btn_passChange() {
         }
         else {
             alert("Error: Change password unsuccessful!");
+            if (res.status == '403') {
+                window.location.href = "./inactive.html";
+            }
             res.json().then(function (data) {
                 console.log(data.message);
             }.bind(this));
@@ -404,6 +464,7 @@ function uploadPicture() {
     data.append('file', input.files[0])
     //data.append('user', 'hubot')
 
+    
     fetch(urlUpload, {
         method: 'POST',
         body: ({ 'element2': data })
@@ -526,12 +587,14 @@ function getUserProfile(userid) {
         document.getElementById("editProfileBtn").style.display = "none";
     }
 
+    
     // get profile of user
     fetch(urlGetProfile, {
         method: "POST",
         headers: {
             'Accept': 'application/json',
-            'content-type': 'application/json'
+            'content-type': 'application/json',
+            'Authorization': ('Bearer ' + JSON.parse(localStorage.token))
         },
         body: JSON.stringify({
             "id": userid,
@@ -541,6 +604,7 @@ function getUserProfile(userid) {
     }).then(function (res) {
         console.log("Inside res function");
         if (res.ok) {
+            resetTokenProfile();
             res.json().then(function (data) {
                 var json = data.response;
                 otherusername = json[0].FullName;
@@ -571,6 +635,9 @@ function getUserProfile(userid) {
         }
         else {
             alert("Error: get profile unsuccessful!");
+            if (res.status == '403') {
+                window.location.href = "./inactive.html";
+            }
             res.json().then(function (data) {
                 console.log(data.message);
             }.bind(this));
@@ -617,11 +684,13 @@ function selectTheme(selected) {
             var theme = null;
     }
 
+    
     fetch(urlSetTheme, {
         method: "POST",
         headers: {
             'Accept': 'application/json',
-            'content-type': 'application/json'
+            'content-type': 'application/json',
+            'Authorization': ('Bearer ' + JSON.parse(localStorage.token))
         },
         body: JSON.stringify({
             "id": uID,
@@ -629,6 +698,7 @@ function selectTheme(selected) {
         })
     }).then(function (res) {
         if (res.ok) {
+            resetTokenProfile();
             res.json().then(function (data) {
                 th = selected;
                 if (theme) {
@@ -641,6 +711,9 @@ function selectTheme(selected) {
         }
         else {
             alert("Error: Setting theme unsuccessful!");
+            if (res.status == '403') {
+                window.location.href = "./inactive.html";
+            }
             res.json().then(function (data) {
                 console.log(data.message);
             }.bind(this));
@@ -680,7 +753,7 @@ function getTheme(key, from) {
             break;
         case "dark":
             var theme = "url('../css/Assets/Dark.jpg')";
-            
+
             var textcolor = '#00284d';
             break;
         case "colorful":
@@ -723,11 +796,13 @@ function deleteShowModal() {
 function deleteAccount() {
     var userPass = document.getElementById("deleteAccountPass").value;
 
+    
     fetch(urlDeleteAccount, {
         method: "POST",
         headers: {
             'Accept': 'application/json',
-            'content-type': 'application/json'
+            'content-type': 'application/json',
+            'Authorization': ('Bearer ' + JSON.parse(localStorage.token))
         },
         body: JSON.stringify({
             "userid": uID,
@@ -736,6 +811,7 @@ function deleteAccount() {
     }).then(function (res) {
         console.log("Inside res function");
         if (res.ok) {
+            resetTokenProfile();
             res.json().then(function (data) {
                 alert("Your account has been Deleted, you will be redirected to the Login Page");
                 window.location.href = "./index.html";
@@ -744,6 +820,9 @@ function deleteAccount() {
         }
         else {
             alert("Error: Delete User Account unsuccessful!");
+            if (res.status == '403') {
+                window.location.href = "./inactive.html";
+            }
             res.json().then(function (data) {
                 console.log(data.message);
             }.bind(this));
@@ -766,11 +845,13 @@ function writeReview() {
 
     var review = document.getElementById("reviewWritten").value;
 
+    
     fetch(urlWriteReview, {
         method: "POST",
         headers: {
             'Accept': 'application/json',
-            'content-type': 'application/json'
+            'content-type': 'application/json',
+            'Authorization': ('Bearer ' + JSON.parse(localStorage.token))
         },
         body: JSON.stringify({
             "byUserID": uID,
@@ -782,6 +863,7 @@ function writeReview() {
     }).then(function (res) {
         console.log("Inside res function");
         if (res.ok) {
+            resetTokenProfile();
             res.json().then(function (data) {
                 var json = data.response;
                 if (json == null) {
@@ -798,6 +880,9 @@ function writeReview() {
         }
         else {
             alert("Error: Writing new review unsuccessful!");
+            if (res.status == '403') {
+                window.location.href = "./inactive.html";
+            }
             res.json().then(function (data) {
                 console.log(data.message);
             }.bind(this));
@@ -810,17 +895,20 @@ function writeReview() {
 
 // get reviews for this user
 function getReviews(userid) {
+    
     fetch(urlGetReviews, {
         method: "POST",
         headers: {
             'Accept': 'application/json',
-            'content-type': 'application/json'
+            'content-type': 'application/json',
+            'Authorization': ('Bearer ' + JSON.parse(localStorage.token))
         },
         body: JSON.stringify({
             "idUser": userid
         })
     }).then(function (res) {
         if (res.ok) {
+            resetTokenProfile();
             res.json().then(function (data) {
                 console.log(data);
                 var numReviews = Object.keys(data.response).length;
@@ -864,6 +952,9 @@ function getReviews(userid) {
         }
         else {
             alert("Error: Getting reviews for this user unsuccessful!");
+            if (res.status == '403') {
+                window.location.href = "./inactive.html";
+            }
             res.json().then(function (data) {
                 console.log(data.message);
             }.bind(this));
@@ -983,17 +1074,20 @@ function createReviewCard(reviewID, rating, review, byUserName, datePosted, byUs
 
 // function to get average rating
 function getAverageRating(userid) {
+    
     fetch(urlGetAverageRating, {
         method: "POST",
         headers: {
             'Accept': 'application/json',
-            'content-type': 'application/json'
+            'content-type': 'application/json',
+            'Authorization': ('Bearer ' + JSON.parse(localStorage.token))
         },
         body: JSON.stringify({
             "idUser": userid
         })
     }).then(function (res) {
         if (res.ok) {
+            resetTokenProfile();
             res.json().then(function (data) {
                 console.log(data);
                 var numReviews = Object.keys(data.response).length;
@@ -1058,6 +1152,9 @@ function getAverageRating(userid) {
         }
         else {
             alert("Error: Getting AverageRating for this user unsuccessful!");
+            if (res.status == '403') {
+                window.location.href = "./inactive.html";
+            }
             res.json().then(function (data) {
                 console.log(data.message);
             }.bind(this));
@@ -1099,12 +1196,14 @@ function sortReviews() {
         userid = uID;
     }
 
+    
     // fetch sorted reviews
     fetch(urlGetSortedReviews, {
         method: "POST",
         headers: {
             'Accept': 'application/json',
-            'content-type': 'application/json'
+            'content-type': 'application/json',
+            'Authorization': ('Bearer ' + JSON.parse(localStorage.token))
         },
         body: JSON.stringify({
             "idUser": userid,
@@ -1113,6 +1212,7 @@ function sortReviews() {
         })
     }).then(function (res) {
         if (res.ok) {
+            resetTokenProfile();
             res.json().then(function (data) {
                 $('.review.card.bg-secondary').remove(); // remove old cards
                 // create new review cards
@@ -1125,6 +1225,9 @@ function sortReviews() {
         }
         else {
             alert("Error: Getting sorted reviews for this user unsuccessful!");
+            if (res.status == '403') {
+                window.location.href = "./inactive.html";
+            }
             res.json().then(function (data) {
                 console.log(data.message);
             }.bind(this));

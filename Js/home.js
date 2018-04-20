@@ -24,7 +24,6 @@ function onLoad_home() {
     var url = window.location.href;
     var str = url.split("?email=");
     emailAdd = str[1];
-    console.log(emailAdd);
 
     if (emailAdd == null || emailAdd == "" || emailAdd == "undefined" || !emailAdd.includes("@purdue.edu")) {
         alert("You have to be logged in first!");
@@ -35,11 +34,13 @@ function onLoad_home() {
 
     documentReadyHome();  // event listeners 
 
+    
     fetch(urlUserDetails, {
         method: "POST",
         headers: {
             'Accept': 'application/json',
-            'content-type': 'application/json'
+            'content-type': 'application/json',
+            'Authorization': ('Bearer ' + JSON.parse(localStorage.token))
         },
         body: JSON.stringify({
             "email": emailAdd
@@ -48,6 +49,7 @@ function onLoad_home() {
     }).then(function (res) {
         if (res.ok) {
             res.json().then(function (data) {
+                resetTokenHome();
                 console.log("Inside res.ok. User ID retrieved");
                 uID = data.response[0].idUsers;
                 getNumOfNewNotifs(); // get num of notifs
@@ -60,6 +62,9 @@ function onLoad_home() {
         }
         else {
             console.log("Error: Cannot get UserID");
+            if (res.status == '403') {
+                window.location.href = "./inactive.html";
+            }
             res.json().then(function (data) {
                 console.log(data.message);
             }.bind(this));
@@ -70,10 +75,46 @@ function onLoad_home() {
     });
 }
 
+function resetTokenHome() {
+    fetch("http://localhost:5500/resetToken", {
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+            "email": emailAdd
+        })
+
+    }).then(function (res) {
+        console.log("Inside res function");
+        if (res.ok) {
+            res.json().then(function (data) {
+                localStorage.setItem('token', JSON.stringify(data.token));
+            }.bind(this));
+        }
+        else {
+            if (res.status == '403') {
+                window.location.href = "./inactive.html";
+            }
+            res.json().then(function (data) {
+                console.log(data.message);
+            }.bind(this));
+            return;
+        }
+    }).catch(function (err) {
+        alert("Error: No internet connection!");
+        console.log(err.message + ": No Internet Connection");
+        return;
+    });
+}
+
 function getAllPosts() {
+    
     fetch(urlGetPosts)
         .then(function (res) {
             res.json().then(function (data) {
+                resetTokenHome();
                 console.log(data);
                 var numPost = Object.keys(data.response).length;
                 var json = data.response;
@@ -326,11 +367,13 @@ function getIDReport(id) {
 
 function reportPost(postID) {
     var reportMsg = document.getElementById("in_report").value;
+    
     fetch(urlReport, {
         method: "POST",
         headers: {
             'Accept': 'application/json',
-            'content-type': 'application/json'
+            'content-type': 'application/json',
+            'Authorization': ('Bearer ' + JSON.parse(localStorage.token))
         },
         body: JSON.stringify({
             "message": reportMsg,
@@ -340,12 +383,16 @@ function reportPost(postID) {
     }).then(function (res) {
         if (res.ok) {
             res.json().then(function (data) {
+                resetTokenHome();
                 console.log("Inside res.ok");
                 alert("Your report was sent successfully!");
             }.bind(this));
         }
         else {
             alert("Error: Sending report unsuccessful!");
+            if (res.status == '403') {
+                window.location.href = "./inactive.html";
+            }
             res.json().then(function (data) {
                 console.log(data.message);
             }.bind(this));
@@ -363,11 +410,13 @@ function clickInterested(postID) {
     getUserIDofPost(postID);
 
     postID = parseInt(postID);
+    
     fetch(urlLike, {
         method: "POST",
         headers: {
             'Accept': 'application/json',
-            'content-type': 'application/json'
+            'content-type': 'application/json',
+            'Authorization': ('Bearer ' + JSON.parse(localStorage.token))
         },
         body: JSON.stringify({
             "id": uID,
@@ -386,6 +435,7 @@ function clickInterested(postID) {
 
         if (res.ok) {
             res.json().then(function (data) {
+                resetTokenHome();
                 var likesid = "txtLikes".concat(postID);
                 var num = parseInt(document.getElementById(likesid).textContent);
                 if (num === 0) {
@@ -403,6 +453,9 @@ function clickInterested(postID) {
         }
         else {
             alert("Error: liking unsuccessful!");
+            if (res.status == '403') {
+                window.location.href = "./inactive.html";
+            }
             res.json().then(function (data) {
                 console.log(data.message);
             }.bind(this));
@@ -418,11 +471,13 @@ function clickInterested(postID) {
 function closePost(postID) {
     if (window.confirm("Are you sure you want to delete this post?")) {
         postID = parseInt(postID);
+        
         fetch(urlClose, {
             method: "POST",
             headers: {
                 'Accept': 'application/json',
-                'content-type': 'application/json'
+                'content-type': 'application/json',
+                'Authorization': ('Bearer ' + JSON.parse(localStorage.token))
             },
             body: JSON.stringify({
                 "postId": postID
@@ -430,6 +485,7 @@ function closePost(postID) {
 
         }).then(function (res) {
             if (res.ok) {
+                resetTokenHome();
                 $('.card_list_el').remove();
                 getAllPosts();
                 alert("Your post was closed and removed!");
@@ -445,6 +501,9 @@ function closePost(postID) {
             }
         }).catch(function (err) {
             alert("Error: No internet connection!");
+            if (res.status == '403') {
+                window.location.href = "./inactive.html";
+            }
             console.log(err.message + ": No Internet Connection");
         });
     }
@@ -453,11 +512,13 @@ function closePost(postID) {
 // GET ALL COMMENTS
 function getAllComments(postID) {
     postID = parseInt(postID);
+    
     fetch(urlGetComment, {
         method: "POST",
         headers: {
             'Accept': 'application/json',
-            'content-type': 'application/json'
+            'content-type': 'application/json',
+            'Authorization': ('Bearer ' + JSON.parse(localStorage.token))
         },
         body: JSON.stringify({
             "postId": postID
@@ -466,6 +527,7 @@ function getAllComments(postID) {
     }).then(function (res) {
         if (res.ok) {
             res.json().then(function (data) {
+                resetTokenHome();
                 console.log(data);
                 var numComments = Object.keys(data.response).length;
                 var json = data.response;
@@ -475,6 +537,9 @@ function getAllComments(postID) {
         }
         else {
             alert("Error: expand comments unsuccessful!");
+            if (res.status == '403') {
+                window.location.href = "./inactive.html";
+            }
             res.json().then(function (data) {
                 console.log(data.message);
             }.bind(this));
@@ -614,12 +679,14 @@ function addComment(postID, email, num) {
     // get id of the owner
     getUserIDofPost(postID);
 
+    
     // send new comment to the server
     fetch(urlWriteComment, {
         method: "POST",
         headers: {
             'Accept': 'application/json',
-            'content-type': 'application/json'
+            'content-type': 'application/json',
+            'Authorization': ('Bearer ' + JSON.parse(localStorage.token))
         },
         body: JSON.stringify({
             "postId": postID,
@@ -629,6 +696,7 @@ function addComment(postID, email, num) {
 
     }).then(function (res) {
         if (res.ok) {
+            resetTokenHome();
             // notifications counter incremented
             if (OwnerIDofPost == uID) {
                 var val = document.getElementById("counter").innerHTML;
@@ -643,6 +711,9 @@ function addComment(postID, email, num) {
         }
         else {
             alert("Error: writing comment unsuccessful!");
+            if (res.status == '403') {
+                window.location.href = "./inactive.html";
+            }
             res.json().then(function (data) {
                 console.log(data.message);
             }.bind(this));
@@ -659,12 +730,13 @@ function addComment(postID, email, num) {
 
 // Function to get user id from post id (id of the owner of the post)
 function getUserIDofPost(postID) {
-
+    
     fetch(urlOwnerIDofPost, {
         method: "POST",
         headers: {
             'Accept': 'application/json',
-            'content-type': 'application/json'
+            'content-type': 'application/json',
+            'Authorization': ('Bearer ' + JSON.parse(localStorage.token))
         },
         body: JSON.stringify({
             "postID": postID
@@ -672,12 +744,16 @@ function getUserIDofPost(postID) {
     }).then(function (res) {
         if (res.ok) {
             res.json().then(function (data) {
+                resetTokenHome();
                 OwnerIDofPost = parseInt(data.response[0].UserID);
                 console.log("Inside res.ok. Owner ID retrieved");
             }.bind(this));
         }
         else {
             alert("Error: getting Owner ID unsuccessful!");
+            if (res.status == '403') {
+                window.location.href = "./inactive.html";
+            }
             res.json().then(function (data) {
                 console.log(data.message);
             }.bind(this));
@@ -690,11 +766,13 @@ function getUserIDofPost(postID) {
 
 // SORT POSTS based on either date or price
 function sortPosts(basedOn, order, upper, lower) {
+    
     fetch(urlSortPosts, {
         method: "POST",
         headers: {
             'Accept': 'application/json',
-            'content-type': 'application/json'
+            'content-type': 'application/json',
+            'Authorization': ('Bearer ' + JSON.parse(localStorage.token))
         },
         body: JSON.stringify({
             "basedOn": basedOn,
@@ -705,12 +783,16 @@ function sortPosts(basedOn, order, upper, lower) {
     }).then(function (res) {
         if (res.ok) {
             res.json().then(function (data) {
+                resetTokenHome();
                 getSortedPosts(data.response);
                 console.log("Inside res.ok. Sorted Posts retrieved");
             }.bind(this));
         }
         else {
             alert("Error: sorting of posts unsuccessful!");
+            if (res.status == '403') {
+                window.location.href = "./inactive.html";
+            }
             res.json().then(function (data) {
                 console.log(data.message);
             }.bind(this));
@@ -735,11 +817,15 @@ function getSortedPosts(json) {
 
 // FILTER POSTS
 function filterPosts(category, type) {
+
+    document.getElementById("categoryDD1").value = category;
+    
     fetch(urlFilterPosts, {
         method: "POST",
         headers: {
             'Accept': 'application/json',
-            'content-type': 'application/json'
+            'content-type': 'application/json',
+            'Authorization': ('Bearer ' + JSON.parse(localStorage.token))
         },
         body: JSON.stringify({
             "category": category,
@@ -748,12 +834,16 @@ function filterPosts(category, type) {
     }).then(function (res) {
         if (res.ok) {
             res.json().then(function (data) {
+                resetTokenHome();
                 getSortedPosts(data.response);
                 console.log("Inside res.ok. Filtered Posts retrieved");
             }.bind(this));
         }
         else {
             alert("Error: filtering of posts unsuccessful!");
+            if (res.status == '403') {
+                window.location.href = "./inactive.html";
+            }
             res.json().then(function (data) {
                 console.log(data.message);
             }.bind(this));
@@ -901,11 +991,13 @@ function createPost(postID) {
     }
 
     // send to server
+    
     fetch(urlCreatePost, {
         method: "POST",
         headers: {
             'Accept': 'application/json',
-            'content-type': 'application/json'
+            'content-type': 'application/json',
+            'Authorization': ('Bearer ' + JSON.parse(localStorage.token))
         },
         body: JSON.stringify({
             "email": emailAdd,
@@ -920,6 +1012,7 @@ function createPost(postID) {
     }).then(function (res) {
         if (res.ok) {
             res.json().then(function (data) {
+                resetTokenHome();
                 $('.card_list_el').remove();
                 getAllPosts();
                 console.log("Inside res.ok. New post added");
@@ -928,6 +1021,9 @@ function createPost(postID) {
         }
         else {
             alert("Error: creating post unsuccessful!");
+            if (res.status == '403') {
+                window.location.href = "./inactive.html";
+            }
             res.json().then(function (data) {
                 console.log(data.message);
             }.bind(this));
@@ -945,6 +1041,8 @@ function createPost(postID) {
 function expandCreatePModal(category, edit) {
     // remove elements if clicked on a category again
     $('.catDiv').remove();
+
+    document.getElementById("categoryDD2").innerHTML = category;
 
     if (edit) {
         var pickedCategory = "pickedEditCategory";
@@ -1348,12 +1446,13 @@ function runSearchForPosts() {
         alert("Keyword for searching posts cannot be empty!");
         return;
     }
-
+    
     fetch(urlSearch, {
         method: "POST",
         headers: {
             'Accept': 'application/json',
-            'content-type': 'application/json'
+            'content-type': 'application/json',
+            'Authorization': ('Bearer ' + JSON.parse(localStorage.token))
         },
         body: JSON.stringify({
             "key": key,
@@ -1364,6 +1463,7 @@ function runSearchForPosts() {
         if (res.ok) {
 
             res.json().then(function (data) {
+                resetTokenHome();
 
                 var numPost = Object.keys(data.response).length;
                 var json = data.response;
@@ -1379,6 +1479,9 @@ function runSearchForPosts() {
         }
         else {
             alert("Error: couldn't run search");
+            if (res.status == '403') {
+                window.location.href = "./inactive.html";
+            }
             res.json().then(function (data) {
                 console.log(data.message);
             }.bind(this));
@@ -1406,12 +1509,13 @@ function runSearchForUsers(from) {
         alert("Keyword for searching users cannot be empty!");
         return;
     }
-
+    
     fetch(urlSearch, {
         method: "POST",
         headers: {
             'Accept': 'application/json',
-            'content-type': 'application/json'
+            'content-type': 'application/json',
+            'Authorization': ('Bearer ' + JSON.parse(localStorage.token))
         },
         body: JSON.stringify({
             "key": key,
@@ -1422,6 +1526,7 @@ function runSearchForUsers(from) {
         if (res.ok) {
 
             res.json().then(function (data) {
+                resetTokenHome();
 
                 // Create dropdown-items to select from 
                 // links should direct to the user profiles
@@ -1463,6 +1568,9 @@ function runSearchForUsers(from) {
         }
         else {
             alert("Error: couldn't run search");
+            if (res.status == '403') {
+                window.location.href = "./inactive.html";
+            }
             res.json().then(function (data) {
                 console.log(data.message);
             }.bind(this));
@@ -1500,12 +1608,13 @@ function closeEditPostModal() {
 
 // get notifications in dropdown list
 function getNotifications(em) {
-
+    
     fetch(urlNewNotifications, {
         method: "POST",
         headers: {
             'Accept': 'application/json',
-            'content-type': 'application/json'
+            'content-type': 'application/json',
+            'Authorization': ('Bearer ' + JSON.parse(localStorage.token))
         },
         body: JSON.stringify({
             //"email": emailAdd
@@ -1516,6 +1625,7 @@ function getNotifications(em) {
         console.log("Inside res function");
         if (res.ok) {
             res.json().then(function (data) {
+                resetTokenHome();
                 console.log(data.message);
                 console.log("Inside res.ok, Get Notifications successful!");
                 var length = Object.keys(data.response).length;
@@ -1571,6 +1681,9 @@ function getNotifications(em) {
         }
         else {
             alert("Error: Get notifications unsuccessful!");
+            if (res.status == '403') {
+                window.location.href = "./inactive.html";
+            }
             res.json().then(function (data) {
                 console.log(data.message);
             }.bind(this));
@@ -1596,11 +1709,13 @@ function goToProfile(from) {
 // show attributes in UI of post card
 function categoryModal(postID) {
     $('.catClass').remove();
+    
     fetch(urlCatAttributes, {
         method: "POST",
         headers: {
             'Accept': 'application/json',
-            'content-type': 'application/json'
+            'content-type': 'application/json',
+            'Authorization': ('Bearer ' + JSON.parse(localStorage.token))
         },
         body: JSON.stringify({
             "postID": postID
@@ -1608,6 +1723,7 @@ function categoryModal(postID) {
     }).then(function (res) {
         if (res.ok) {
             res.json().then(function (data) {
+                resetTokenHome();
                 console.log(data.message);
                 console.log("Inside res.ok, category and attributes successfully recieved!");
                 var category = data.response[0].Category;
@@ -1655,6 +1771,9 @@ function categoryModal(postID) {
         }
         else {
             alert("Error: get Category and Attributes unsuccessful!");
+            if (res.status == '403') {
+                window.location.href = "./inactive.html";
+            }
             res.json().then(function (data) {
                 console.log(data.message);
             }.bind(this));
@@ -1683,7 +1802,8 @@ function editPost(title, desc, price, type_value, category, attributes, postID) 
         method: "POST",
         headers: {
             'Accept': 'application/json',
-            'content-type': 'application/json'
+            'content-type': 'application/json',
+            'Authorization': ('Bearer ' + JSON.parse(localStorage.token))
         },
         body: JSON.stringify({
             "PostId": postID,
@@ -1698,6 +1818,7 @@ function editPost(title, desc, price, type_value, category, attributes, postID) 
     }).then(function (res) {
         if (res.ok) {
             res.json().then(function (data) {
+                resetTokenHome();
                 $('.card_list_el').remove();
                 getAllPosts();
                 console.log("Inside res.ok. Post edited");
@@ -1706,6 +1827,9 @@ function editPost(title, desc, price, type_value, category, attributes, postID) 
         }
         else {
             alert("Error: editing post unsuccessful!");
+            if (res.status == '403') {
+                window.location.href = "./inactive.html";
+            }
             res.json().then(function (data) {
                 console.log(data.message);
             }.bind(this));
