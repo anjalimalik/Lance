@@ -55,16 +55,16 @@
         </li>
 
         <!-- Search for user-->
-        <li class="nav-item" style="margin-right:0;">
+        <li class="nav-item dropdown show" style="margin-right:0;">
           <input type="text" style="height: 44px; width: 300px; font-size: 15px; padding: 5%;" id="searchUserBar" placeholder="Enter user email or name...">
+          <div id="searchUserToggle" class="dropdown-menu" x-placement="bottom-start" style="width: 300px; font-size: 14px; display: none; position: absolute; transform: translate3d(0px, 50px, 0px); top: 0px; will-change: transform; overflow: auto;">
+            <div id="usersearch">
+              <!-- Here goes the options for users (JS)-->
+            </div>
         </li>
         <li class="nav-item">
           <input type="button" class="btn btn-primary" onclick="runSearchForUsers()" style="font-size: 13px; border: 1px solid grey;"
             value="Search User"></input>
-          <div id="searchUserToggle" class="dropdown-menu" x-placement="bottom-start" style="display: none; position: absolute; transform: translate3d(0px, 60px, 0px); top: 0px; will-change: transform;">
-            <div id="usersearch">
-
-            </div>
         </li>
 
         <!-- Notifications -->
@@ -74,11 +74,10 @@
             <img src="../css/Assets/notifications.png" width="20" height="20" alt="Notifications"></img>
             <span id="counter" class="notification-counter" style = "display: none;">0</span>
           </a>
-          <div id="notificationsToggle" class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 45px, 0px); top: 0px; will-change: transform;">
+          <div id="notificationsToggle" class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 45px, 0px); top: 0px; will-change: transform; overflow: auto;">
             <div id="notif">
-
+              <!-- Here goes the notifications (JS)-->
             </div>
-            <!-- <a class="dropdown-item" href="#">View all Notifications</a>-->
           </div>
         </li>
         <!-- End Notifications -->

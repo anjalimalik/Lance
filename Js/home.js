@@ -1392,7 +1392,7 @@ function runSearchForUsers() {
                         var click = "gotoUserProfile(".concat(json[i].idUsers, ",", '1', ")");
                         lnk.setAttribute('onclick', click);
                         lnk.innerHTML = (json[i].FullName).concat("  (", json[i].Email, ")");
-                        lnk.style = "border-bottom: 1px solid #ccc;";
+                        lnk.style = "border-bottom: 1px solid #ccc; color: #333399; font-weight: bold; overflow: scroll;";
                         userSearchDiv.appendChild(lnk);
                     }
                 }
