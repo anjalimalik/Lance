@@ -10,7 +10,6 @@ var urlCreatePost = "http://localhost:5500/CreatePost"
 var urlCatAttributes = "http://localhost:5500/getCatAttributes";
 var urlEditPost = "http://localhost:5500/EditPost";
 var urlUserID = "http://localhost:5500/getUserID";
-var urlAllNotifications = "http://localhost:5500/getAllNotifications"
 var urlNewNotifications = "http://localhost:5500/getNewNotifications";
 var urlOwnerIDofPost = "http://localhost:5500/getOwnerIDofPost";
 var urlSearch = "http://localhost:5500/runSearch";
@@ -1532,6 +1531,8 @@ function getNotifications() {
                     var listNotifs = document.createElement("a");
                     listNotifs.setAttribute('class', 'notifClass dropdown-item');
                     listNotifs.innerHTML = "See All";
+                    var notificationsPage = "./notifications.html?".concat(uID);
+                    listNotifs.setAttribute('href', notificationsPage);
                     listNotifs.style = "border-bottom: 1px solid #ccc; text-align:center; color:#333399; font-weight: bold;";
                     document.getElementById("notif").appendChild(listNotifs);
                 }
@@ -1547,6 +1548,8 @@ function getNotifications() {
                     var listNotifs = document.createElement("a");
                     listNotifs.setAttribute('class', 'notifClass dropdown-item');
                     listNotifs.innerHTML = "See All";
+                    var notificationsPage = "./notifications.html?".concat(uID);
+                    listNotifs.setAttribute('href', notificationsPage);
                     listNotifs.style = "border-bottom: 1px solid #ccc; text-align:center; color:#333399; font-weight: bold;";
                     document.getElementById("notif").appendChild(listNotifs);
                 }
@@ -1571,7 +1574,6 @@ function getNotifications() {
         alert("Error: No internet connection!");
         console.log(err.message + ": No Internet Connection");
     });
-
 }
 
 // redirect to profile
