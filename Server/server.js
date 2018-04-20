@@ -205,7 +205,7 @@ app.post('/login', function (req, res) {
                 return res.status(500).json({ message: "Internal server error" });
             }
             //return res.status(200).json({ message: "success", authToken: authToken });
-            jwt.sign({ user }, 'secretkey', { expiresIn: '40s' }, (errToken, token) => {
+            jwt.sign({ user }, 'secretkey', { expiresIn: '1800s' }, (errToken, token) => {
                 res.json({
                     token
                 });
