@@ -1354,7 +1354,7 @@ app.post('/runSearch', function (req, res) {
         dbQuery = "SELECT * FROM Posts WHERE Headline LIKE ? OR Content LIKE ?";
     }
     else if (search == "user") {
-        dbQuery = "SELECT idUsers, FullName FROM Users WHERE FullName LIKE ? OR Email LIKE ?";
+        dbQuery = "SELECT idUsers, FullName, Email FROM Users WHERE FullName LIKE ? OR Email LIKE ?";
     }
     else {
         return res.status(400).json({ message: "Invalid Search Type" });

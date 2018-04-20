@@ -1351,6 +1351,8 @@ function runSearchForPosts() {
 
 // Perform search on posts using keywords
 function runSearchForUsers() {
+    $('.searchClass.dropdown-item').remove();
+    $('.searchClass.dropdown-item.half-rule').remove();
 
     key = document.getElementById("searchUserBar").value;
 
@@ -1376,6 +1378,35 @@ function runSearchForUsers() {
 
             res.json().then(function (data) {
                 console.log(data.response);
+                var json = data.response;
+                var length = Object.keys(json).length;
+                var userSearchDiv = document.getElementById("usersearch");
+               
+                if (length != 0) {
+                    for (i = 0; i < length; i++) {
+                        var lnk = document.createElement("a");
+                        lnk.setAttribute('class', 'searchClass dropdown-item');
+                        lnk.setAttribute('href', '#');
+                        var click = "gotoUserProfile(".concat(json[i].idUsers, ",", '1', ")");
+                        lnk.setAttribute('onclick', click);
+                        lnk.innerHTML = (json[i].FullName).concat("  (", json[i].Email, ")");
+                        lnk.style = "border-bottom: 1px solid #ccc; font-weight: bold; color:#333399;";
+                        userSearchDiv.appendChild(lnk);
+                    }
+                }
+                else if (length == 0) {
+                    var lnk = document.createElement("a");
+                    lnk.setAttribute('class', 'searchClass dropdown-item half-rule');
+                    lnk.innerHTML = "No matching users found!";
+                    lnk.style = "border-bottom: 1px solid #ccc; font-weight: bold; margin-left:0;";
+                    userSearchDiv.appendChild(lnk);
+                }
+                if (document.getElementById("searchUserToggle").style.display == "none") {
+                    document.getElementById("searchUserToggle").style.display = "block";
+                }
+                else {
+                    document.getElementById("searchUserToggle").style.display = "none";
+                }
             });
         }
         else {

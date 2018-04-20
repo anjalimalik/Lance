@@ -465,19 +465,19 @@ function setFullStarState(target) {
 }
 /* Star ratings end */
 
-function gotoUserProfile(otheruserid, from) {
+function gotoUserProfile(id, from) {
 
     // no need to add id string if own's profile
-    if (otheruserid == uID) {
-        goToProfile('0');
+    if (id == uID) {
+        goToProfile(from);
         return;
     }
 
-    if (from == 0) {
-        window.location.href = "profile.html?email=".concat(email, "&id=", otheruserid);
+    if (from == '0') {
+        window.location.href = "profile.html?email=".concat(email, "&id=", id);
     }
     else {
-        window.location.href = "profile.html?email=".concat(emailAdd, "&id=", otheruserid);
+        window.location.href = "profile.html?email=".concat(emailAdd, "&id=", id);
     }
 }
 
