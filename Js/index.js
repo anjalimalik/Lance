@@ -40,7 +40,8 @@ function btn_login() {
             res.json().then(function (data) {
                 var u = 'profile.html?email='.concat(_email);
                 window.location.href = u;
-                this.authToken = data.authToken
+                //this.authToken = data.authToken
+                localStorage.setItem('token', JSON.stringify(data.token));
                 this.email = _email;
                 console.log("Inside res.ok");
             }.bind(this));
@@ -97,7 +98,7 @@ function btn_register_continue() {
 
             if (res.ok) {
                 res.json().then(function (data) {
-                    sessionStorage.setItem("signedIn", "true");
+                    localStorage.setItem("signedIn", "true");
                 }.bind(this));
             }
             else {
@@ -156,7 +157,7 @@ function btn_register_finish() {
         if (res.ok) {
             res.json().then(function (data) {
 
-                sessionStorage.setItem("signedIn", "true");
+                localStorage.setItem("signedIn", "true");
                 location.reload(true);
             }.bind(this));
         }
@@ -322,6 +323,7 @@ function btn_logout(useremail) {
         console.log("Inside res function");
         if (res.ok) {
             res.json().then(function (data) {
+                localStorage.setItem('token', '0');
                 if(confirm("You are loggout out")){
                     window.location.href = "./index.html";
                 }

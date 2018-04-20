@@ -47,7 +47,8 @@ function getAllNotifications(id) {
         method: "POST",
         headers: {
             'Accept': 'application/json',
-            'content-type': 'application/json'
+            'content-type': 'application/json',
+            'Authorization': ('Bearer ' + JSON.parse(localStorage.token))
         },
         body: JSON.stringify({
             "id": id
@@ -122,6 +123,9 @@ function getAllNotifications(id) {
         }
         else {
             alert("Error: Get all notifications (list) unsuccessful!");
+            if (res.status == '403') {
+                window.location.href = "./inactive.html";
+            }
             res.json().then(function (data) {
                 console.log(data.message);
             }.bind(this));
