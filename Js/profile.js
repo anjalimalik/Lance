@@ -9,6 +9,7 @@ var urlWriteReview = "http://localhost:5500/WriteReview";
 var urlGetReviews = "http://localhost:5500/getReviews";
 var urlGetSortedReviews = "http://localhost:5500/getSortedReviews";
 var urlGetAverageRating = "http://localhost:5500/getAverageRating";
+var urlSetTheme = "http://localhost:5500/setTheme";
 
 var uID = "";
 var ratingSelected = 0;
@@ -574,6 +575,70 @@ function getUserProfile(userid) {
         alert("Error: No internet connection!");
         console.log(err.message + ": No Internet Connection");
         return;
+    });
+
+}
+
+function selectTheme(selected) {
+
+    // theme selection
+    switch (selected) {
+        case "sunrise":
+            var theme = "url('../css/Assets/Sunrise.jpg')";
+            var textcolor = '#cc6600';
+            break;
+        case "purple":
+            var theme = "url('../css/Assets/Purple.jpg')";
+            var textcolor = '##3333cc';
+            break;
+        case "moose":
+            var theme = "url('../css/Assets/Moose.jpg')";
+            var textcolor = '#006699';
+            break;
+        case "dark":
+            var theme = "url('../css/Assets/Dark.jpg')";
+            document.getElementById("editProfileBtn").style.color = "white";
+            var textcolor = '#00284d';
+            break;
+        case "colorful":
+            var theme = "url('../css/Assets/Colorful.jpg')";
+            var textcolor = '#6600cc';
+            break;
+        case "glitter":
+            var theme = "url('../css/Assets/Glitter.jpg')";
+            var textcolor = '#000099';
+            break;
+        default:
+            var theme = null;
+    }
+
+    fetch(urlSetTheme, {
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+            "id": uID,
+            "theme": theme
+        })
+    }).then(function (res) {
+        if (res.ok) {
+            res.json().then(function (data) {
+                if (theme) {
+                    changeTheme(theme, textcolor);
+                }
+            }.bind(this));
+        }
+        else {
+            alert("Error: Setting theme unsuccessful!");
+            res.json().then(function (data) {
+                console.log(data.message);
+            }.bind(this));
+        }
+    }).catch(function (err) {
+        alert("Error: No internet connection!");
+        console.log(err.message + ": No Internet Connection");
     });
 
 }
