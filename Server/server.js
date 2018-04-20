@@ -1371,10 +1371,10 @@ app.post('/runSearch', function (req, res) {
     });
 });
 
-// Get user id from email
-app.post('/getUserID', function (req, res) {
+// Get user id and theme from email
+app.post('/getUserDetails', function (req, res) {
     var email = req.body.email;
-    let query = "SELECT idUsers FROM Users WHERE Email = ?";
+    let query = "SELECT idUsers, Theme FROM Users WHERE Email = ?";
 
     // get user id connected to the email
     db.query(query, email, function (error, response) {

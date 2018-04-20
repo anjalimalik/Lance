@@ -2,7 +2,7 @@ var email, pass, name, edu, skills, desc, contact, links, pic, docs, userProfile
 var urlChangePass = "http://localhost:5500/changePassword"
 var urlGetProfile = "http://localhost:5500/getProfile"
 var urlUpload = "http://localhost:5500/api/upload";
-var urlUserID = "http://localhost:5500/getUserID";
+var urlUserDetails = "http://localhost:5500/getUserDetails";
 var urlNumNewNotifs = "http://localhost:5500/getNumNotifications";
 var urlDeleteAccount = "http://localhost:5500/DeleteUser";
 var urlWriteReview = "http://localhost:5500/WriteReview";
@@ -47,8 +47,8 @@ function onLoad_profile() {
 
     documentReadyProfile();  // activate event listeners 
 
-    // get user id
-    fetch(urlUserID, {
+    // get user id and theme
+    fetch(urlUserDetails, {
         method: "POST",
         headers: {
             'Accept': 'application/json',
@@ -63,6 +63,9 @@ function onLoad_profile() {
             res.json().then(function (data) {
                 console.log("Inside res.ok. User ID retrieved");
                 uID = data.response[0].idUsers;
+                
+                // get theme
+                getTheme(data.response[0].Theme);
 
                 // if visiting another user's profile, get their profile
                 if (otheruserid) {
@@ -620,7 +623,7 @@ function selectTheme(selected) {
         },
         body: JSON.stringify({
             "id": uID,
-            "theme": theme
+            "theme": selected
         })
     }).then(function (res) {
         if (res.ok) {
@@ -641,6 +644,46 @@ function selectTheme(selected) {
         console.log(err.message + ": No Internet Connection");
     });
 
+}
+
+function getTheme(key) {
+    // check for null
+    if (!key) {
+        // do nothing
+        // default
+        return;
+    }
+
+    // select attributes
+    switch (key) {
+        case "sunrise":
+            var theme = "url('../css/Assets/Sunrise.jpg')";
+            var textcolor = '#cc6600';
+            break;
+        case "purple":
+            var theme = "url('../css/Assets/Purple.jpg')";
+            var textcolor = '##3333cc';
+            break;
+        case "moose":
+            var theme = "url('../css/Assets/Moose.jpg')";
+            var textcolor = '#006699';
+            break;
+        case "dark":
+            var theme = "url('../css/Assets/Dark.jpg')";
+            document.getElementById("editProfileBtn").style.color = "white";
+            var textcolor = '#00284d';
+            break;
+        case "colorful":
+            var theme = "url('../css/Assets/Colorful.jpg')";
+            var textcolor = '#6600cc';
+            break;
+        case "glitter":
+            var theme = "url('../css/Assets/Glitter.jpg')";
+            var textcolor = '#000099';
+            break;
+        default:  
+    }
+    changeTheme(theme, textcolor);
 }
 
 function btn_theme_1() {
@@ -680,7 +723,6 @@ function changeTheme(theme, textcolor) {
     document.body.style.backgroundImage = theme;
     document.body.style.color = theme;
     localStorage.setItem('style', theme);
-    optionsToggle.style.display = "none";
     document.body.style.backgroundSize = "cover";
     document.getElementById('editProfileBtn').style.backgroundImage = theme;
     document.getElementById('bodyProfile').style.color = textcolor;

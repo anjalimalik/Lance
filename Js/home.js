@@ -9,7 +9,7 @@ var urlFilterPosts = "http://localhost:5500/getFilteredPosts"
 var urlCreatePost = "http://localhost:5500/CreatePost"
 var urlCatAttributes = "http://localhost:5500/getCatAttributes";
 var urlEditPost = "http://localhost:5500/EditPost";
-var urlUserID = "http://localhost:5500/getUserID";
+var urlUserDetails = "http://localhost:5500/getUserDetails";
 var urlNewNotifications = "http://localhost:5500/getNewNotifications";
 var urlOwnerIDofPost = "http://localhost:5500/getOwnerIDofPost";
 var urlSearch = "http://localhost:5500/runSearch";
@@ -34,7 +34,7 @@ function onLoad_home() {
 
     documentReadyHome();  // event listeners 
 
-    fetch(urlUserID, {
+    fetch(urlUserDetails, {
         method: "POST",
         headers: {
             'Accept': 'application/json',
@@ -51,6 +51,9 @@ function onLoad_home() {
                 uID = data.response[0].idUsers;
                 getNumOfNewNotifs(); // get num of notifs
                 getAllPosts();
+
+                // get theme
+                getTheme(data.response[0].Theme);
             }.bind(this));
         }
         else {
