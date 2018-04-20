@@ -222,7 +222,7 @@ app.post('/resetToken', (req, res) => {
         email: email
     }
 
-    jwt.sign({ user }, 'secretkey', { expiresIn: '40s' }, (errToken, token) => {
+    jwt.sign({ user }, 'secretkey', { expiresIn: '1800s' }, (errToken, token) => {
         res.json({
             token
         });
