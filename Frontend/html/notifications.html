@@ -21,7 +21,7 @@
 <body onload="onLoad_Notifications()">
 
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-    <a class="navbar-brand" href="#" onclick="goToHome()">Lance</a>
+    <a class="navbar-brand" href="#" onclick="backToHome()">Lance</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01"
       aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
@@ -43,17 +43,17 @@
 
         <!-- Options -->
         <li class="nav-item dropdown show" style="margin-left: 180%;">
-            <a href="#" id="options_btn" onclick="document.getElementById('options_btn').style.display='block';" class="navbar-brand nav-link dropdown-toggle" data-toggle="dropdown"
-              role="button" aria-haspopup="true" aria-expanded="false">
+          <a href="#" id="options_btn" onclick="document.getElementById('options_btn').style.display='block';" class="navbar-brand nav-link dropdown-toggle"
+            data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
               <img src="../css/Assets/options.png" width="25" height="25" alt="Options"></img>
               <span class="caret"></span></a>
-            <div id="optionsToggle" class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 45px, 0px); top: 0px; will-change: transform;">
-              <a class="dropdown-item btn btn-success btn-sm" style="font-size: 12px;" href="#" onclick="backToProfile()">View Profile</a>
-              <div class="dropdown-divider"></div>
-              <a href="#" class="dropdown-item btn btn-success btn-sm" style="font-size: 12px;" onclick="btn_logout(em)">Logout</a>
-            </div>
-          </li>
-          <!-- End Options -->
+          <div id="optionsToggle" class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 45px, 0px); top: 0px; will-change: transform;">
+            <a class="dropdown-item btn btn-success btn-sm" style="font-size: 12px;" href="#" onclick="backToProfile()">View Profile</a>
+            <div class="dropdown-divider"></div>
+            <a href="#" class="dropdown-item btn btn-success btn-sm" style="font-size: 12px;" onclick="btn_logout(em)">Logout</a>
+          </div>
+        </li>
+        <!-- End Options -->
         <!-- End -->
       </ul>
 
@@ -63,30 +63,40 @@
   <body>
     <!-- Page Content -->
 
-    <div class="alert alert-primary" role="alert">
-      <a href="#" class="alert-link">This is a primary alert with an example link</a>.
+    <!-- START OF CARD LIST -->
+    <div style="background-color: white; width: 70%; text-align: center; margin:0 auto;">
+      <!-- List Items added in JS -->
+      <ul id="nList" class="list-group"> 
+          <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+              <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">List group item heading</h5>
+                <small>3 days ago</small>
+              </div>
+              <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
+              <small>Donec id elit non mi porta.</small>
+            </a>
+            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+              <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">List group item heading</h5>
+                <small class="text-muted">3 days ago</small>
+              </div>
+              <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
+              <small class="text-muted">Donec id elit non mi porta.</small>
+            </a>
+            <a href="#" class="list-group-item list-group-item-action flex-column align-items-start">
+              <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">List group item heading</h5>
+                <small class="text-muted">3 days ago</small>
+              </div>
+              <p class="mb-1">Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.</p>
+              <small class="text-muted">Donec id elit non mi porta.</small>
+            </a>
+        </ul>
     </div>
-    <div class="alert alert-secondary" role="alert">
-      <a href="#" class="alert-link">This is a secondary alert with an example link</a>.
-    </div>
-    <div class="alert alert-success" role="alert">
-      <a href="#" class="alert-link">This is a success alert with an example link</a>.
-    </div>
-    <div class="alert alert-danger" role="alert">
-      <a href="#" class="alert-link">This is a danger alert with an example link</a>.
-    </div>
-    <div class="alert alert-warning" role="alert">
-      <a href="#" class="alert-link">This is a warning alert with an example link</a>.
-    </div>
-    <div class="alert alert-info" role="alert">
-      <a href="#" class="alert-link">This is a info alert with an example link</a>.
-    </div>
-    <div class="alert alert-light" role="alert">
-      <a href="#" class="alert-link">This is a light alert with an example link</a>.
-    </div>
-    <div class="alert alert-dark" role="alert">
-      <a href="#" class="alert-link">This is a dark alert with an example link</a>.
-    </div>
+    <!-- END OF CARD LIST -->
+
+
+
     <!-- Bootstrap core JavaScript -->
     <script src="./../vendor/jquery/jquery.min.js"></script>
     <script src="./../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
