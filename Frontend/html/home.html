@@ -54,14 +54,6 @@
           <a class="nav-link" href="about.html">About</a>
         </li>
 
-        <li class="nav-item">
-          <input type="text" style="height: 44px; width: 300px; margin-left: 150%; font-size: 20px" id="searchBar" placeholder="Enter keyword to search for...">
-        </li>
-
-        <li class="nav-item">
-          <button class="btn btn-secondary" onclick="runSearch()" style="margin-left: 360%">Search</button>
-        </li>
-
         <!-- Notifications -->
         <li class="nav-item dropdown show" style="margin-left: 5%">
           <a href="#" id="notifications_btn" onclick="displayNotifications()" class="notifications navbar-brand nav-link dropdown-toggle"
@@ -303,13 +295,20 @@
       <div class="jumbotron" style="position: absolute; left: 5%; top: 15px; width: 63%; height: auto;">
         <h4 style="position: relative; top: -40px; left: 110px; font-size: 120%;"> MENU </h4>
 
-        <input type="button" value="Offer" id="btnOffer" class="btn btn-outline-primary" onclick="filterPosts(null, 'Offer')"></input>
-        <input type="button" value="Request" id="btnRequest" class="btn btn-outline-primary" onclick="filterPosts(null, 'Request')"></input>
+        <!-- Offer/Request -->
+        <input type="button" value="Offer" id="btnOffer" class="btn btn-outline-primary" style="margin: 0% 0% 8% 0%;" onclick="filterPosts(null, 'Offer')"></input>
+        <input type="button" value="Request" id="btnRequest" class="btn btn-outline-primary" style="margin: 0% 0% 8% 0%;" onclick="filterPosts(null, 'Request')"></input>
+
+        <!-- Search using keyword-->
+        <div class="nav-item" style=" margin:0% 0% 5% 0%;">
+            <input type="text" style="display: inline-block; height: 25%; width: 70%; font-size: 15px; padding:4% 4% 4% 4%;" id="searchBar" placeholder="Enter keyword to search...">
+            <input type=button class="btn btn-primary" onclick="runSearch()" value="Search" style="display: inline-block; width: 30%; margin:-2% 0% 0% -2%; padding:4% 0% 4% 0%;"></input>
+          </div>
 
         <!-- Price -->
-        <h5 style="position: relative; top: -40px; left: 110px;"> Price </h5>
+        <h5 style="position: relative; left: 110px;"> Price </h5>
 
-        <div style="margin-left:60px; margin-top:-40px;">
+        <div style="margin-left:60px;">
           <input type="button" value="&uarr;" id="btnASCPrice" class="btn btn-outline-secondary" onclick="sortPosts('cost', 'ASC', null, null)"></input>
           <input type="button" value="&darr;" id="btnDESCPrice" class="btn btn-outline-secondary" onclick="sortPosts('cost', 'DESC')"></input>
         </div>
