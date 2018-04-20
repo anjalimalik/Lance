@@ -44,7 +44,7 @@ function onLoad_profile() {
     // give ratings
     giveRatings();
 
-    documentReadyClicksProfile();  // event listeners 
+    documentReadyProfile();  // activate event listeners 
 
     // get user id
     fetch(urlUserID, {
@@ -141,7 +141,7 @@ function onLoad_profile() {
     document.getElementById("img_profile").src = "./../css/Assets/user_icon.jpg";
 }
 
-function documentReadyClicksProfile() {
+function documentReadyProfile() {
     // Execute a function when the user releases a key on the keyboard
     document.getElementById("searchUserBar2").addEventListener("keyup", function (event) {
         // Number 13 is the "Enter" key on the keyboard
@@ -149,6 +149,22 @@ function documentReadyClicksProfile() {
             // Trigger the button element with a click
             document.getElementById("userSearchBtn2").click();
         }
+    });
+
+    // if clicked anywhere else, hide the dropdown list
+    $(document).on('click', function (e) {
+        if (e.target.id !== 'optionsToggle') {
+            $('#optionsToggle').hide();
+        }
+
+    });
+
+    // if clicked anywhere else, hide the dropdown list
+    $(document).on('click', function (e) {
+        if (e.target.id !== 'notificationsToggle') {
+            $('#notificationsToggle').hide();
+        }
+
     });
 }
 
@@ -206,14 +222,6 @@ function displayOptions() {
     } else {
         x.style.display = "none";
     }
-
-    // if clicked anywhere else, hide the dropdown list
-    $(document).on('click', function(e) {
-        if (e.target.id !== 'optionsToggle') {
-            $('#optionsToggle').hide();
-        }
-
-    })
 }
 
 function displayNotifications() {
@@ -225,14 +233,6 @@ function displayNotifications() {
     } else {
         x.style.display = "none";
     }
-
-    // if clicked anywhere else, hide the dropdown list
-    $(document).on('click', function(e) {
-        if (e.target.id !== 'notificationsToggle') {
-            $('#notificationsToggle').hide();
-        }
-
-    })
 
     // function to get notifications
     getNotifications();
@@ -702,7 +702,7 @@ function writeReview() {
                 }
                 else {
                     confirm("Writing new review successful!");
-                    
+
                     reloadProfile();
                 }
             }.bind(this));
@@ -911,7 +911,7 @@ function getAverageRating(userid) {
                 var rating = data.response[0].AverageRating;
 
                 var profileNameDiv = document.getElementById('profile_name');
-                
+
                 var avgRating = document.createElement('p');
                 avgRating.style = "float:right; margin:0;";
                 profileNameDiv.appendChild(avgRating);
@@ -988,15 +988,15 @@ function sortReviews() {
         sort = "DESC";
         basedOn = "Rating";
     }
-    else if ((document.getElementById("sortReviews")).value == "Lowest Reviews"){
+    else if ((document.getElementById("sortReviews")).value == "Lowest Reviews") {
         sort = "ASC";
         basedOn = "Rating";
     }
-    else if ((document.getElementById("sortReviews")).value == "Latest Reviews"){
+    else if ((document.getElementById("sortReviews")).value == "Latest Reviews") {
         sort = "DESC";
         basedOn = "DatePosted";
     }
-    else if ((document.getElementById("sortReviews")).value == "Oldest Reviews"){
+    else if ((document.getElementById("sortReviews")).value == "Oldest Reviews") {
         sort = "ASC";
         basedOn = "DatePosted";
     }

@@ -1351,10 +1351,10 @@ app.post('/runSearch', function (req, res) {
 
     var dbQuery = "";
     if (search == "post") {
-        dbQuery = "SELECT * FROM Posts WHERE Headline LIKE ? OR Content LIKE ?";
+        dbQuery = "SELECT * FROM Posts WHERE Headline LIKE ? OR Content LIKE ? ORDER BY DatePosted DESC";
     }
     else if (search == "user") {
-        dbQuery = "SELECT idUsers, FullName, Email FROM Users WHERE FullName LIKE ? OR Email LIKE ?";
+        dbQuery = "SELECT idUsers, FullName, Email FROM Users WHERE FullName LIKE ? OR Email LIKE ? ORDER BY FullName ASC";
     }
     else {
         return res.status(400).json({ message: "Invalid Search Type" });

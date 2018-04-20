@@ -33,7 +33,7 @@ function onLoad_home() {
         emailAdd = emailAdd.replace("#", "");
     }
 
-    documentReadyClicksHome();  // event listeners 
+    documentReadyHome();  // event listeners 
 
     fetch(urlUserID, {
         method: "POST",
@@ -86,7 +86,7 @@ function getAllPosts() {
         });
 }
 
-function documentReadyClicksHome() {
+function documentReadyHome() {
     // Execute a function when the user releases a key on the keyboard
     document.getElementById("searchUserBar1").addEventListener("keyup", function (event) {
         // Number 13 is the "Enter" key on the keyboard
@@ -100,6 +100,22 @@ function documentReadyClicksHome() {
         if (event.keyCode === 13) {
             document.getElementById("postSearchBtn").click();
         }
+    });
+
+    // if clicked anywhere else, hide the dropdown list
+    $(document).on('click', function (e) {
+        if (e.target.id !== 'optionsToggle') {
+            $('#optionsToggle').hide();
+        }
+
+    });
+
+    // if clicked anywhere else, hide the dropdown list
+    $(document).on('click', function (e) {
+        if (e.target.id !== 'notificationsToggle') {
+            $('#notificationsToggle').hide();
+        }
+
     });
 }
 
