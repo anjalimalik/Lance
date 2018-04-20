@@ -1298,10 +1298,10 @@ function expandCreatePModal(category, edit) {
 
 }
 
-//Perform search
-function runSearch() {
+// Perform search on posts using keywords
+function runSearchForPosts() {
 
-    key = document.getElementById("searchBar").value;
+    key = document.getElementById("searchPostBar").value;
     
     fetch(urlSearch, {
         method: "POST",
@@ -1321,8 +1321,9 @@ function runSearch() {
                 var numPost = Object.keys(data.response).length;
                 var json = data.response;
 
+                /*
                 var ul = document.getElementById('news_card_list');
-                ul.innerHTML = "";
+                ul.innerHTML = "";*/
 
                 for (i = 0; i < numPost; i++) {
                     createPostCard(json[i].UserName, json[i].Content, json[i].Headline, json[i].PostingType, json[i].money, json[i].idPosts, json[i].DatePosted, json[i].numLikes, json[i].Category, json[i].Attributes, json[i].UserID);
@@ -1438,9 +1439,15 @@ function getNotifications() {
 }
 
 // redirect to profile
-function goToProfile() {
-    var u = 'profile.html?email='.concat(emailAdd);
-    window.location.href = u;
+function goToProfile(from) {
+    if (from == '0') {
+        var u = 'profile.html?email='.concat(email);
+        window.location.href = u;
+    }
+    else if (from == '1') {
+        var u = 'profile.html?email='.concat(emailAdd);
+        window.location.href = u;
+    }
 }
 
 // show attributes in UI of post card

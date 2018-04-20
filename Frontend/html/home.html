@@ -47,7 +47,7 @@
         </li>
 
         <li class="nav-item">
-          <a class="nav-link" href="#" onclick="goToProfile()">Profile</a>
+          <a class="nav-link" href="#" onclick="goToProfile('1')">Profile</a>
         </li>
 
         <li class="nav-item">
@@ -59,7 +59,7 @@
           <input type="text" style="height: 44px;  font-size: 20px; padding: 5%;" id="searchUserBar" placeholder="Enter user email or name...">
             </li>
         <li class="nav-item">
-            <input type="button" class="btn btn-primary" onclick="runSearch()" style="font-size: 13px; border: 1px solid grey;" value="Search User"></input>
+            <input type="button" class="btn btn-primary" onclick="runSearchForUsers()" style="font-size: 13px; border: 1px solid grey;" value="Search User"></input>
           </li>
 
         <!-- Notifications -->
@@ -85,7 +85,7 @@
             <img src="../css/Assets/options.png" width="25" height="25" alt="Options"></img>
             <span class="caret"></span></a>
           <div id="optionsToggle" class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 45px, 0px); top: 0px; will-change: transform;">
-            <a class="dropdown-item btn btn-success btn-sm" style="font-size: 12px;" href="#" onclick="goToProfile()">View Profile</a>
+            <a class="dropdown-item btn btn-success btn-sm" style="font-size: 12px;" href="#" onclick="goToProfile('1')">View Profile</a>
             <div class="dropdown-divider"></div>
             <a href="#" class="dropdown-item btn btn-success btn-sm" style="font-size: 12px;" onclick="btn_logout(emailAdd)">Logout</a>
           </div>
@@ -309,8 +309,8 @@
 
         <!-- Search using keyword-->
         <div class="nav-item" style=" margin:0% 0% 5% 0%;">
-          <input type="text" style="height: 25%; width: 70%; font-size: 15px; padding:4% 4% 4% 4%;" id="searchBar" placeholder="Enter keyword to search...">
-          <input type=button class="btn btn-primary" onclick="runSearch()" value="Search" style="width: 30%; margin:-2% 0% 0% -2%; padding:4% 0% 4% 0%;"></input>
+          <input type="text" style="height: 25%; width: 70%; font-size: 15px; padding:4% 4% 4% 4%;" id="searchPostBar" placeholder="Enter keyword to search...">
+          <input type=button class="btn btn-primary" onclick="runSearchForPosts()()" value="Search" style="width: 30%; margin:-2% 0% 0% -2%; padding:4% 0% 4% 0%;"></input>
         </div>
 
         <!-- Price -->

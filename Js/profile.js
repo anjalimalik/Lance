@@ -469,7 +469,7 @@ function gotoUserProfile(otheruserid, from) {
 
     // no need to add id string if own's profile
     if (otheruserid == uID) {
-        goToProfile();
+        goToProfile('0');
         return;
     }
 
