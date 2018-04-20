@@ -63,9 +63,9 @@ function onLoad_profile() {
             res.json().then(function (data) {
                 console.log("Inside res.ok. User ID retrieved");
                 uID = data.response[0].idUsers;
-                
+
                 // get theme
-                getTheme(data.response[0].Theme);
+                getTheme(data.response[0].Theme, '0');
 
                 // if visiting another user's profile, get their profile
                 if (otheruserid) {
@@ -592,7 +592,7 @@ function selectTheme(selected) {
             break;
         case "purple":
             var theme = "url('../css/Assets/Purple.jpg')";
-            var textcolor = '##3333cc';
+            var textcolor = '#3333cc';
             break;
         case "moose":
             var theme = "url('../css/Assets/Moose.jpg')";
@@ -629,7 +629,10 @@ function selectTheme(selected) {
         if (res.ok) {
             res.json().then(function (data) {
                 if (theme) {
-                    changeTheme(theme, textcolor);
+                    getTheme(selected, '0');
+                }
+                else {
+                    reloadProfile();
                 }
             }.bind(this));
         }
@@ -646,12 +649,16 @@ function selectTheme(selected) {
 
 }
 
-function getTheme(key) {
+function getTheme(key, from) {
     // check for null
-    if (!key) {
+    if (!key || key == "default") {
         // do nothing
         // default
         return;
+    }
+
+    if (from === '0') { // only when on profile.html
+        document.getElementById("editProfileBtn").style.color = "white";
     }
 
     // select attributes
@@ -670,7 +677,7 @@ function getTheme(key) {
             break;
         case "dark":
             var theme = "url('../css/Assets/Dark.jpg')";
-            document.getElementById("editProfileBtn").style.color = "white";
+            
             var textcolor = '#00284d';
             break;
         case "colorful":
@@ -681,51 +688,23 @@ function getTheme(key) {
             var theme = "url('../css/Assets/Glitter.jpg')";
             var textcolor = '#000099';
             break;
-        default:  
     }
-    changeTheme(theme, textcolor);
+
+    changeTheme(theme, textcolor, from);
 }
 
-function btn_theme_1() {
-    var theme = "url('../css/Assets/Sunrise.jpg')";
-    var textcolor = '#cc6600';
-    changeTheme(theme, textcolor);
-}
-
-function btn_theme_2(theme) {
-    var theme = "url('../css/Assets/Purple.jpg')";
-    var textcolor = '##3333cc';
-    changeTheme(theme, textcolor);
-}
-function btn_theme_3(theme) {
-    var theme = "url('../css/Assets/Moose.jpg')";
-    var textcolor = '#006699';
-    changeTheme(theme, textcolor);
-}
-function btn_theme_4(theme) {
-    var theme = "url('../css/Assets/Dark.jpg')";
-    document.getElementById("editProfileBtn").style.color = "white";
-    var textcolor = '#00284d';
-    changeTheme(theme, textcolor);
-}
-function btn_theme_5(theme) {
-    var theme = "url('../css/Assets/Colorful.jpg')";
-    var textcolor = '#6600cc';
-    changeTheme(theme, textcolor);
-}
-function btn_theme_6(theme) {
-    var theme = "url('../css/Assets/Glitter.jpg')";
-    var textcolor = '#000099';
-    changeTheme(theme, textcolor);
-}
-
-function changeTheme(theme, textcolor) {
+function changeTheme(theme, textcolor, from) {
     document.body.style.backgroundImage = theme;
     document.body.style.color = theme;
     localStorage.setItem('style', theme);
     document.body.style.backgroundSize = "cover";
-    document.getElementById('editProfileBtn').style.backgroundImage = theme;
-    document.getElementById('bodyProfile').style.color = textcolor;
+    if (from === '0') {
+        document.getElementById('editProfileBtn').style.backgroundImage = theme;
+        document.getElementById('bodyProfile').style.color = textcolor;
+    }
+    else {
+        document.getElementById('bodyHome').style.color = textcolor;
+    }
 }
 
 function deleteShowModal() {

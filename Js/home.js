@@ -53,7 +53,7 @@ function onLoad_home() {
                 getAllPosts();
 
                 // get theme
-                getTheme(data.response[0].Theme);
+                getTheme(data.response[0].Theme, '1');
             }.bind(this));
         }
         else {
@@ -173,7 +173,7 @@ function createPostCard(user, content, headline, postingType, price, postID, dat
     /* Offer/Request */
     var ReqOff = document.createElement("p");
     var str = postingType.concat(" by ", "<b style=\"", "color:#333399; font-weight:bold\">", "<a href='#' onclick=\"gotoUserProfile(", userid, ",", 1, ")\">", user, "</a></b>");
-    ReqOff.style = "font-family:monaco;font-size:14px;color:#666699;float:left;";
+    ReqOff.style = "font-family:monaco;font-size:14px;float:left;";
     ReqOff.innerHTML = str;
     divHeader.appendChild(ReqOff);
 
