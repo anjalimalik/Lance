@@ -18,6 +18,7 @@ var emailAdd;
 var uID = "";
 var numNotifs = 0;
 var OwnerIDofPost = 0;
+var th = "";
 
 function onLoad_home() {
     var url = window.location.href;
@@ -53,7 +54,8 @@ function onLoad_home() {
                 getAllPosts();
 
                 // get theme
-                getTheme(data.response[0].Theme, '1');
+                th = data.response[0].Theme;
+                getTheme(th, '1');
             }.bind(this));
         }
         else {
@@ -1534,7 +1536,7 @@ function getNotifications(em) {
                     var listNotifs = document.createElement("a");
                     listNotifs.setAttribute('class', 'notifClass dropdown-item');
                     listNotifs.innerHTML = "See All";
-                    var notificationsPage = "./notifications.html?email=".concat(em, "&id=", uID);
+                    var notificationsPage = "./notifications.html?email=".concat(em, "&id=", uID, "&th=", th);
                     listNotifs.setAttribute('href', notificationsPage);
                     listNotifs.style = "border-bottom: 1px solid #ccc; text-align:center; color:#333399; font-weight: bold;";
                     document.getElementById("notif").appendChild(listNotifs);
@@ -1551,7 +1553,7 @@ function getNotifications(em) {
                     var listNotifs = document.createElement("a");
                     listNotifs.setAttribute('class', 'notifClass dropdown-item');
                     listNotifs.innerHTML = "See All";
-                    var notificationsPage = "./notifications.html?email=".concat(em, "&id=", uID);
+                    var notificationsPage = "./notifications.html?email=".concat(em, "&id=", uID, "&th=", th);
                     listNotifs.setAttribute('href', notificationsPage);
                     listNotifs.style = "border-bottom: 1px solid #ccc; text-align:center; color:#333399; font-weight: bold;";
                     document.getElementById("notif").appendChild(listNotifs);

@@ -15,6 +15,7 @@ var uID = "";
 var ratingSelected = 0;
 var otheruserid = null;
 var otherusername = null;
+var th = "";
 
 function onLoad_profile() {
 
@@ -65,7 +66,8 @@ function onLoad_profile() {
                 uID = data.response[0].idUsers;
 
                 // get theme
-                getTheme(data.response[0].Theme, '0');
+                th = data.response[0].Theme;
+                getTheme(th, '0');
 
                 // if visiting another user's profile, get their profile
                 if (otheruserid) {
@@ -628,6 +630,7 @@ function selectTheme(selected) {
     }).then(function (res) {
         if (res.ok) {
             res.json().then(function (data) {
+                th = selected;
                 if (theme) {
                     getTheme(selected, '0');
                 }

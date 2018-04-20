@@ -2,6 +2,8 @@ var urlAllNotifications = "http://localhost:5500/getAllNotifications";
 
 var em = ""; // email
 var id = ""; // user id
+var th = "";
+
 
 // onload
 function onLoad_Notifications() {
@@ -19,13 +21,20 @@ function onLoad_Notifications() {
         str = em.split("&id=");
         em = str[0];
         id = str[1];
-        if (id.includes("#")) {
-            id = id.replace("#", "");
+
+        str = id.split("&th=");
+        id = str[0];
+        th = str[1];
+
+        if (th.includes("#")) {
+            th = th.replace("#", "");
         }
     }
     else if (em.includes("#")) {
         em = em.replace("#", "");
     }
+
+    applyTheme();
 
     $(".notificationsContainer").remove();
     getAllNotifications(id);
@@ -60,6 +69,13 @@ function getAllNotifications(id) {
                 list.appendChild(listDiv);
 
                 if (length != 0) {
+
+                    var title = document.createElement("h4");
+                    title.setAttribute('class', 'text-capitalize mb-1');
+                    title.style = "padding: 3%; color: grey;";
+                    title.innerHTML = "All Notifications";
+                    listDiv.appendChild(title);
+
                     // create the list using loop
                     for (i = 0; i < length; i++) {
                         var a = document.createElement("a");
@@ -114,6 +130,50 @@ function getAllNotifications(id) {
         alert("Error: No internet connection!");
         console.log(err.message + ": No Internet Connection");
     });
+}
+
+function applyTheme() {
+    console.log(th);
+
+    if (!th || th == "default") {
+        // do nothing
+        // default
+        return;
+    }
+
+    // theme selection
+    switch (th) {
+        case "sunrise":
+            var theme = "url('../css/Assets/Sunrise.jpg')";
+            var textcolor = '#cc6600';
+            break;
+        case "purple":
+            var theme = "url('../css/Assets/Purple.jpg')";
+            var textcolor = '#3333cc';
+            break;
+        case "moose":
+            var theme = "url('../css/Assets/Moose.jpg')";
+            var textcolor = '#006699';
+            break;
+        case "dark":
+            var theme = "url('../css/Assets/Dark.jpg')";
+            var textcolor = '#00284d';
+            break;
+        case "colorful":
+            var theme = "url('../css/Assets/Colorful.jpg')";
+            var textcolor = '#6600cc';
+            break;
+        case "glitter":
+            var theme = "url('../css/Assets/Glitter.jpg')";
+            var textcolor = '#000099';
+            break;
+        default:
+            var theme = "url('../css/Assets/bluebackground.png')";
+            var textcolor = '#333399';
+    }
+
+    document.body.style.backgroundImage = theme;
+    document.body.style.color = textcolor;
 }
 
 // Method to go to home
