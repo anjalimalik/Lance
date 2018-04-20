@@ -1003,7 +1003,7 @@ app.post('/getAllNotifications', function (req, res) {
     }
 
     // get data from Notifications using the user id
-    let query = "SELECT Notification FROM Notifications WHERE idUsers = ? ORDER BY msec DESC";
+    let query = "SELECT * FROM Notifications WHERE idUsers = ? ORDER BY msec DESC";
 
     db.query(query, id, (err, result) => {
         if (err) {

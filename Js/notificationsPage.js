@@ -27,6 +27,7 @@ function onLoad_Notifications() {
         em = em.replace("#", "");
     }
 
+    $(".notificationsContainer").remove();
     getAllNotifications(id);
 }
 
@@ -48,16 +49,16 @@ function getAllNotifications(id) {
         if (res.ok) {
             res.json().then(function (data) {
                 console.log(data.message);
+                console.log(data.response);
                 var json = data.response;
                 var length = Object.keys(data.response).length;
 
-                var list = document.getElementsById("nList");
+                var list = document.getElementById("nList");
 
                 if (length != 0) {
-
                     // create a container div
                     var listDiv = document.createElement("div");
-                    a.setAttribute('class', 'notificationsContainer');
+                    listDiv.setAttribute('class', 'notificationsContainer');
                     list.appendChild(listDiv);
 
                     // create the list using loop
@@ -73,16 +74,18 @@ function getAllNotifications(id) {
 
                         var notif = document.createElement("h4");
                         notif.setAttribute('class', 'mb-1');
-                        notif.innerHTML = (json[i].Notification);
+                        //notif.innerHTML = ((json[i].Notification).split("@"))[0];
                         head.appendChild(notif);
 
                         var ago = document.createElement("small");
-                        ago.innerHTML = (timeSince(new Date(Date.now() - json[i].msec)));
+                        var date = new Date(parseInt(json[i].msec));
+                        ago.innerHTML = date.toString();
                         head.appendChild(ago);
 
                         var p = document.createElement("p");
                         p.setAttribute('class', 'mb-1');
-                        p.innerHTML = json[i].SenderName;
+                        //p.innerHTML = json[i].SenderName;
+                        p.innerHTML = ((json[i].Notification).split("@"))[0];
                         a.appendChild(p);
                     }
                 }
@@ -124,42 +127,4 @@ function backToHome() {
 function backToProfile() {
     var u = 'profile.html?email='.concat(em);
     window.location.href = u;
-}
-
-function timeSince(date) {
-    
-      var seconds = Math.floor((new Date() - date) / 1000);
-    
-      // years
-      var interval = Math.floor(seconds / 31536000);
-      if (interval > 1) {
-        return interval + " years ago";
-      }
-
-      // months
-      interval = Math.floor(seconds / 2592000);
-      if (interval > 1) {
-        return interval + " months ago";
-      }
-
-      // days
-      interval = Math.floor(seconds / 86400);
-      if (interval > 1) {
-        return interval + " days ago";
-      }
-
-      // hours
-      interval = Math.floor(seconds / 3600);
-      if (interval > 1) {
-        return interval + " hours ago";
-      }
-
-      // minutes
-      interval = Math.floor(seconds / 60);
-      if (interval > 1) {
-        return interval + " minutes ago";
-      }
-
-      // else - seconds
-      return Math.floor(seconds) + " seconds ago";
 }
