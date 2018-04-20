@@ -33,7 +33,7 @@ function onLoad_Notifications() {
 
 // populate the list of notifications with all notifications (seen/unseen)
 function getAllNotifications(id) {
-    
+
     fetch(urlAllNotifications, {
         method: "POST",
         headers: {
@@ -49,18 +49,17 @@ function getAllNotifications(id) {
         if (res.ok) {
             res.json().then(function (data) {
                 console.log(data.message);
-                console.log(data.response);
                 var json = data.response;
                 var length = Object.keys(data.response).length;
 
                 var list = document.getElementById("nList");
 
-                if (length != 0) {
-                    // create a container div
-                    var listDiv = document.createElement("div");
-                    listDiv.setAttribute('class', 'notificationsContainer');
-                    list.appendChild(listDiv);
+                // create a container div
+                var listDiv = document.createElement("div");
+                listDiv.setAttribute('class', 'notificationsContainer');
+                list.appendChild(listDiv);
 
+                if (length != 0) {
                     // create the list using loop
                     for (i = 0; i < length; i++) {
                         var a = document.createElement("a");
@@ -74,35 +73,33 @@ function getAllNotifications(id) {
 
                         var notif = document.createElement("h4");
                         notif.setAttribute('class', 'mb-1');
-                        //notif.innerHTML = ((json[i].Notification).split("@"))[0];
+                        //notif.innerHTML = json[i].SenderName;
                         head.appendChild(notif);
 
                         var ago = document.createElement("small");
                         var date = new Date(parseInt(json[i].msec));
-                        ago.innerHTML = date.toString();
+                        ago.innerHTML = date.toDateString() + ", " + date.toLocaleTimeString();
                         head.appendChild(ago);
 
                         var p = document.createElement("p");
                         p.setAttribute('class', 'mb-1');
-                        //p.innerHTML = json[i].SenderName;
+                        p.style = "font-weight: bold; color: black;";
                         p.innerHTML = ((json[i].Notification).split("@"))[0];
                         a.appendChild(p);
                     }
+
+                    // end of notifications
+                    var end = document.createElement("p");
+                    end.style = "padding: 15px 5px 5px 5px; text-align: center;";
+                    end.innerHTML = "End of notifications";
+                    listDiv.appendChild(end);
                 }
-                else if (numNotifs == 0) {
-                    var a = document.createElement("a");
-                    a.setAttribute('class', 'list-group-item list-group-item-action flex-column align-items-start');
-                    a.setAttribute('href', '#');
-                    listDiv.appendChild(a);
-
-                    var head = document.createElement("div");
-                    head.setAttribute('class', 'd-flex w-100 justify-content-between');
-                    a.appendChild(head);
-
-                    var notif = document.createElement("h4");
-                    notif.setAttribute('class', 'mb-1');
-                    notif.innerHTML = "You have zero notifications!";
-                    head.appendChild(notif);
+                else {
+                    // zero notifications
+                    var zero = document.createElement("p");
+                    zero.style = "padding: 15px 5px 5px 5px; text-align: center;";
+                    zero.innerHTML = "You have zero notifications!";
+                    listDiv.appendChild(zero);
                 }
 
             }.bind(this));
@@ -119,11 +116,13 @@ function getAllNotifications(id) {
     });
 }
 
+// Method to go to home
 function backToHome() {
     var u = 'home.html?email='.concat(em);
     window.location.href = u;
 }
 
+// Method to go to profile
 function backToProfile() {
     var u = 'profile.html?email='.concat(em);
     window.location.href = u;
