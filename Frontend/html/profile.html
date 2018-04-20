@@ -45,97 +45,82 @@
           <a class="nav-link" href="#" onclick="goToHome()">Home <span class="sr-only">(current)</span></a>
         </li>
         <li class="nav-item">
+          <a class="nav-link" href="#" onclick="goToProfile('0')">Profile</a>
+        </li>
+        <li class="nav-item active">
           <a class="nav-link" href="./about.html">About</a>
         </li>
 
-        <!-- Notifications -->
+        <!-- Search for user-->
+        <li class="nav-item dropdown show" style="margin-right:0;">
+          <input type="text" style="height: 44px; width: 300px; font-size: 15px; padding: 5%;" id="searchUserBar2" placeholder="Enter user email or name...">
+          <div id="searchUserToggle" class="dropdown-menu" x-placement="bottom-start" style="width: 300px; font-size: 14px; display: none; position: absolute; transform: translate3d(0px, 50px, 0px); top: 0px; will-change: transform; overflow: auto;">
+            <div id="usersearch">
+              <!-- Here goes the options for users (JS)-->
+            </div>
+        </li>
+        <li class="nav-item">
+          <input type="button" class="btn btn-primary" onclick="runSearchForUsers('0')" id="userSearchBtn2" style="font-size: 13px; border: 1px solid grey;"
+            value="Search User"></input>
+        </li>
 
+        <!-- Notifications -->
         <li class="nav-item dropdown show">
-          <a href="#" id="notifications_btn" onclick="displayNotifications()" class="notifications navbar-brand nav-link dropdown-toggle"
-            data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="margin-left: 250px; margin-top:-5px;">
+          <a href="#" id="notifications_btn" onclick="displayNotifications(email)" class="notifications navbar-brand nav-link dropdown-toggle"
+            data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="margin-left: 275%;">
             <img src="../css/Assets/notifications.png" width="20" height="20" alt="Notifications"></img>
             <span id="counter" class="notification-counter" style="display:none;">0</span>
           </a>
-          <div id="notificationsToggle" class="dropdown-menu show" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 38px, 0px); top: 0px; margin-left: 200px; left: 355px; will-change: transform;">
-            <ul id="notif">
-
-            </ul>
-            <!-- <a class="dropdown-item" href="#">View all Notifications</a>-->
+          <div id="notificationsToggle" class="dropdown-menu show" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 45px, 0px); top: 0px; will-change: transform;">
+            <div id="notif">
+            </div>
           </div>
         </li>
-
+        <!-- End Notifications -->
 
         <!-- Options -->
 
-        <li class="nav-item dropdown show">
+        <li class="nav-item dropdown show" style="margin-left: 20%;">
           <a href="#" id="options_btn" onclick="displayOptions()" class="navbar-brand nav-link dropdown-toggle" data-toggle="dropdown"
-            role="button" aria-haspopup="true" aria-expanded="false" style="margin-left: 350px; margin-top:-5px;">
+            role="button" aria-haspopup="true" aria-expanded="false">
             <img src="../css/Assets/options.png" width="25" height="25" alt="Options"></img>
             <span class="caret"></span></a>
-          <div id="optionsToggle" class="dropdown-menu show" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 38px, 0px); top: 0px; left: 750px; will-change: transform;">
-            <!--<a class="dropdown-item" href="#">Log Out</a>-->
+          <div id="optionsToggle" class="dropdown-menu show" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 45px, 0px); top: 0px; will-change: transform;">
+            <a class="dropdown-item btn btn-success btn-sm" style="font-size: 12px;" href="#" onclick="goToProfile('0')">View Profile</a>
+            <div class="dropdown-divider"></div>
             <a href="#" class="dropdown-item btn btn-success btn-sm" style="margin-left: 0px; font-size: 12px;" onclick="btn_logout(email)">Logout</a>
 
             <div class="dropdown-divider"></div>
             <button type="button" class="dropdown-item btn btn-success btn-sm" style="margin-left: 0px; font-size: 12px;" data-toggle="modal"
-              data-target="#setModal">Settings</button>
+              data-target="#settingsModal">Settings</button>
           </div>
         </li>
+
         <!-- End -->
 
       </ul>
-    </div>
+
+      <!-- Search -->
+      <!--
+      <form class="form-inline my-2 my-lg-0">
+        <input class="form-control mr-sm-2" type="text" placeholder="Search" style="position: absolute; transform: translate3d(0px. 38px, 0px); top: 20px; left: 450px; will-change: transform;">
+        <button class="btn btn-secondary my-2 my-sm-0" type="submit" style="position: absolute; transform: translate3d(0px. 38px, 0px); top: 21.5px; left: 710px; will-change: transform;">Search</button>
+      </form>
+      -->
+      <!-- End -->
+
+      </div>
   </nav>
 
-  <body style="color: #666699;">
+  <body id="bodyProfile" style="color: #666699;">
     <!-- Page Content -->
     <div class="card mb-3" style="width: 50%; margin-left: 25%;">
-      <div class="card-header text-capitalize" style="height:30%; font-size:30px; text-align: left; font-weight: bold;" id="profile_name">John Doe</div>
+      <div class="card-header text-capitalize" style="height:30%; font-size:30px; text-align: left; font-weight: bold;" id="profile_name">John Doe
+        <!-- Here goes average ratings for user (defined in JS) -->
+      </div>
 
       <img style="height: 20%; width: 20%; margin-left: 5%; margin-top:2%; display: block;" src="./../css/Assets/user_icon.jpg"
         id="img_profile" alt="Card image">
-
-      <!--- AVERAGE STAR RATINGS
-
-        <div class="rating" data-vote="0">
-              <div class="star">
-                <span class="full" data-value="1"></span>
-                <span class="half" data-value="0.5"></span>
-                <span class="selected"></span>
-              </div>
-            
-              <div class="star">
-                <span class="full" data-value="2"></span>
-                <span class="half" data-value="1.5"></span>
-                <span class="selected"></span>
-              </div>
-            
-              <div class="star">
-                <span class="full" data-value="3"></span>
-                <span class="half" data-value="2.5"></span>
-                <span class="selected"></span>
-              </div>
-            
-              <div class="star">
-                <span class="full" data-value="4"></span>
-                <span class="half" data-value="3.5"></span>
-                <span class="selected"></span>
-              </div>
-            
-              <div class="star">
-                <span class="full" data-value="5"></span>
-                <span class="half" data-value="4.5"></span>
-                <span class="selected"></span>
-              </div>
-            
-              <div class="score">
-                <span class="score-rating js-score">0</span>
-                <span>/</span>
-                <span class="total">5</span>
-              </div>
-            </div>
-          -->
-      <!-- End average rating stars -->
 
       <div class="card-body">
         <!--Upload profile image-->
@@ -146,7 +131,7 @@
         </div>
 
         <!--EDIT BUTTON-->
-        <button id="editProfileBtn" type="button" class="btn btn-info btn-sm text-capitalize" style="display:none; border: 2px solid #CCCCCC; border-radius: 8px; margin-left:92%; font-size: 13px;"
+        <button id="editProfileBtn" type="button" class="btn btn-sm text-capitalize" style="background-color: gold; display:none; border: 2px solid #CCCCCC; border-radius: 8px; margin-left:92%; font-size: 13px;"
           data-toggle="modal" data-target="#myModal3" onclick="btn_EditProfile()">edit</button>
         <br>
         <br>
@@ -278,47 +263,6 @@
           </div>
         </div>
 
-        <!-- SETTINGS MODAL-->
-        <div class="modal" style="margin-top:150px;" id="setModal" aria-hidden="true">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title">Password Change</h5>
-                <button type="button" class="close" data-dismiss="modal" onclick="clearSetModal()" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-              </div>
-              <div class="modal-body">
-
-                <form>
-                  <fieldset id="fieldset_passChange">
-
-                    <div class="form-group">
-                      <label for="in_profile_currentPass">Current Password</label>
-                      <input type="password" class="form-control" id="in_profile_currentPass" placeholder="Password">
-                    </div>
-
-                    <div class="form-group">
-                      <label for="in_profile_newPass">New Password</label>
-                      <input type="password" class="form-control" id="in_profile_newPass" onchange="passMatch()" placeholder="Password">
-                    </div>
-
-                    <div class="form-group">
-                      <label for="in_profile_confirmPass">Confirm Password</label>
-                      <input type="password" class="form-control" id="in_profile_confirmPass" onchange="passMatch()" placeholder="Password">
-                    </div>
-
-
-                  </fieldset>
-                </form>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-outline-primary" onclick="btn_passChange()" data-dismiss="modal">Save</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="clearSetModal()">Close</button>
-              </div>
-            </div>
-          </div>
-        </div>
 
         <!--Profile Page//-->
 
@@ -376,6 +320,7 @@
         <a href="#" id="profile_links" class="card-link">Link</a>
       </div>
 
+<<<<<<< HEAD
         <div class="card-footer">
    
 
@@ -453,21 +398,261 @@
             <button type="button" class="btn btn-outline-success">Post Review!</button>
 
           </div>
+=======
+      <!--- Reviews List -->
+      <br>
+
+      <div class="card-header text-uppercase" style="height:15%; font-size:25px; text-align: left; font-weight: bold;">Reviews</div>
+
+      <div id="sortReviewsDiv" class="form-group" style="margin-bottom:0%;">
+        <select class="form-control" style="float:right;display:inline-block; width:20%;" id="sortReviews" onchange="sortReviews()">
+            <option>Select</option>
+            <option>Highest Reviews</option>
+            <option>Lowest Reviews</option>
+            <option>Latest Reviews</option>
+            <option>Oldest Reviews</option>
+         </select>
+        <label for="sortReviews" style="float:right;font-weight:bold; padding-top:1.5%; padding-right: 3%; display:inline-block;">Sort Reviews</label>
+      </div>
+
+      <!-- REVIEW Write a new review -->
+      <div class="card bg-secondary" style="display: none; max-width: 200rem; margin-bottom:0%; padding:0;" id="writeNewReview">
+        <div class="card-body">
+          <legend style="font-size:20px;" id="writeReviewLegend">Start your review by selecting a rating score for this user...</legend>
+
+          <!-- Rating -->
+          <div class="rating" style="width:100%; height:100%;margin:0; text-align:left;" data-vote="0">
+            <div class="star">
+              <span class="full" data-value="1"></span>
+              <span class="half" data-value="0.5"></span>
+              <span class="selected"></span>
+            </div>
+
+            <div class="star">
+              <span class="full" data-value="2"></span>
+              <span class="half" data-value="1.5"></span>
+              <span class="selected"></span>
+            </div>
+
+            <div class="star">
+              <span class="full" data-value="3"></span>
+              <span class="half" data-value="2.5"></span>
+              <span class="selected"></span>
+            </div>
+
+            <div class="star">
+              <span class="full" data-value="4"></span>
+              <span class="half" data-value="3.5"></span>
+              <span class="selected"></span>
+            </div>
+
+            <div class="star">
+              <span class="full" data-value="5"></span>
+              <span class="half" data-value="4.5"></span>
+              <span class="selected"></span>
+            </div>
+
+            <div class="score">
+              <span class="score-rating js-score">0</span>
+              <span>/</span>
+              <span class="total">5</span>
+            </div>
+          </div>
+
+          <!-- Review content -->
+          <div class="form-group" style="display:block;">
+            <label for="reviewWritten">Write your review here..</label>
+            <grammarly-ghost spellcheck="false">
+
+              <br data-grammarly-reactid=".5.1"></div>
+          </grammarly-ghost><textarea class="form-control" id="reviewWritten" rows="3" data-gramm="true" data-txt_gramm_id="d3643a56-3051-299d-31fd-d1f0b3f119f6"
+            data-gramm_id="d3643a56-3051-299d-31fd-d1f0b3f119f6" spellcheck="false" data-gramm_editor="true" style="z-index: auto; position: relative; line-height: 21px; font-size: 14px; transition: none; background-color: transparent !important; background-position: initial initial !important; background-repeat: initial initial !important;"></textarea>
+          <grammarly-btn>
+            <div style="z-index: 2; opacity: 1; transform: translate(509px, 640px);" class="_9b5ef6-textarea_btn _9b5ef6-show _9b5ef6-field_hovered"
+              data-grammarly-reactid=".0">
+              <div class="_9b5ef6-transform_wrap" data-grammarly-reactid=".0.0">
+                <div title="Protected by Grammarly" class="_9b5ef6-status" data-grammarly-reactid=".0.0.0">&nbsp;</div>
+              </div>
+            </div>
+          </grammarly-btn>
+        </div>
+      </div>
+      <form role="form" class="form-horizontal" style="display:none;" id="formWriteReview">
+        <input type="button" class="btn btn-outline-danger" style="float:right; display:inline-block; width:50%;" value="Clear" id="clearReview"
+          onclick="reloadProfile()"></input>
+        <input type="button" class="btn btn-outline-success" style="float:left; display:inline-block; width:50%;" value="Post Review!"
+          id="postReview" onclick="writeReview()"></input>
+      </form>
 
 
-      <!-- Bootstrap core JavaScript -->
-      <script src="./../vendor/jquery/jquery.min.js"></script>
-      <script src="./../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-      <script src="./../../Js/index.js"></script>
-      <script src="./../../Js/profile.js"></script>
-      <script src="./../../Js/home.js"></script>
+      <!-- Reviews List - added in JS -->
+      <div id="reviewsList">
+      </div>
+      <!--- Reviews List End -->
+>>>>>>> master
 
 
-      <!-- Bootstrap core CSS -->
-      <link href="./../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+      <!-- Real settings MODAL-->
+      <div class="modal" style="margin-top:150px;" id="settingsModal" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">SETTINGS</h4>
+                <button type="button" class="close" data-dismiss="modal" onclick="clearSetModal()" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+
+              <form>
+                <fieldset>
+                  <div class="form-group">
+                    <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#themesModal" data-dismiss="modal">Choose Themes</button>
+                  </div>
+                  <div class="form-group">
+                    <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#setModal" data-dismiss="modal">Change Password</button>
+                  </div>
+                  <div class="form-group">
+                    <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#deleteAccountModal" data-dismiss="modal"
+                      onclick="deleteShowModal()">Delete 1ance Account</button>
+                  </div>
+
+                </fieldset>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal" onclick="clearSetModal()">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
 
 
+      <!-- Themes MODAL-->
+      <div class="modal" style="margin-top:150px;" id="themesModal" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Themes</h4>
+                <button type="button" class="close" id="closeThemes" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+          </button>
+            </div>
+            <div class="modal-body">
+
+              <form>
+                <fieldset>
+                  <div class="floating-box theme1">
+                    <div style="color: white;">Sunrise</div>
+                    <input type="button" class="btnThemes" data-dismiss="modal" onclick="selectTheme('sunrise')" value="Select"></input>
+                  </div>
+                  <div class="floating-box theme2">
+                    <div style="color: white;">Purple</div>
+                    <input type="button" class="btnThemes" data-dismiss="modal" onclick="selectTheme('purple')" value="Select"></input>
+                  </div>
+                  <div class="floating-box theme3">
+                    <div style="color: white;">Moose</div>
+                    <input type="button" class="btnThemes" data-dismiss="modal" onclick="selectTheme('moose')" value="Select"></input>
+                  </div>
+                  <div class="floating-box theme4">
+                    <div style="color: white;">Dark</div>
+                    <input type="button" class="btnThemes" data-dismiss="modal" onclick="selectTheme('dark')" value="Select"></input>
+                  </div>
+                  <div class="floating-box theme5">
+                    <div style="color: white;">Colorful</div>
+                    <input type="button" class="btnThemes" data-dismiss="modal" onclick="selectTheme('colorful')" value="Select"></input>
+                  </div>
+                  <div class="floating-box theme6">
+                    <div style="color: white;">Glitter</div>
+                    <input type="button" class="btnThemes" data-dismiss="modal" onclick="selectTheme('glitter')" value="Select"></input>
+                  </div>
+                  <div class="floating-box theme7">
+                      <div style="color: white;">Default</div>
+                      <input type="button" class="btnThemes" data-dismiss="modal" onclick="selectTheme('default')" value="Select"></input>
+                    </div>
+                </fieldset>
+              </form>
+            </div>
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#settingsModal" data-dismiss="modal">Back</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Password Change MODAL-->
+      <div class="modal" style="margin-top:150px;" id="setModal" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Password Change</h5>
+              <button type="button" class="close" data-dismiss="modal" onclick="clearSetModal()" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+
+              <form>
+                <fieldset id="fieldset_passChange">
+
+                  <div class="form-group">
+                    <label for="in_profile_currentPass">Current Password</label>
+                    <input type="password" class="form-control" id="in_profile_currentPass" placeholder="Password">
+                  </div>
+
+                  <div class="form-group">
+                    <label for="in_profile_newPass">New Password</label>
+                    <input type="password" class="form-control" id="in_profile_newPass" onchange="passMatch()" placeholder="Password">
+                  </div>
+
+                  <div class="form-group">
+                    <label for="in_profile_confirmPass">Confirm Password</label>
+                    <input type="password" class="form-control" id="in_profile_confirmPass" onchange="passMatch()" placeholder="Password">
+                  </div>
+
+
+                </fieldset>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#settingsModal" data-dismiss="modal">Back</button>
+              <button type="button" class="btn btn-outline-primary" onclick="btn_passChange()" data-dismiss="modal">Save</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Delete Account MODAL-->
+      <div class="modal" style="margin-top:150px;" id="deleteAccountModal" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Delete 1ance Account</h4>
+                <button type="button" class="close" data-dismiss="modal" onclick="clearSetModal()" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+
+              <form>
+                <fieldset id="fieldset_passChange">
+
+                  <div class="form-group">
+                    <label id="accountName"></label>
+                  </div>
+                  <div class="form-group">
+                    <input type="text" id="accountEmail"></label>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="in_profile_currentPass">Enter Password</label>
+                    <input type="password" class="form-control" id="deleteAccountPass" placeholder="Password">
+                  </div>
+
+
+
+<<<<<<< HEAD
 
         <!-- Ratings Bootstrap core JavaScript -->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
@@ -488,6 +673,42 @@
       </script>
       <script src="./../vendor/bootstrap/js/bootstrap.min.js"></script>
 
+=======
+                </fieldset>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#settingsModal" data-dismiss="modal">Back</button>
+              <button type="button" class="btn btn-outline-primary" onclick="deleteAccount()" data-dismiss="modal">DELETE ACCOUNT</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="./../vendor/jquery/jquery.min.js"></script>
+    <script src="./../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <script src="./../../Js/index.js"></script>
+    <script src="./../../Js/profile.js"></script>
+    <script src="./../../Js/home.js"></script>
+
+
+    <!-- Bootstrap core CSS -->
+    <link href="./../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+
+    <!-- Ratings Bootstrap core JavaScript -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script>
+      window.jQuery || document.write('<script src="assets/js/vendor/jquery.min.js"><\/script>')
+    </script>
+    <script src="./../vendor/bootstrap/js/bootstrap.min.js"></script>
+>>>>>>> master
   </body>
 
   <style>
@@ -509,18 +730,6 @@
       font-weight: bold;
     }
 
-    #options_btn {
-      position: absolute;
-      left: 415px;
-      width: 92px;
-    }
-
-    #notifications_btn {
-      position: absolute;
-      left: 465px;
-      width: 136px;
-    }
-
     .notifications {
       position: relative;
     }
@@ -536,6 +745,56 @@
       border-radius: 3px;
       padding: 1px 3px;
       font: 11px Verdana;
+    }
+
+    .floating-box {
+      float: left;
+      width: 150px;
+      height: 75px;
+      margin: 10px;
+      border: 3px solid #73AD21;
+    }
+
+    .btnThemes {
+      width: 55%;
+      height: 50%;
+      border-radius: 5%;
+      margin-top: 15%;
+      margin-left: 5%;
+      margin-bottom: 5%;
+    }
+
+    .theme1 {
+      background-image: url("../css/Assets/Sunrise.jpg");
+    }
+
+    .theme2 {
+      background-image: url("../css/Assets/Purple.jpg");
+    }
+
+    .theme3 {
+      background-image: url("../css/Assets/Moose.jpg");
+    }
+
+    .theme4 {
+      background-image: url("../css/Assets/Dark.jpg");
+    }
+
+    .theme5 {
+      background-image: url("../css/Assets/Colorful.jpg");
+    }
+
+    .theme6 {
+      background-image: url("../css/Assets/Glitter.jpg");
+    }
+
+    .theme7 {
+      background-image: url("../css/Assets/bluebackground.png");
+    }
+
+     ::-webkit-input-placeholder {
+      /* Chrome/Opera/Safari */
+      font-size: 15px;
     }
   </style>
 

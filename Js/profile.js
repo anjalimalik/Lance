@@ -2,10 +2,20 @@ var email, pass, name, edu, skills, desc, contact, links, pic, docs, userProfile
 var urlChangePass = "http://localhost:5500/changePassword"
 var urlGetProfile = "http://localhost:5500/getProfile"
 var urlUpload = "http://localhost:5500/api/upload";
-var urlUserID = "http://localhost:5500/getUserID";
+var urlUserDetails = "http://localhost:5500/getUserDetails";
 var urlNumNewNotifs = "http://localhost:5500/getNumNotifications";
+var urlDeleteAccount = "http://localhost:5500/DeleteUser";
+var urlWriteReview = "http://localhost:5500/WriteReview";
+var urlGetReviews = "http://localhost:5500/getReviews";
+var urlGetSortedReviews = "http://localhost:5500/getSortedReviews";
+var urlGetAverageRating = "http://localhost:5500/getAverageRating";
+var urlSetTheme = "http://localhost:5500/setTheme";
 
 var uID = "";
+var ratingSelected = 0;
+var otheruserid = null;
+var otherusername = null;
+var th = "";
 
 function onLoad_profile() {
 
@@ -15,7 +25,6 @@ function onLoad_profile() {
     // get email
     var url = window.location.href;
     var str = url.split("?email=");
-    var otheruserid = null;
 
     email = str[1];
     if (email === null) {
@@ -34,15 +43,19 @@ function onLoad_profile() {
         email = email.replace("#", "");
     }
 
-    // average ratings
-    // averageRatings();
+    // give ratings
+    giveRatings();
 
-    // get user id
-    fetch(urlUserID, {
+    documentReadyProfile();  // activate event listeners 
+
+    
+    // get user id and theme
+    fetch(urlUserDetails, {
         method: "POST",
         headers: {
             'Accept': 'application/json',
-            'content-type': 'application/json'
+            'content-type': 'application/json',
+            'Authorization': ('Bearer ' + JSON.parse(localStorage.token))
         },
         body: JSON.stringify({
             "email": email
@@ -50,22 +63,29 @@ function onLoad_profile() {
 
     }).then(function (res) {
         if (res.ok) {
+            resetTokenProfile();
             res.json().then(function (data) {
                 console.log("Inside res.ok. User ID retrieved");
                 uID = data.response[0].idUsers;
 
+                // get theme
+                th = data.response[0].Theme;
+                getTheme(th, '0');
+
                 // if visiting another user's profile, get their profile
-                if (otheruserid){
+                if (otheruserid) {
                     getUserProfile(otheruserid);
                     return;
                 }
 
+                
                 // get profile
                 fetch(urlGetProfile, {
                     method: "POST",
                     headers: {
                         'Accept': 'application/json',
-                        'content-type': 'application/json'
+                        'content-type': 'application/json',
+                        'Authorization': ('Bearer ' + JSON.parse(localStorage.token))
                     },
                     body: JSON.stringify({
                         "email": null,
@@ -75,7 +95,9 @@ function onLoad_profile() {
                 }).then(function (res) {
                     console.log("Inside res function");
                     if (res.ok) {
+                        resetTokenProfile();
                         res.json().then(function (data) {
+                            
                             var json = data.response;
                             name = json[0].FullName;
                             edu = json[0].Education;
@@ -87,6 +109,13 @@ function onLoad_profile() {
                             populate_profile(email);
                             document.getElementById("editProfileBtn").style.display = "block";
 
+                            // average rating
+                            getAverageRating(uID);
+
+                            // get reviews for this user
+                            $('.review.card.bg-secondary').remove();
+                            getReviews(uID);
+
                             // notifications
                             getNumOfNewNotifs();
 
@@ -94,6 +123,9 @@ function onLoad_profile() {
                     }
                     else {
                         alert("Error: get profile unsuccessful!");
+                        if (res.status == '403') {
+                            window.location.href = "./inactive.html";
+                        }
                         res.json().then(function (data) {
                             console.log(data.message);
                         }.bind(this));
@@ -109,6 +141,9 @@ function onLoad_profile() {
         }
         else {
             console.log("Error: Cannot get UserID");
+            if (res.status == '403') {
+                window.location.href = "./inactive.html";
+            }
             res.json().then(function (data) {
                 console.log(data.message);
             }.bind(this));
@@ -123,14 +158,77 @@ function onLoad_profile() {
     document.getElementById("img_profile").src = "./../css/Assets/user_icon.jpg";
 }
 
-// to get notifications counter 
-function getNumOfNewNotifs() {
+function documentReadyProfile() {
+    // Execute a function when the user releases a key on the keyboard
+    document.getElementById("searchUserBar2").addEventListener("keyup", function (event) {
+        // Number 13 is the "Enter" key on the keyboard
+        if (event.keyCode === 13) {
+            // Trigger the button element with a click
+            document.getElementById("userSearchBtn2").click();
+        }
+    });
 
-    fetch(urlNumNewNotifs, {
+    // if clicked anywhere else, hide the dropdown list
+    $(document).on('click', function (e) {
+        if (e.target.id !== 'optionsToggle') {
+            $('#optionsToggle').hide();
+        }
+
+    });
+
+    // if clicked anywhere else, hide the dropdown list
+    $(document).on('click', function (e) {
+        if (e.target.id !== 'notificationsToggle') {
+            $('#notificationsToggle').hide();
+        }
+
+    });
+}
+
+
+function resetTokenProfile() {
+    fetch("http://localhost:5500/resetToken", {
         method: "POST",
         headers: {
             'Accept': 'application/json',
             'content-type': 'application/json'
+        },
+        body: JSON.stringify({
+            "email": email
+        })
+
+    }).then(function (res) {
+        console.log("Inside res function");
+        if (res.ok) {
+            res.json().then(function (data) {
+                localStorage.setItem('token', JSON.stringify(data.token));
+            }.bind(this));
+        }
+        else {
+            if (res.status == '403') {
+                window.location.href = "./inactive.html";
+            }
+            res.json().then(function (data) {
+                console.log(data.message);
+            }.bind(this));
+            return;
+        }
+    }).catch(function (err) {
+        alert("Error: No internet connection!");
+        console.log(err.message + ": No Internet Connection");
+        return;
+    });
+}
+
+// to get notifications counter
+function getNumOfNewNotifs() {
+    
+    fetch(urlNumNewNotifs, {
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'content-type': 'application/json',
+            'Authorization': ('Bearer ' + JSON.parse(localStorage.token))
         },
         body: JSON.stringify({
             "id": uID
@@ -139,6 +237,7 @@ function getNumOfNewNotifs() {
     }).then(function (res) {
         console.log("Inside res function");
         if (res.ok) {
+            resetTokenProfile();
             res.json().then(function (data) {
                 var json = data.response;
                 var num = parseInt(json[0].count);
@@ -151,6 +250,9 @@ function getNumOfNewNotifs() {
         }
         else {
             alert("Error: Get number of notifications unsuccessful!");
+            if (res.status == '403') {
+                window.location.href = "./inactive.html";
+            }
             res.json().then(function (data) {
                 console.log(data.message);
             }.bind(this));
@@ -158,6 +260,9 @@ function getNumOfNewNotifs() {
         }
     }).catch(function (err) {
         alert("Error: No internet connection!");
+        if (res.status == '403') {
+            window.location.href = "./inactive.html";
+        }
         console.log(err.message + ": No Internet Connection");
         return;
     });
@@ -179,7 +284,7 @@ function displayOptions() {
     }
 }
 
-function displayNotifications() {
+function displayNotifications(em) {
     document.getElementById("optionsToggle").style.display = "none";
     var x = document.getElementById("notificationsToggle");
 
@@ -190,7 +295,7 @@ function displayNotifications() {
     }
 
     // function to get notifications
-    getNotifications();
+    getNotifications(em);
     document.getElementById('counter').style.display = "none";// remove counter
     document.getElementById('counter').innerHTML = 0;
 }
@@ -210,7 +315,12 @@ function imageIsLoaded(e) {
 }
 
 function populate_profile(useremail) {
-    document.getElementById("profile_name").innerHTML = name;
+    if (otherusername != null) {
+        document.getElementById("profile_name").innerHTML = otherusername;
+    }
+    else {
+        document.getElementById("profile_name").innerHTML = name;
+    }
     document.getElementById("profile_email").innerHTML = useremail;
     document.getElementById("profile_edu").innerHTML = edu;
     document.getElementById("profile_contact").innerHTML = contact;
@@ -306,11 +416,13 @@ function btn_passChange() {
         return;
     }
 
+    
     fetch(urlChangePass, {
         method: "POST",
         headers: {
             'Accept': 'application/json',
-            'content-type': 'application/json'
+            'content-type': 'application/json',
+            'Authorization': ('Bearer ' + JSON.parse(localStorage.token))
         },
         body: JSON.stringify({
             "email": email,
@@ -321,6 +433,7 @@ function btn_passChange() {
     }).then(function (res) {
         console.log("Inside res function");
         if (res.ok) {
+            resetTokenProfile();
             res.json().then(function (data) {
                 alert(data.message);
                 console.log("Inside res.ok");
@@ -328,6 +441,9 @@ function btn_passChange() {
         }
         else {
             alert("Error: Change password unsuccessful!");
+            if (res.status == '403') {
+                window.location.href = "./inactive.html";
+            }
             res.json().then(function (data) {
                 console.log(data.message);
             }.bind(this));
@@ -348,6 +464,7 @@ function uploadPicture() {
     data.append('file', input.files[0])
     //data.append('user', 'hubot')
 
+    
     fetch(urlUpload, {
         method: 'POST',
         body: ({ 'element2': data })
@@ -361,7 +478,7 @@ function uploadPicture() {
 
 
 /* STAR RATINGS */
-function averageRatings() {
+function giveRatings() {
 
     var starClicked = false;
     $('.star').click(function () {
@@ -387,7 +504,8 @@ function averageRatings() {
 
         $(this).closest('.rating').data('vote', $(this).data('value'));
         //calculateAverage()
-        console.log(parseInt($(this).data('value')));
+        console.log(parseFloat($(this).data('value')));
+        ratingSelected = (parseFloat($(this).data('value')));
 
     })
 
@@ -402,7 +520,8 @@ function averageRatings() {
         $(this).closest('.rating').data('vote', $(this).data('value'));
         //calculateAverage()
 
-        console.log(parseInt($(this).data('value')));
+        console.log(parseFloat($(this).data('value')));
+        ratingSelected = (parseFloat($(this).data('value')));
     })
 
     $('.half').hover(function () {
@@ -421,36 +540,46 @@ function averageRatings() {
 
 function updateStarState(target) {
     $(target).parent().prevAll().addClass('animate');
-    $(target).parent().prevAll().children().addClass('star-colour');
+    $(target).parent().prevAll().children().addClass('star-color');
 
     $(target).parent().nextAll().removeClass('animate');
-    $(target).parent().nextAll().children().removeClass('star-colour');
+    $(target).parent().nextAll().children().removeClass('star-color');
 }
 
 function setHalfStarState(target) {
-    $(target).addClass('star-colour');
-    $(target).siblings('.full').removeClass('star-colour');
+    $(target).addClass('star-color');
+    $(target).siblings('.full').removeClass('star-color');
     updateStarState(target)
 }
 
 function setFullStarState(target) {
-    $(target).addClass('star-colour');
+    $(target).addClass('star-color');
     $(target).parent().addClass('animate');
-    $(target).siblings('.half').addClass('star-colour');
+    $(target).siblings('.half').addClass('star-color');
 
     updateStarState(target)
 }
-
 /* Star ratings end */
 
-function gotoUserProfile(otheruserid) {
-    window.location.href = "profile.html?email=".concat(emailAdd, "&id=", otheruserid);
+function gotoUserProfile(id, from) {
+
+    // no need to add id string if own's profile
+    if (id == uID) {
+        goToProfile(from);
+        return;
+    }
+
+    if (from == '0') {
+        window.location.href = "profile.html?email=".concat(email, "&id=", id);
+    }
+    else {
+        window.location.href = "profile.html?email=".concat(emailAdd, "&id=", id);
+    }
 }
 
-function getUserProfile(otheruserid) {
-
+function getUserProfile(userid) {
     // if the user is same as the one logged in, show edit and upload buttons.
-    if (otheruserid == uID) {
+    if (userid == uID) {
         document.getElementById("editProfileBtn").style.display = "block";
     }
     else {
@@ -458,24 +587,27 @@ function getUserProfile(otheruserid) {
         document.getElementById("editProfileBtn").style.display = "none";
     }
 
+    
     // get profile of user
     fetch(urlGetProfile, {
         method: "POST",
         headers: {
             'Accept': 'application/json',
-            'content-type': 'application/json'
+            'content-type': 'application/json',
+            'Authorization': ('Bearer ' + JSON.parse(localStorage.token))
         },
         body: JSON.stringify({
-            "id": otheruserid,
+            "id": userid,
             "email": null
         })
 
     }).then(function (res) {
         console.log("Inside res function");
         if (res.ok) {
+            resetTokenProfile();
             res.json().then(function (data) {
                 var json = data.response;
-                name = json[0].FullName;
+                otherusername = json[0].FullName;
                 edu = json[0].Education;
                 links = json[0].Links;
                 contact = json[0].ContactInfo;
@@ -484,10 +616,28 @@ function getUserProfile(otheruserid) {
                 userProfileID = json[0].idUsers;
                 otheruseremail = json[0].Email;
                 populate_profile(otheruseremail);
+
+                // average rating
+                getAverageRating(userid);
+
+                // make write review visible
+                document.getElementById('writeNewReview').style.display = "block";
+                document.getElementById('writeReviewLegend').innerHTML = "Start your review by selecting a rating score for " + otherusername + "...";
+                document.getElementById('formWriteReview').style.display = "block";
+
+                // get reviews
+                $('.review.card.bg-secondary').remove();
+                getReviews(userid);
+
+                // number of notifications
+                getNumOfNewNotifs();
             }.bind(this));
         }
         else {
             alert("Error: get profile unsuccessful!");
+            if (res.status == '403') {
+                window.location.href = "./inactive.html";
+            }
             res.json().then(function (data) {
                 console.log(data.message);
             }.bind(this));
@@ -501,4 +651,595 @@ function getUserProfile(otheruserid) {
 
 }
 
+function selectTheme(selected) {
+
+    // theme selection
+    switch (selected) {
+        case "sunrise":
+            var theme = "url('../css/Assets/Sunrise.jpg')";
+            var textcolor = '#cc6600';
+            break;
+        case "purple":
+            var theme = "url('../css/Assets/Purple.jpg')";
+            var textcolor = '#3333cc';
+            break;
+        case "moose":
+            var theme = "url('../css/Assets/Moose.jpg')";
+            var textcolor = '#006699';
+            break;
+        case "dark":
+            var theme = "url('../css/Assets/Dark.jpg')";
+            document.getElementById("editProfileBtn").style.color = "white";
+            var textcolor = '#00284d';
+            break;
+        case "colorful":
+            var theme = "url('../css/Assets/Colorful.jpg')";
+            var textcolor = '#6600cc';
+            break;
+        case "glitter":
+            var theme = "url('../css/Assets/Glitter.jpg')";
+            var textcolor = '#000099';
+            break;
+        default:
+            var theme = null;
+    }
+
+    
+    fetch(urlSetTheme, {
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'content-type': 'application/json',
+            'Authorization': ('Bearer ' + JSON.parse(localStorage.token))
+        },
+        body: JSON.stringify({
+            "id": uID,
+            "theme": selected
+        })
+    }).then(function (res) {
+        if (res.ok) {
+            resetTokenProfile();
+            res.json().then(function (data) {
+                th = selected;
+                if (theme) {
+                    getTheme(selected, '0');
+                }
+                else {
+                    reloadProfile();
+                }
+            }.bind(this));
+        }
+        else {
+            alert("Error: Setting theme unsuccessful!");
+            if (res.status == '403') {
+                window.location.href = "./inactive.html";
+            }
+            res.json().then(function (data) {
+                console.log(data.message);
+            }.bind(this));
+        }
+    }).catch(function (err) {
+        alert("Error: No internet connection!");
+        console.log(err.message + ": No Internet Connection");
+    });
+
+}
+
+function getTheme(key, from) {
+    // check for null
+    if (!key || key == "default") {
+        // do nothing
+        // default
+        return;
+    }
+
+    if (from === '0') { // only when on profile.html
+        document.getElementById("editProfileBtn").style.color = "white";
+    }
+
+    // select attributes
+    switch (key) {
+        case "sunrise":
+            var theme = "url('../css/Assets/Sunrise.jpg')";
+            var textcolor = '#cc6600';
+            break;
+        case "purple":
+            var theme = "url('../css/Assets/Purple.jpg')";
+            var textcolor = '##3333cc';
+            break;
+        case "moose":
+            var theme = "url('../css/Assets/Moose.jpg')";
+            var textcolor = '#006699';
+            break;
+        case "dark":
+            var theme = "url('../css/Assets/Dark.jpg')";
+
+            var textcolor = '#00284d';
+            break;
+        case "colorful":
+            var theme = "url('../css/Assets/Colorful.jpg')";
+            var textcolor = '#6600cc';
+            break;
+        case "glitter":
+            var theme = "url('../css/Assets/Glitter.jpg')";
+            var textcolor = '#000099';
+            break;
+    }
+
+    changeTheme(theme, textcolor, from);
+}
+
+function changeTheme(theme, textcolor, from) {
+    document.body.style.backgroundImage = theme;
+    document.body.style.color = theme;
+    localStorage.setItem('style', theme);
+    document.body.style.backgroundSize = "cover";
+    if (from === '0') {
+        document.getElementById('editProfileBtn').style.backgroundImage = theme;
+        document.getElementById('bodyProfile').style.color = textcolor;
+    }
+    else {
+        document.getElementById('bodyHome').style.color = textcolor;
+    }
+}
+
+function deleteShowModal() {
+    var str = name.concat(", confirm your password below to remove 1ance account");
+    document.getElementById("accountName").innerHTML = str;
+    document.getElementById("accountName").setAttribute("style", "font-size:120%; color:red;");
+    document.getElementById("accountEmail").value = email;
+    document.getElementById("accountEmail").readOnly = true;
+    document.getElementById("accountEmail").setAttribute("style", "background-color: #D3D3D3;");
+}
+
+
+function deleteAccount() {
+    var userPass = document.getElementById("deleteAccountPass").value;
+
+    
+    fetch(urlDeleteAccount, {
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'content-type': 'application/json',
+            'Authorization': ('Bearer ' + JSON.parse(localStorage.token))
+        },
+        body: JSON.stringify({
+            "userid": uID,
+            "password": userPass
+        })
+    }).then(function (res) {
+        console.log("Inside res function");
+        if (res.ok) {
+            resetTokenProfile();
+            res.json().then(function (data) {
+                alert("Your account has been Deleted, you will be redirected to the Login Page");
+                window.location.href = "./index.html";
+                console.log("Inside res.ok");
+            }.bind(this));
+        }
+        else {
+            alert("Error: Delete User Account unsuccessful!");
+            if (res.status == '403') {
+                window.location.href = "./inactive.html";
+            }
+            res.json().then(function (data) {
+                console.log(data.message);
+            }.bind(this));
+        }
+    }).catch(function (err) {
+        alert("Error: No internet connection!");
+        console.log(err.message + ": No Internet Connection");
+    });
+}
+
 window.gotoUserProfile = gotoUserProfile; // just making sure the function is globally available
+
+// method to write new review
+function writeReview() {
+    if (ratingSelected == 0) {
+        alert("Please provide a rating score for this user.");
+        reloadProfile();
+        return;
+    }
+
+    var review = document.getElementById("reviewWritten").value;
+
+    
+    fetch(urlWriteReview, {
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'content-type': 'application/json',
+            'Authorization': ('Bearer ' + JSON.parse(localStorage.token))
+        },
+        body: JSON.stringify({
+            "byUserID": uID,
+            "UserID": otheruserid,
+            "byUserName": name,
+            "rating": ratingSelected,
+            "review": review
+        })
+    }).then(function (res) {
+        console.log("Inside res function");
+        if (res.ok) {
+            resetTokenProfile();
+            res.json().then(function (data) {
+                var json = data.response;
+                if (json == null) {
+                    confirm("Unsuccessful: You have already posted a review for this user!");
+                    reloadProfile();
+                    return;
+                }
+                else {
+                    confirm("Writing new review successful!");
+
+                    reloadProfile();
+                }
+            }.bind(this));
+        }
+        else {
+            alert("Error: Writing new review unsuccessful!");
+            if (res.status == '403') {
+                window.location.href = "./inactive.html";
+            }
+            res.json().then(function (data) {
+                console.log(data.message);
+            }.bind(this));
+        }
+    }).catch(function (err) {
+        alert("Error: No internet connection!");
+        console.log(err.message + ": No Internet Connection");
+    });
+}
+
+// get reviews for this user
+function getReviews(userid) {
+    
+    fetch(urlGetReviews, {
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'content-type': 'application/json',
+            'Authorization': ('Bearer ' + JSON.parse(localStorage.token))
+        },
+        body: JSON.stringify({
+            "idUser": userid
+        })
+    }).then(function (res) {
+        if (res.ok) {
+            resetTokenProfile();
+            res.json().then(function (data) {
+                console.log(data);
+                var numReviews = Object.keys(data.response).length;
+                var json = data.response;
+
+                // check if any reviews are available
+                if (numReviews == 0) {
+                    var rlist = document.getElementById('reviewsList');
+                    /* review div */
+                    var reviewDiv = document.createElement('div');
+                    reviewDiv.setAttribute('class', 'review card bg-secondary');
+                    reviewDiv.style = "margin: 5%;";
+                    rlist.appendChild(reviewDiv);
+
+                    /* Card Body div */
+                    var cardBodyDiv = document.createElement('div');
+                    cardBodyDiv.setAttribute('class', 'card-body');
+                    reviewDiv.appendChild(cardBodyDiv);
+
+                    /* No reviews available */
+                    var noneP = document.createElement('p');
+                    noneP.setAttribute('class', 'card-text');
+                    document.getElementById("sortReviewsDiv").style.display = "none"; // hide sort reviews
+                    if (otherusername) {
+                        noneP.innerHTML = otherusername + " has not been reviewed yet! Add your review?";
+                    }
+                    else {
+                        noneP.innerHTML = "No one has reviewed you yet!";
+                    }
+
+                    noneP.style = "text-align:center;";
+                    cardBodyDiv.appendChild(noneP);
+                }
+                else {
+                    document.getElementById("sortReviewsDiv").style.display = "block"; // show sort reviews
+                    for (i = 0; i < numReviews; i++) {
+                        createReviewCard(json[i].idReviews, json[i].Rating, json[i].Review, json[i].byUserName, json[i].DatePosted, json[i].byUserID);
+                    }
+                }
+            }.bind(this));
+        }
+        else {
+            alert("Error: Getting reviews for this user unsuccessful!");
+            if (res.status == '403') {
+                window.location.href = "./inactive.html";
+            }
+            res.json().then(function (data) {
+                console.log(data.message);
+            }.bind(this));
+        }
+    }).catch(function (err) {
+        alert("Error: No internet connection!");
+        console.log(err.message + ": No Internet Connection");
+    });
+}
+
+// This method creates new card under profile for each review retrieved 
+function createReviewCard(reviewID, rating, review, byUserName, datePosted, byUserID) {
+
+    var rlist = document.getElementById('reviewsList');
+
+    /* review div */
+    var reviewDiv = document.createElement('div');
+    reviewDiv.setAttribute('class', 'review card bg-secondary');
+    reviewDiv.setAttribute('id', 'review');
+    //reviewDiv.style = "max-width: 200rem;";
+    reviewDiv.style = "margin:0%;";
+    rlist.appendChild(reviewDiv);
+
+    /* header */
+    var headerDiv = document.createElement('div');
+    headerDiv.setAttribute('class', 'card-header');
+    headerDiv.style = "background-color:rgba(0,0,0,0.1); padding:0%; padding-top:1%;";
+    reviewDiv.appendChild(headerDiv);
+
+    /* Card Body div */
+    var cardBodyDiv = document.createElement('div');
+    cardBodyDiv.setAttribute('class', 'card-body');
+    reviewDiv.appendChild(cardBodyDiv);
+
+    /* Title h4 */
+    var titleH4 = document.createElement('h4');
+    titleH4.setAttribute('class', 'card-title text-capitalize');
+    titleH4.setAttribute('id', 'reviewer');
+    var str = "";
+    str = str.concat("<b style=\"color:black; font-weight:bold\"><a href='#' onclick=\"gotoUserProfile(", byUserID, ",", 0, ")\">", byUserName, "</a></b>");
+    titleH4.innerHTML = str;
+    cardBodyDiv.appendChild(titleH4);
+
+    /* date posted */
+    var reviewDate = document.createElement('p');
+    reviewDate.setAttribute('class', 'card-text');
+    reviewDate.setAttribute('id', 'reviewDate');
+    var d = new Date(datePosted);
+    datePosted = d.toDateString();
+    reviewDate.innerHTML = datePosted;
+    reviewDate.style = "display:inline-block; float:right; font-size:12px;";
+    titleH4.appendChild(reviewDate);
+
+    /* Rating */
+    var ratingP = document.createElement('p');
+    ratingP.style = "color: grey;";
+    cardBodyDiv.appendChild(ratingP);
+    /* Stars */
+    var starP1 = document.createElement('span');
+    starP1.setAttribute('class', 'fa fa-star');
+    var starID = "star1".concat(reviewID);
+    starP1.setAttribute('id', starID);
+    ratingP.appendChild(starP1);
+
+    var starP2 = document.createElement('span');
+    starP2.setAttribute('class', 'fa fa-star');
+    starID = "star2".concat(reviewID);
+    starP2.setAttribute('id', starID);
+    ratingP.appendChild(starP2);
+
+    var starP3 = document.createElement('span');
+    starP3.setAttribute('class', 'fa fa-star');
+    starID = "star3".concat(reviewID);
+    starP3.setAttribute('id', starID);
+    ratingP.appendChild(starP3);
+
+    var starP4 = document.createElement('span');
+    starP4.setAttribute('class', 'fa fa-star');
+    starID = "star4".concat(reviewID);
+    starP4.setAttribute('id', starID);
+    ratingP.appendChild(starP4);
+
+    var starP5 = document.createElement('span');
+    starP5.setAttribute('class', 'fa fa-star');
+    starID = "star5".concat(reviewID);
+    starP5.setAttribute('id', starID);
+    ratingP.appendChild(starP5);
+
+    // fill color in the stars using rating
+    var i = 1;
+    var r = parseInt(rating);
+    var colorArray = ["#e6b800", "#ff9900", "#ff6600", "#ff5050", "#cc0000"]; // array for colors based on how high the rating is
+    while (r >= i) {
+        starID = "star".concat(i, reviewID);
+        document.getElementById(starID).style.color = colorArray[(r - 1)];
+        i = i + 1;
+    }
+    // if half a star
+    if (r !== parseFloat(rating)) {
+        starID = "star".concat(i, reviewID);
+        document.getElementById(starID).className = "fa fa-star-half-o";
+        document.getElementById(starID).style.color = colorArray[(r - 1)];
+    }
+    /* Rating end */
+
+    /* Review blockquote */
+    var blockquote = document.createElement('blockquote');
+    blockquote.setAttribute('class', 'blockquote');
+    cardBodyDiv.appendChild(blockquote);
+
+    var reviewContent = document.createElement('footer');
+    reviewContent.setAttribute('class', 'blockquote-footer');
+    reviewContent.setAttribute('id', 'reviewContent');
+    reviewContent.innerHTML = review;
+    blockquote.appendChild(reviewContent);
+}
+
+// function to get average rating
+function getAverageRating(userid) {
+    
+    fetch(urlGetAverageRating, {
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'content-type': 'application/json',
+            'Authorization': ('Bearer ' + JSON.parse(localStorage.token))
+        },
+        body: JSON.stringify({
+            "idUser": userid
+        })
+    }).then(function (res) {
+        if (res.ok) {
+            resetTokenProfile();
+            res.json().then(function (data) {
+                console.log(data);
+                var numReviews = Object.keys(data.response).length;
+                var rating = data.response[0].AverageRating;
+
+                var profileNameDiv = document.getElementById('profile_name');
+
+                var avgRating = document.createElement('p');
+                avgRating.style = "float:right; margin:0;";
+                profileNameDiv.appendChild(avgRating);
+
+                if (rating == null) {
+                    avgRating.style = "font-size:15px; color: #a6a6a6; padding-top:1.5%; float:right;";
+                    avgRating.innerHTML = "No reviews";
+                    return;
+                }
+
+                /* Stars */
+                var starP1 = document.createElement('span');
+                starP1.setAttribute('class', 'fa fa-star');
+                starP1.setAttribute('id', "avgStar1");
+                avgRating.appendChild(starP1);
+
+                var starP2 = document.createElement('span');
+                starP2.setAttribute('class', 'fa fa-star');
+                starP2.setAttribute('id', "avgStar2");
+                avgRating.appendChild(starP2);
+
+                var starP3 = document.createElement('span');
+                starP3.setAttribute('class', 'fa fa-star');
+                starP3.setAttribute('id', "avgStar3");
+                avgRating.appendChild(starP3);
+
+                var starP4 = document.createElement('span');
+                starP4.setAttribute('class', 'fa fa-star');
+                starP4.setAttribute('id', "avgStar4");
+                avgRating.appendChild(starP4);
+
+                var starP5 = document.createElement('span');
+                starP5.setAttribute('class', 'fa fa-star');
+                starP5.setAttribute('id', "avgStar5");
+                avgRating.appendChild(starP5);
+
+                // fill color in the stars using rating
+                var i = 1;
+                var r = parseInt(rating);
+                var starID;
+                var colorArray = ["#e6b800", "#ff9900", "#ff6600", "#ff5050", "#cc0000"]; // array for colors based on how high the rating is
+                while (r >= i) {
+                    starID = "avgStar".concat(i);
+                    document.getElementById(starID).style.color = colorArray[(r - 1)];
+                    i = i + 1;
+                }
+                // if half a star
+                if (r !== parseFloat(rating)) {
+                    starID = "avgStar".concat(i);
+                    document.getElementById(starID).className = "fa fa-star-half-o";
+                    document.getElementById(starID).style.color = colorArray[(r - 1)];
+                }
+
+            }.bind(this));
+        }
+        else {
+            alert("Error: Getting AverageRating for this user unsuccessful!");
+            if (res.status == '403') {
+                window.location.href = "./inactive.html";
+            }
+            res.json().then(function (data) {
+                console.log(data.message);
+            }.bind(this));
+        }
+    }).catch(function (err) {
+        alert("Error: No internet connection!");
+        console.log(err.message + ": No Internet Connection");
+    });
+}
+
+// method to sort reviews in asc or desc order of ratings
+function sortReviews() {
+    // get the order
+    var sort = "";
+    var basedOn = "";
+    if ((document.getElementById("sortReviews")).value == "Highest Reviews") {
+        sort = "DESC";
+        basedOn = "Rating";
+    }
+    else if ((document.getElementById("sortReviews")).value == "Lowest Reviews") {
+        sort = "ASC";
+        basedOn = "Rating";
+    }
+    else if ((document.getElementById("sortReviews")).value == "Latest Reviews") {
+        sort = "DESC";
+        basedOn = "DatePosted";
+    }
+    else if ((document.getElementById("sortReviews")).value == "Oldest Reviews") {
+        sort = "ASC";
+        basedOn = "DatePosted";
+    }
+
+    // ID for own profile or some other user?
+    var userid;
+    if (otheruserid) {
+        userid = otheruserid;
+    }
+    else {
+        userid = uID;
+    }
+
+    
+    // fetch sorted reviews
+    fetch(urlGetSortedReviews, {
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'content-type': 'application/json',
+            'Authorization': ('Bearer ' + JSON.parse(localStorage.token))
+        },
+        body: JSON.stringify({
+            "idUser": userid,
+            "order": sort,
+            "basedOn": basedOn
+        })
+    }).then(function (res) {
+        if (res.ok) {
+            resetTokenProfile();
+            res.json().then(function (data) {
+                $('.review.card.bg-secondary').remove(); // remove old cards
+                // create new review cards
+                var numReviews = Object.keys(data.response).length;
+                var json = data.response;
+                for (i = 0; i < numReviews; i++) {
+                    createReviewCard(json[i].idReviews, json[i].Rating, json[i].Review, json[i].byUserName, json[i].DatePosted, json[i].byUserID);
+                }
+            }.bind(this));
+        }
+        else {
+            alert("Error: Getting sorted reviews for this user unsuccessful!");
+            if (res.status == '403') {
+                window.location.href = "./inactive.html";
+            }
+            res.json().then(function (data) {
+                console.log(data.message);
+            }.bind(this));
+        }
+    }).catch(function (err) {
+        alert("Error: No internet connection!");
+        console.log(err.message + ": No Internet Connection");
+    });
+}
+
+// method to simply reload the page without losing query strings
+function reloadProfile() {
+    var url = window.location.href;
+    window.location.href = url;
+}
