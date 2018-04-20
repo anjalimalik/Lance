@@ -83,6 +83,17 @@ function getAllPosts() {
         });
 }
 
+function documentReadyClicks() {
+    // Execute a function when the user releases a key on the keyboard
+    document.getElementById("searchUserBar1").addEventListener("keyup", function (event) {
+        // Number 13 is the "Enter" key on the keyboard
+        if (event.keyCode === 13) {
+            // Trigger the button element with a click
+            document.getElementById("userSearchBtn").click();
+        }
+    });
+}
+
 // CREATE A NEW CARD FOR EVERY POST FROM SERVER (/getPosts)
 function createPostCard(user, content, headline, postingType, price, postID, date, likes, category, attributes, userid) {
 
@@ -1317,7 +1328,7 @@ function runSearchForPosts() {
         },
         body: JSON.stringify({
             "key": key,
-            "search" : "post"
+            "search": "post"
         })
 
     }).then(function (res) {
@@ -1350,11 +1361,16 @@ function runSearchForPosts() {
 }
 
 // Perform search on posts using keywords
-function runSearchForUsers() {
+function runSearchForUsers(from) {
     $('.searchClass.dropdown-item').remove();
     $('.searchClass.dropdown-item.half-rule').remove();
 
-    key = document.getElementById("searchUserBar").value;
+    if (from == '0') {
+        key = document.getElementById("searchUserBar2").value;
+    }
+    else {
+        key = document.getElementById("searchUserBar1").value;
+    }
 
     // if key is empty
     if (!key) {
@@ -1383,16 +1399,16 @@ function runSearchForUsers() {
                 var json = data.response;
                 var length = Object.keys(json).length;
                 var userSearchDiv = document.getElementById("usersearch");
-               
+
                 if (length != 0) {
                     for (i = 0; i < length; i++) {
                         var lnk = document.createElement("a");
                         lnk.setAttribute('class', 'searchClass dropdown-item');
                         lnk.setAttribute('href', '#');
-                        var click = "gotoUserProfile(".concat(json[i].idUsers, ",", '1', ")");
+                        var click = "gotoUserProfile(".concat(json[i].idUsers, ",", from, ")");
                         lnk.setAttribute('onclick', click);
                         lnk.innerHTML = (json[i].FullName).concat("  (", json[i].Email, ")");
-                        lnk.style = "border-bottom: 1px solid #ccc; color: #333399; font-weight: bold; overflow: scroll;";
+                        lnk.style = "border-bottom: 1px solid #ccc; font-weight: bold; overflow: scroll;";
                         userSearchDiv.appendChild(lnk);
                     }
                 }
@@ -1408,11 +1424,11 @@ function runSearchForUsers() {
                 document.getElementById("searchUserToggle").style.display = "block";
 
                 // if clicked anywhere else, hide the dropdown list
-                $(document).on('click', function(e) {
+                $(document).on('click', function (e) {
                     if (e.target.id !== 'searchUserToggle') {
                         $('#searchUserToggle').hide();
                     }
-            
+
                 })
             });
         }
@@ -1511,11 +1527,11 @@ function getNotifications() {
                 }
 
                 // if clicked anywhere else, hide the dropdown list
-                $(document).on('click', function(e) {
+                $(document).on('click', function (e) {
                     if (e.target.id !== 'notificationsToggle') {
                         $('#notificationsToggle').hide();
                     }
-            
+
                 })
 
             }.bind(this));

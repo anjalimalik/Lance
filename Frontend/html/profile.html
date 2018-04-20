@@ -44,11 +44,15 @@
         </li>
 
         <!-- Search for user-->
-        <li class="nav-item" style="margin-right:0;">
-          <input type="text" style="height: 44px; width: 300px; font-size: 15px; padding: 5%;" id="searchUserBar" placeholder="Enter user email or name...">
+        <li class="nav-item dropdown show" style="margin-right:0;">
+          <input type="text" style="height: 44px; width: 300px; font-size: 15px; padding: 5%;" id="searchUserBar2" placeholder="Enter user email or name...">
+          <div id="searchUserToggle" class="dropdown-menu" x-placement="bottom-start" style="width: 300px; font-size: 14px; display: none; position: absolute; transform: translate3d(0px, 50px, 0px); top: 0px; will-change: transform; overflow: auto;">
+            <div id="usersearch">
+              <!-- Here goes the options for users (JS)-->
+            </div>
         </li>
         <li class="nav-item">
-          <input type="button" class="btn btn-primary" onclick="runSearchForUsers()" style="font-size: 13px; border: 1px solid grey;"
+          <input type="button" class="btn btn-primary" onclick="runSearchForUsers('0')" style="font-size: 13px; border: 1px solid grey;"
             value="Search User"></input>
         </li>
 
@@ -97,7 +101,7 @@
       -->
       <!-- End -->
 
-    </div>
+      </div>
   </nav>
 
   <body id="bodyProfile" style="color: #666699;">
